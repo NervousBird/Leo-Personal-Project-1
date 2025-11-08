@@ -1,39 +1,29 @@
-import { useIncomes } from '../hooks/useIncomes.ts'
+import { Income } from '../../models/incomes.ts'
+import { useAddIncome, useDeleteIncome, useIncomes } from '../hooks/useIncomes.ts'
 import IncomeRow from './Income.tsx'
-import { useState } from 'react'
 
 function App() {
   const { data } = useIncomes()
+  const addIncome = useAddIncome()
+  const deleteIncome = useDeleteIncome()
 
-  // console.log(data[0])
-
-  const newIncomeObject = {
-    id: 1,
-    name: '',
-    type: '',
-    frequency: '',
-    date: '',
-    expected: '',
-    actual: '',
-    difference: '',
-    notes: '',
-  }
-
-  const [incomesState, setIncomesState] = useState([newIncomeObject])
-
-
-  const handleNewIncome = () => {
-    if(incomesState.length === 0) {
-      setIncomesState([...incomesState, newIncomeObject])
-    } else {
-      const id = incomesState[incomesState.length - 1].id + 1
-      setIncomesState([...incomesState, {...newIncomeObject, id: id}])
+  const handleNewIncome = async () => {
+    try {
+      await addIncome.mutateAsync({
+        name: '',
+        type: '',
+        frequency: '',
+        date: '',
+        expected: '',
+        notes: '',
+      })
+    } catch (error) {
+      console.error('Error adding income:', error)
     }
   }
 
-  const handleRemoveIncome = (id: number) => {
-    const newIncome = incomesState.filter(income => income.id != id)
-    setIncomesState(newIncome)
+  const handleRemoveIncome = async (id: Income) => {
+    await deleteIncome.mutateAsync(id)
   }
 
   return (
@@ -50,19 +40,11 @@ function App() {
           <button>Transactions</button>
         </nav>
         <main>
-          {incomesState.map(income => 
-            <div key={income.id} className='income-row'>
-              <span>{income.id}</span>
-              <IncomeRow {...newIncomeObject} />
-              <button onClick={() => handleRemoveIncome(income.id)}>X</button>
-            </div>
-          )}
-
           {data && data.map(income => 
             <div key={income.id} className='income-row'>
               <span>{income.id}</span>
               <IncomeRow {...income}/>
-              <button onClick={() => handleRemoveIncome(income.id)}>X</button>
+              <button onClick={() => handleRemoveIncome(income)}>X</button>
             </div>
           )}
 

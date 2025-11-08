@@ -1,10 +1,6 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  MutationFunction,
-} from '@tanstack/react-query'
-import { getIncomes } from '../apis/incomes.ts'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { addIncome, deleteIncome, getIncomes } from '../apis/incomes.ts'
+import { Income, IncomeObject } from '../../models/incomes.ts'
 
 export function useIncomes() {
   const query = useQuery({ queryKey: ['incomes'], queryFn: getIncomes })
@@ -14,12 +10,26 @@ export function useIncomes() {
   }
 }
 
-export function useAddIncomes<TData = unknown, TVariables = unknown>(
-  mutationFn: MutationFunction<TData, TVariables>,
-) {
+export function useAddIncome() {
   const queryClient = useQueryClient()
   const mutation = useMutation({
-    mutationFn,
+    mutationFn: async (data: IncomeObject) => {
+      await addIncome(data)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['incomes'] })
+    },
+  })
+
+  return mutation
+}
+
+export function useDeleteIncome() {
+  const queryClient = useQueryClient()
+  const mutation = useMutation({
+    mutationFn: async (id: Income) => {
+      await deleteIncome(id)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['incomes'] })
     },

@@ -1,5 +1,8 @@
-export interface Income {
+export interface Income extends IncomeObject {
   id: number
+}
+
+export interface IncomeObject {
   name: string
   type: string
   frequency: string
