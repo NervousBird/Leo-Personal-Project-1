@@ -1,9 +1,9 @@
-export interface Transaction {
+export interface Income {
   id: number
   name: string
   type: string
-  category: string
+  frequency: string
   date: string
-  amount: number
+  expected: string
   notes: string
 }

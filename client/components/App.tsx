@@ -1,9 +1,12 @@
-import Transaction from './Transaction.tsx'
-import Income from './Income.tsx'
+import { useIncomes } from '../hooks/useIncomes.ts'
+import IncomeRow from './Income.tsx'
 import { useState } from 'react'
 
 function App() {
-  
+  const { data } = useIncomes()
+
+  // console.log(data[0])
+
   const newIncomeObject = {
     id: 1,
     name: '',
@@ -16,21 +19,21 @@ function App() {
     notes: '',
   }
 
-  const [incomes, setIncomes] = useState([newIncomeObject])
+  const [incomesState, setIncomesState] = useState([newIncomeObject])
 
 
   const handleNewIncome = () => {
-    if(incomes.length === 0) {
-      setIncomes([...incomes, newIncomeObject])
+    if(incomesState.length === 0) {
+      setIncomesState([...incomesState, newIncomeObject])
     } else {
-      const id = incomes[incomes.length - 1].id + 1
-      setIncomes([...incomes, {...newIncomeObject, id: id}])
+      const id = incomesState[incomesState.length - 1].id + 1
+      setIncomesState([...incomesState, {...newIncomeObject, id: id}])
     }
   }
 
   const handleRemoveIncome = (id: number) => {
-    const newIncome = incomes.filter(income => income.id != id)
-    setIncomes(newIncome)
+    const newIncome = incomesState.filter(income => income.id != id)
+    setIncomesState(newIncome)
   }
 
   return (
@@ -47,14 +50,22 @@ function App() {
           <button>Transactions</button>
         </nav>
         <main>
-          {incomes.map(income => 
+          {incomesState.map(income => 
             <div key={income.id} className='income-row'>
               <span>{income.id}</span>
-              <Income />
+              <IncomeRow {...newIncomeObject} />
               <button onClick={() => handleRemoveIncome(income.id)}>X</button>
             </div>
           )}
-          
+
+          {data && data.map(income => 
+            <div key={income.id} className='income-row'>
+              <span>{income.id}</span>
+              <IncomeRow {...income}/>
+              <button onClick={() => handleRemoveIncome(income.id)}>X</button>
+            </div>
+          )}
+
           <button onClick={handleNewIncome}>+</button>
         </main>
         {/* <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul> */}
