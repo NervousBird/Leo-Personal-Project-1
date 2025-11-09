@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
 router.patch('/', async (req, res) => {
   try {
     const data = req.body
-    await db.updateIncome(data.id, data)
+    await db.updateIncome(data)
     res.sendStatus(204)
   } catch (error) {
     console.log(error)

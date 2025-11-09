@@ -1,5 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { addIncome, deleteIncome, getIncomes } from '../apis/incomes.ts'
+import {
+  addIncome,
+  deleteIncome,
+  getIncomes,
+  updateIncome,
+} from '../apis/incomes.ts'
 import { Income, IncomeObject } from '../../models/incomes.ts'
 
 export function useIncomes() {
@@ -38,6 +43,19 @@ export function useDeleteIncome() {
   return mutation
 }
 
+export function useUpdateIncome() {
+  const queryClient = useQueryClient()
+  const mutation = useMutation({
+    mutationFn: async (data: Income) => {
+      await updateIncome(data)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['incomes'] })
+    },
+  })
+
+  return mutation
+}
 // Query functions go here e.g. useAddFruit
 /* function useAddFruit() {
   return useFruitsMutation(addFruit)
