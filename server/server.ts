@@ -1,11 +1,13 @@
 import express from 'express'
 import * as Path from 'node:path'
 import incomeRoutes from './routes/incomes.ts'
+import transactionRoutes from './routes/transactions.ts'
 
 const server = express()
 
 server.use(express.json())
 
+server.use('/api/v1/transactions', transactionRoutes)
 server.use('/api/v1/incomes', incomeRoutes)
 
 if (process.env.NODE_ENV === 'production') {

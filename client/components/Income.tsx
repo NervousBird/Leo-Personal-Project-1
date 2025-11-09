@@ -1,11 +1,13 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Income } from "../../models/incomes"
 import { useUpdateIncome } from "../hooks/useIncomes"
+import { useTransactions } from "../hooks/useTransactions"
 
 function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
+  const { data: transactions } = useTransactions()
   const [warning, setWarning] = useState(false)
   const [difference, setDifference] = useState('$0.00')
-  const [actual, setActual] = useState('$5.30') // Grab this as ALL transactions relating to the "type"
+  const [actual, setActual] = useState('') // Grab this as ALL transactions relating to the "type"
   const updateIncome = useUpdateIncome()
   const [data, setData] = useState({
     id,
@@ -16,6 +18,20 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
     expected,
     notes,
   })
+
+  const countActualAmount = async () => {
+    if (transactions) {
+      const amounts = transactions.filter(transaction => transaction.type == type).map(transaction => transaction.amount)
+      console.log('amounts', amounts, type)
+      if (amounts.length !== 0) {
+        const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
+        console.log('count', type, count)
+        setActual(count)
+      } else {
+        setActual(data.expected)
+      }      
+    }
+  }
   
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -32,6 +48,7 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    data.expected = `${Number(data.expected).toFixed(2)}`
     await updateIncome.mutateAsync(data)
     setWarning(false)
   }
@@ -44,8 +61,9 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
 
   useEffect(() => {
     updateDifference()
+    countActualAmount()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actual, data.expected])
+  }, [actual, data.expected, transactions])
 
   return (
     <div className="income_component">
@@ -89,7 +107,7 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
           onChange={handleChange}
           placeholder="expected"
         />
-        <span>{actual}</span>
+        <span>{'$' + actual}</span>
         <span>{difference}</span>
         <input
           className="notes"
@@ -98,7 +116,7 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
           onChange={handleChange}
           placeholder="notes"
         />
-        <button type='submit'></button>
+        {warning && <button type='submit'>✔</button>}
       </form>
     </div>
   )

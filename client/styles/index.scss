@@ -111,7 +111,6 @@ main {
 }
 
 .income_component {
-  
   form {
     display: flex;
     // gap: -1px;
@@ -165,9 +164,20 @@ main {
     }
 
     button {
-      display: none;
+      position: absolute;
+      background-color: #7ece6f;
+      color: white;
+      border-radius: 5px;
+      padding: 0px 5px 0px 5px;
+      // transform: translateX(970px);
+      margin-left: 965px;
+      align-self: center;
+      // left: -10px;
     }
 
   }
+}
 
+.transaction_component {
+  
 }
