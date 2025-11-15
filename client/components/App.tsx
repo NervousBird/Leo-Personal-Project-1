@@ -2,6 +2,7 @@ import { Transaction } from '../../models/transactions.ts'
 import { useTransactions } from '../hooks/useTransactions.ts'
 import TransactionRow from './TransactionRow.tsx'
 import IncomeComponent from './IncomeComponent.tsx'
+import ExpenseComponent from './ExpenseComponent.tsx'
 
 function App() {
   const { data: transactions } = useTransactions()
@@ -40,21 +41,8 @@ function App() {
         </nav>
 
         <main>
-          <section>
-            <span className='table-header'>
-              <h4 className='name'>Name</h4>
-              <h4 className='type'>Type</h4>
-              <h4 className='frequency'>Frequency</h4>
-              <h4 className='start'>Start Date</h4>
-              <h4 className='expected'>Expected</h4>
-              <h4 className='actual'>Actual</h4>
-              <h4 className='difference'>Difference</h4>
-              <h4 className='notes'>Notes</h4>
-            </span>
-            <IncomeComponent />
-          </section>
-
-
+          <IncomeComponent />
+          <ExpenseComponent />
           <section>
             <span className='table-header'>
               <h4>Name</h4>

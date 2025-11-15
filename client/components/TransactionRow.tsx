@@ -2,9 +2,11 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Transaction } from "../../models/transactions"
 import { useTransactions } from "../hooks/useTransactions"
 import { useIncomes } from "../hooks/useIncomes"
+import { useExpenses } from "../hooks/useExpenses"
 
 function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   const { data: incomes } = useIncomes()
+  const { data: expenses } = useExpenses()
   const useTransaction = useTransactions()
 
   const [warning, setWarning] = useState(false)
@@ -46,10 +48,11 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   }
 
   useEffect(() => {
-    if(incomes) {
-      setTypesChoice(incomes.map(data => data.type))
+    if(incomes && expenses) {
+      const types = [...incomes.map(data => data.type), ...expenses.map(data => data.type)]
+      setTypesChoice(types)
     }
-  }, [incomes])
+  }, [incomes, expenses])
 
   return (
     <div className="transaction_component">
