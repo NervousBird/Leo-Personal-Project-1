@@ -1,12 +1,12 @@
 import { Router } from 'express'
 
-import * as db from '../db/incomes.ts'
+import * as db from '../db/transactions.ts'
 
 const router = Router()
 
 router.get('/', async (req, res) => {
   try {
-    const incomes = await db.getAllIncomes()
+    const incomes = await db.getAllTransactions()
     res.json(incomes)
   } catch (error) {
     console.log(error)
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const data = req.body
-    await db.addIncome(data)
+    await db.addTransaction(data)
     res.sendStatus(204)
   } catch (error) {
     console.log(error)
@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
 router.patch('/', async (req, res) => {
   try {
     const data = req.body
-    await db.updateIncome(data)
+    await db.updateTransaction(data)
     res.sendStatus(204)
   } catch (error) {
     console.log(error)
@@ -39,7 +39,7 @@ router.patch('/', async (req, res) => {
 router.delete('/', async (req, res) => {
   try {
     const id = req.body.id
-    await db.deleteIncome(id)
+    await db.deleteTransaction(id)
     res.sendStatus(204)
   } catch (error) {
     console.log(error)

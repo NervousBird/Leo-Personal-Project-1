@@ -1,20 +1,19 @@
-import { Income } from '../../models/incomes.ts'
-import { useAddIncome, useDeleteIncome, useIncomes } from '../hooks/useIncomes.ts'
-import IncomeRow from './Income.tsx'
+import { Transaction } from '../../models/transactions.ts'
+import { useTransactions } from '../hooks/useTransactions.ts'
+import TransactionRow from './TransactionRow.tsx'
+import IncomeComponent from './IncomeComponent.tsx'
 
 function App() {
-  const { data } = useIncomes()
-  const addIncome = useAddIncome()
-  const deleteIncome = useDeleteIncome()
+  const { data: transactions } = useTransactions()
+  const useTransaction = useTransactions()
 
-  const handleNewIncome = async () => {
+  const handleNewTransaction = async () => {
     try {
-      await addIncome.mutateAsync({
+      await useTransaction.add.mutateAsync({
         name: '',
         type: '',
-        frequency: '',
-        date: '',
-        expected: '',
+        date: ``,
+        amount: '0.00',
         notes: '',
       })
     } catch (error) {
@@ -22,37 +21,59 @@ function App() {
     }
   }
 
-  const handleRemoveIncome = async (id: Income) => {
-    await deleteIncome.mutateAsync(id)
+  const handleRemoveTransaction = async (id: Transaction) => {
+    await useTransaction.delete.mutateAsync(id)
   }
 
   return (
     <>
       <div className="app">
-        <h1>Finances</h1>
         <header>
-
+          <h1>Finances</h1>
         </header>
+
         <nav>
           <button>Summary</button>
           <button>Incomes</button>
           <button>Expenses</button>
           <button>Transactions</button>
         </nav>
-        <main>
-          {data && data.map(income => 
-            <div key={income.id} className='income-row'>
-              <span>{income.id}</span>
-              <IncomeRow {...income}/>
-              <button onClick={() => handleRemoveIncome(income)}>X</button>
-            </div>
-          )}
 
-          <button onClick={handleNewIncome}>+</button>
+        <main>
+          <section>
+            <span className='table-header'>
+              <h4 className='name'>Name</h4>
+              <h4 className='type'>Type</h4>
+              <h4 className='frequency'>Frequency</h4>
+              <h4 className='start'>Start Date</h4>
+              <h4 className='expected'>Expected</h4>
+              <h4 className='actual'>Actual</h4>
+              <h4 className='difference'>Difference</h4>
+              <h4 className='notes'>Notes</h4>
+            </span>
+            <IncomeComponent />
+          </section>
+
+
+          <section>
+            <span className='table-header'>
+              <h4>Name</h4>
+              <h4>Type</h4>
+              <h4>Date</h4>
+              <h4>Amount</h4>
+              <h4 className='notes'>Notes</h4>
+            </span>
+            {transactions && transactions.map(transaction => 
+              <div key={transaction.id} className='transaction-row'>
+                <TransactionRow { ...transaction } />
+                <button onClick={() => handleRemoveTransaction(transaction)}>X</button>
+              </div>
+            )}
+            <button onClick={handleNewTransaction}>+</button>
+          </section>
+          
         </main>
-        {/* <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul> */}
-        {/* <Transaction /> */}
-        {/* <Income /> */}
+        
       </div>
     </>
   )

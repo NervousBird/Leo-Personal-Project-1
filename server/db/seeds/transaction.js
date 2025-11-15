@@ -4,16 +4,15 @@
  */
 export async function seed(knex) {
   // Deletes ALL existing entries
-  await knex('incomes').del()
+  await knex('transactions').del()
 
-  await knex('incomes').insert([
+  await knex('transactions').insert([
     {
       id: 1,
-      name: 'Test income 1',
+      name: 'Test transaction',
       type: 'Work',
-      frequency: 'Monthly',
-      date: '2025-11-10',
-      expected: '50.00',
+      date: '2025-11-15',
+      amount: '50.00',
       notes: 'This is a test',
     },
   ])
