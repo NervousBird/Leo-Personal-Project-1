@@ -1,12 +1,12 @@
-import { useIncomes } from "../hooks/useIncomes.ts"
-import { Income } from '../../models/incomes.ts'
-import IncomeRow from "./IncomeRow.tsx"
+import { useExpenses } from "../hooks/useExpenses"
+import { Expense } from "../../models/expenses"
+import ExpenseRow from "./ExpenseRow"
 
 
-function IncomeComponent() {
-  const { data: incomes, isPending, isError, error } = useIncomes()
-  const useIncome = useIncomes()
-
+function ExpenseComponent() {
+  const { data: expenses, isPending, isError, error } = useExpenses()
+  const useExpense = useExpenses()
+  
   if(isPending) {
     return <p>Loading...</p>
   }
@@ -15,10 +15,10 @@ function IncomeComponent() {
     return <p>Something went wrong. {error.toString()}</p>
   }
 
-  const handleNewIncome = async () => {
+  const handleNewExpense = async () => {
     const today = new Date()
     try {
-      await useIncome.add.mutateAsync({
+      await useExpense.add.mutateAsync({
         name: '',
         type: '',
         frequency: ``,
@@ -31,8 +31,8 @@ function IncomeComponent() {
     }
   }
   
-  const handleRemoveIncome = async (id: Income) => {
-    await useIncome.delete.mutateAsync(id)
+  const handleRemoveExpense = async (id: Expense) => {
+    await useExpense.delete.mutateAsync(id)
   }
 
   return (
@@ -47,15 +47,15 @@ function IncomeComponent() {
         <h4 className='difference'>Difference</h4>
         <h4 className='notes'>Notes</h4>
       </span>
-      {incomes && incomes.map(income =>
-          <div key={income.id} className='income-row'>
-            <IncomeRow {...income}/>
-            <button onClick={() => handleRemoveIncome(income)}>X</button>
-          </div>
-        )}
-      <button onClick={handleNewIncome}>+</button>
+      {expenses && expenses.map(expense => 
+        <div key={expense.id} className='expense-row'>
+          <ExpenseRow {...expense}/>
+          <button onClick={() => handleRemoveExpense(expense)}>X</button>
+        </div>
+      )}
+      <button onClick={handleNewExpense}>+</button>
     </section>
   )
 }
 
-export default IncomeComponent
+export default ExpenseComponent

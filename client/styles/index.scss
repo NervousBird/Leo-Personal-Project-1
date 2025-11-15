@@ -90,6 +90,7 @@ section {
 }
 
 .transaction-row,
+.expense-row,
 .income-row {
   display: flex;
 
@@ -116,11 +117,18 @@ section {
     background-color: #c1d7dd;
   }
 
+  .expense-row  {
+    background-color: #e7a4ad;
+  }
+  .expense-row:nth-child(2n) {
+    background-color: #e7c6c7;
+  }
+
   .transaction-row {
-    background-color: #a0c2dd;
+    background-color: #a0dda3;
   }
   .transaction-row:nth-child(2n) {
-    background-color: #c1d7dd;
+    background-color: #c0ebda;
   }
 }
 
