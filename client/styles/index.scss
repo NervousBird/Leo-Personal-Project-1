@@ -21,7 +21,6 @@ input {
 }
 
 nav {
-
   button {
     font-size: 1.1rem;
     border: none;
@@ -36,7 +35,6 @@ nav {
     background-color: #e47878;
     transition: background-color .2s ease-out;
   }
-
 }
 
 main {
@@ -47,7 +45,6 @@ main {
 
   span {
     min-width: 20px;
-    font-size: .8rem;
     align-self: center;
     text-align: center;
   }
@@ -70,32 +67,34 @@ main {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: 1rem;
+    font-size: 1.1rem;
     background-color: #7f9fe6;
 
     h4 {
-      width: 110px;
+      width: 120px;
       margin: 5px 0px 5px 0px;
       padding: 0px;
     }
-
     .actual,
     .difference {
-      width: 90px;
+      width: 120px;
     }
-
     .notes {
       width: 231px;
     }
   }
-
 }
 
+section {
+  text-align: center;
+}
+
+.transaction-row,
 .income-row {
   display: flex;
 
   button {
-    font-size: .9rem;
+    font-size: 1rem;
     border: none;
     border-radius: 0px;
     background-color: #fdbdbd;
@@ -107,14 +106,27 @@ main {
     background-color: #e47878;
     transition: background-color .2s ease-out;
   }
+}
 
+section {
+  .income-row  {
+    background-color: #a0c2dd;
+  }
+  .income-row:nth-child(2n) {
+    background-color: #c1d7dd;
+  }
+
+  .transaction-row {
+    background-color: #a0c2dd;
+  }
+  .transaction-row:nth-child(2n) {
+    background-color: #c1d7dd;
+  }
 }
 
 .income_component {
   form {
     display: flex;
-    // gap: -1px;
-    background-color: #c1d7dd;
 
     .warning {
       position: absolute;
@@ -123,14 +135,13 @@ main {
       border-radius: 5px;
       padding: 0px 5px 0px 5px;
       margin-left: -15px;
-      // left: -10px;
     }
 
     input,
     select,
     span {
-      font-size: .9rem;
-      min-width: 80px;
+      font-size: 1rem;
+      min-width: 110px;
       border: none;
       border-radius: 5px;
       color: #252525;
@@ -145,6 +156,12 @@ main {
       border-radius: 5px;
       outline:none;
       transition: background-color .2s ease;
+    }
+
+    .actual,
+    .difference,
+    .expected {
+      text-align: right;
     }
 
     select {
@@ -169,15 +186,78 @@ main {
       color: white;
       border-radius: 5px;
       padding: 0px 5px 0px 5px;
-      // transform: translateX(970px);
-      margin-left: 965px;
+      margin-left: 1075px;
       align-self: center;
-      // left: -10px;
     }
-
   }
 }
 
 .transaction_component {
-  
+  form {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+
+    .warning {
+      position: absolute;
+      background-color: #ff4444;
+      color: white;
+      border-radius: 5px;
+      padding: 0px 5px 0px 5px;
+      margin-left: -15px;
+    }
+
+    input,
+    select,
+    span {
+      font-size: 1rem;
+      min-width: 140px;
+      border: none;
+      border-radius: 5px;
+      color: #252525;
+      background-color: transparent;
+      padding: 2px 5px 2px 5px;
+      transition: background-color .2s ease;
+    }
+
+    select {
+      option {
+        background-color: #c1d7dd;
+        transition: background-color .2s ease;
+      }
+
+      option:hover {
+        background-color: #7f9fe6;
+        transition: background-color .2s ease;
+      }
+    }
+
+    select:focus,
+    input:focus {
+      background-color: #7f9fe6;
+      border-radius: 5px;
+      outline:none;
+      transition: background-color .2s ease;
+    }
+
+    .amount {
+      text-align: right;
+    }
+
+    .notes {
+      min-width: 250px;
+    }
+
+    button {
+      position: absolute;
+      background-color: #7ece6f;
+      color: white;
+      border-radius: 5px;
+      padding: 0px 5px 0px 5px;
+      margin-left: 915px;
+      align-self: center;
+    }
+
+  }
 }

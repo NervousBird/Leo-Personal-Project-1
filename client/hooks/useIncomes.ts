@@ -1,62 +1,42 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  addIncome,
-  deleteIncome,
-  getIncomes,
-  updateIncome,
-} from '../apis/incomes.ts'
-import { Income, IncomeObject } from '../../models/incomes.ts'
+  useQuery,
+  useMutation,
+  useQueryClient,
+  MutationFunction,
+} from '@tanstack/react-query'
+import * as API from '../apis/incomes.ts'
 
 export function useIncomes() {
-  const query = useQuery({ queryKey: ['incomes'], queryFn: getIncomes })
+  const query = useQuery({ queryKey: ['incomes'], queryFn: API.getIncomes })
   return {
     ...query,
-    // Extra queries go here e.g. addFruit: useAddFruit()
+    add: useAddIncome(),
+    delete: useDeleteIncome(),
+    update: useUpdateIncome(),
   }
 }
 
-export function useAddIncome() {
+export function useIncomeMutation<TData = unknown, TVariables = unknown>(
+  mutationFn: MutationFunction<TData, TVariables>,
+) {
   const queryClient = useQueryClient()
   const mutation = useMutation({
-    mutationFn: async (data: IncomeObject) => {
-      await addIncome(data)
-    },
+    mutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['incomes'] })
     },
   })
-
   return mutation
+}
+
+export function useAddIncome() {
+  return useIncomeMutation(API.addIncome)
 }
 
 export function useDeleteIncome() {
-  const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: async (id: Income) => {
-      await deleteIncome(id)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['incomes'] })
-    },
-  })
-
-  return mutation
+  return useIncomeMutation(API.deleteIncome)
 }
 
 export function useUpdateIncome() {
-  const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: async (data: Income) => {
-      await updateIncome(data)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['incomes'] })
-    },
-  })
-
-  return mutation
+  return useIncomeMutation(API.updateIncome)
 }
-// Query functions go here e.g. useAddFruit
-/* function useAddFruit() {
-  return useFruitsMutation(addFruit)
-} */

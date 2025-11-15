@@ -1,46 +1,58 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Income } from "../../models/incomes"
-import { useUpdateIncome } from "../hooks/useIncomes"
+import { useIncomes } from "../hooks/useIncomes"
 import { useTransactions } from "../hooks/useTransactions"
 
-function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
-  const { data: transactions } = useTransactions()
+function IncomeRow(incomes: Income) {
+  const { data: transactions, isPending, isError, error } = useTransactions()
+  const useIncome = useIncomes()
+  const [incomeData, setIncomeData] = useState(incomes)
+  
   const [warning, setWarning] = useState(false)
   const [difference, setDifference] = useState('$0.00')
   const [actual, setActual] = useState('') // Grab this as ALL transactions relating to the "type"
-  const updateIncome = useUpdateIncome()
-  const [data, setData] = useState({
-    id,
-    name,
-    type,
-    frequency,
-    date,
-    expected,
-    notes,
-  })
+
+  if(isPending) {
+    return <p>Loading...</p>
+  }
+  if(isError) {
+    return <p>Error! {error.toString()}</p>
+  }
+
+  // This is NOT a great solution right now, but will be fixed later
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    updateDifference()
+    countActualAmount()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actual, incomeData.expected, transactions])
 
   const countActualAmount = async () => {
     if (transactions) {
-      const amounts = transactions.filter(transaction => transaction.type == type).map(transaction => transaction.amount)
-      console.log('amounts', amounts, type)
+      const amounts = transactions.filter(transaction => transaction.type === incomeData.type).map(transaction => transaction.amount)
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
-        console.log('count', type, count)
-        setActual(count)
+        setActual(Number(count).toFixed(2))
       } else {
-        setActual(data.expected)
+        setActual(incomeData.expected)
       }      
     }
+  }
+
+  const updateDifference = () => {
+    const expectedNum = Number(incomeData.expected.replace('$', ''))
+    const actualNum = Number(actual.replace('$', ''))
+    setDifference(`${(actualNum - expectedNum).toFixed(2)}`)
   }
   
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     switch(name) {
       case 'expected':
-        setData((prev) => ({...prev, [name]: value.replace('$', '')}))
+        setIncomeData((prev) => ({...prev, [name]: value.replace('$', '')}))
         break
       default:
-        setData((prev) => ({...prev, [name]: value}))
+        setIncomeData((prev) => ({...prev, [name]: value}))
         break
     }
     setWarning(true)
@@ -48,22 +60,10 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    data.expected = `${Number(data.expected).toFixed(2)}`
-    await updateIncome.mutateAsync(data)
+    incomeData.expected = `${Number(incomeData.expected).toFixed(2)}`
+    await useIncome.update.mutateAsync(incomeData)
     setWarning(false)
   }
-
-  const updateDifference = () => {
-    const expectedNum = Number(data.expected.replace('$', ''))
-    const actualNum = Number(actual.replace('$', ''))
-    setDifference(`$${(actualNum - expectedNum).toFixed(2)}`)
-  }
-
-  useEffect(() => {
-    updateDifference()
-    countActualAmount()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actual, data.expected, transactions])
 
   return (
     <div className="income_component">
@@ -72,18 +72,18 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
         <input
           className="name"
           name="name"
-          value={data.name}
+          value={incomeData.name}
           onChange={handleChange}
           placeholder="name"
         />
         <input
           className="type"
           name="type"
-          value={data.type}
+          value={incomeData.type}
           onChange={handleChange}
           placeholder="type"
         />
-        <select className="frequency" id='frequency' name="frequency" value={data.frequency} onChange={handleChange}>
+        <select className="frequency" id='frequency' name="frequency" value={incomeData.frequency} onChange={handleChange}>
           <option value="daily">daily</option>
           <option value="weekly">weekly</option>
           <option value="fornightly">fortnightly</option>
@@ -95,7 +95,7 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
         <input 
           className="date"
           name="date"
-          value={data.date}
+          value={incomeData.date}
           onChange={handleChange}
           type="date"
           placeholder="starting date"
@@ -103,16 +103,16 @@ function IncomeRow({id, name, type, frequency, date, expected, notes}: Income) {
         <input
           className="expected"
           name="expected"
-          value={`$${data.expected}`}
+          value={`$${incomeData.expected}`}
           onChange={handleChange}
           placeholder="expected"
         />
-        <span>{'$' + actual}</span>
-        <span>{difference}</span>
+        <span className="actual">${actual}</span>
+        <span className="difference">${difference}</span>
         <input
           className="notes"
           name="notes"
-          value={data.notes}
+          value={incomeData.notes}
           onChange={handleChange}
           placeholder="notes"
         />

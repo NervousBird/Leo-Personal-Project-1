@@ -1,13 +1,14 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Transaction } from "../../models/transactions"
-import { useUpdateTransaction } from "../hooks/useTransactions"
+import { useTransactions } from "../hooks/useTransactions"
 import { useIncomes } from "../hooks/useIncomes"
 
 function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   const { data: incomes } = useIncomes()
+  const useTransaction = useTransactions()
+
   const [warning, setWarning] = useState(false)
   const [typesChoice, setTypesChoice] = useState([''])
-  const updateTransaction = useUpdateTransaction()
 
   const [transaction, setTransaction] = useState({
     id,
@@ -21,7 +22,7 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     switch(name) {
-      case 'expected':
+      case 'amount':
         setTransaction((prev) => ({...prev, [name]: value.replace('$', '')}))
         break
       default:
@@ -34,7 +35,7 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     transaction.amount = `${Number(transaction.amount).toFixed(2)}`
-    await updateTransaction.mutateAsync(transaction)
+    await useTransaction.update.mutate(transaction)
     setWarning(false)
   }
 
@@ -51,7 +52,7 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   }, [incomes])
 
   return (
-    <>
+    <div className="transaction_component">
       <form onSubmit={handleSubmit}>
         {warning && <div className="warning">!</div>}
         <input 
@@ -60,7 +61,7 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
           onChange={handleChange}
           placeholder="name"
         />
-        <select name="type" value={transaction.type} defaultValue={typesChoice[0]} onChange={handleType}>
+        <select name="type" value={transaction.type} defaultValue={'type'} onChange={handleType}>
           {typesChoice.map((type,idx) =>
             <option key={idx} value={type}>{type}</option>
           )}
@@ -73,12 +74,14 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
           placeholder="date" 
         />
         <input 
+          className="amount"
           name="amount"
-          value={transaction.amount}
+          value={`$${transaction.amount}`}
           onChange={handleChange}
           placeholder="amount"
         />
         <input 
+          className="notes"
           name="notes"
           value={transaction.notes}
           onChange={handleChange}
@@ -86,7 +89,7 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
         />
         {warning && <button type='submit'>✔</button>}
       </form>
-    </>
+    </div>
   )
 }
 

@@ -1,65 +1,45 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  getTransactions,
-  addTransaction,
-  deleteTransaction,
-  updateTransaction,
-} from '../apis/transactions.ts'
-import { Transaction, TransactionObject } from '../../models/transactions.ts'
+  useQuery,
+  useMutation,
+  useQueryClient,
+  MutationFunction,
+} from '@tanstack/react-query'
+import * as API from '../apis/transactions.ts'
 
 export function useTransactions() {
   const query = useQuery({
     queryKey: ['transactions'],
-    queryFn: getTransactions,
+    queryFn: API.getTransactions,
   })
   return {
     ...query,
-    // Extra queries go here e.g. addFruit: useAddFruit()
+    add: useAddTransaction(),
+    delete: useDeleteTransaction(),
+    update: useUpdateTransaction(),
   }
 }
 
-export function useAddTransaction() {
+export function useTransactionMutation<TData = unknown, TVariables = unknown>(
+  mutationFn: MutationFunction<TData, TVariables>,
+) {
   const queryClient = useQueryClient()
   const mutation = useMutation({
-    mutationFn: async (data: TransactionObject) => {
-      await addTransaction(data)
-    },
+    mutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
     },
   })
-
   return mutation
+}
+
+export function useAddTransaction() {
+  return useTransactionMutation(API.addTransaction)
 }
 
 export function useDeleteTransaction() {
-  const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: async (id: Transaction) => {
-      await deleteTransaction(id)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transactions'] })
-    },
-  })
-
-  return mutation
+  return useTransactionMutation(API.deleteTransaction)
 }
 
 export function useUpdateTransaction() {
-  const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn: async (data: Transaction) => {
-      await updateTransaction(data)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transactions'] })
-    },
-  })
-
-  return mutation
+  return useTransactionMutation(API.updateTransaction)
 }
-// Query functions go here e.g. useAddFruit
-/* function useAddFruit() {
-  return useFruitsMutation(addFruit)
-} */
