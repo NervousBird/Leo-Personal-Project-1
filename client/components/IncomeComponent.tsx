@@ -2,8 +2,12 @@ import { useIncomes } from "../hooks/useIncomes.ts"
 import { Income } from '../../models/incomes.ts'
 import IncomeRow from "./IncomeRow.tsx"
 
+interface Props {
+  startDate: string
+  endDate: string
+}
 
-function IncomeComponent() {
+function IncomeComponent(dates: Props) {
   const { data: incomes, isPending, isError, error } = useIncomes()
   const useIncome = useIncomes()
 
@@ -35,6 +39,15 @@ function IncomeComponent() {
     await useIncome.delete.mutateAsync(id)
   }
 
+  const isDateBetween = (dateToCheck: string | Date, startDate: string | Date, endDate: string | Date) => {
+    dateToCheck = new Date(dateToCheck)
+    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  }
+
+  const handleAddIncomes = (incomeData: Income) => {
+    incomes.filter((income: Income) => income.type === incomeData.type && isDateBetween(income.date, incomeData.date, '2025-12-31'))
+  }
+
   return (
     <section>
       <span className='table-header'>
@@ -47,9 +60,9 @@ function IncomeComponent() {
         <h4 className='difference'>Difference</h4>
         <h4 className='notes'>Notes</h4>
       </span>
-      {incomes && incomes.map(income =>
+      {incomes && incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(income =>
           <div key={income.id} className='income-row'>
-            <IncomeRow {...income}/>
+            <IncomeRow {...income} {...dates} />
             <button onClick={() => handleRemoveIncome(income)}>X</button>
           </div>
         )}

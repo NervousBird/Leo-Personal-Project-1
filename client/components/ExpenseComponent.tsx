@@ -1,9 +1,12 @@
 import { useExpenses } from "../hooks/useExpenses"
 import { Expense } from "../../models/expenses"
 import ExpenseRow from "./ExpenseRow"
+interface Props {
+  startDate: string
+  endDate: string
+}
 
-
-function ExpenseComponent() {
+function ExpenseComponent(dates: Props) {
   const { data: expenses, isPending, isError, error } = useExpenses()
   const useExpense = useExpenses()
   
@@ -22,7 +25,8 @@ function ExpenseComponent() {
         name: '',
         type: '',
         frequency: ``,
-        date: `${today.getFullYear()}-${today.getMonth()}-${today.getDate().toString().padStart(2, '0')}`,
+        // date: `${today.getFullYear()}-${today.getMonth()}-${today.getDate().toString().padStart(2, '0')}`,
+        date: `${dates.startDate}`,
         expected: '0.00',
         notes: '',
       })
@@ -33,6 +37,11 @@ function ExpenseComponent() {
   
   const handleRemoveExpense = async (id: Expense) => {
     await useExpense.delete.mutateAsync(id)
+  }
+
+  const isDateBetween = (dateToCheck: Date, startDate: Date, endDate: Date) => {
+    dateToCheck = new Date(dateToCheck)
+    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
   }
 
   return (
@@ -47,7 +56,7 @@ function ExpenseComponent() {
         <h4 className='difference'>Difference</h4>
         <h4 className='notes'>Notes</h4>
       </span>
-      {expenses && expenses.map(expense => 
+      {expenses && expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(expense => 
         <div key={expense.id} className='expense-row'>
           <ExpenseRow {...expense}/>
           <button onClick={() => handleRemoveExpense(expense)}>X</button>

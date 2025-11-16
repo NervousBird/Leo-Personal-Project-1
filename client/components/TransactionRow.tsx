@@ -4,7 +4,8 @@ import { useTransactions } from "../hooks/useTransactions"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
 
-function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
+function TransactionRow(transactionData: Transaction) {
+  // FIX THIS TO BE ONE ROUTE TO GRAB BOTH
   const { data: incomes } = useIncomes()
   const { data: expenses } = useExpenses()
   const useTransaction = useTransactions()
@@ -12,14 +13,7 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   const [warning, setWarning] = useState(false)
   const [typesChoice, setTypesChoice] = useState([''])
 
-  const [transaction, setTransaction] = useState({
-    id,
-    name,
-    type,
-    date,
-    amount,
-    notes,
-  })
+  const [transaction, setTransaction] = useState(transactionData)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -37,7 +31,7 @@ function TransactionRow({id, name, type, date, amount, notes}: Transaction) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     transaction.amount = `${Number(transaction.amount).toFixed(2)}`
-    await useTransaction.update.mutate(transaction)
+    await useTransaction.update.mutateAsync(transaction)
     setWarning(false)
   }
 
