@@ -4,8 +4,17 @@ import TransactionComponent from './TransactionComponent.tsx'
 import React, { ChangeEvent, useState } from 'react'
 import { useGetDates } from '../hooks/useGetDates.ts'
 
+const currentYear = new Date().getFullYear() 
+const currentMonth = new Date().getMonth()
+
+const setDate = [ 
+  `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${new Date(currentYear, currentMonth).getDate().toString().padStart(2, '0')}`,
+  `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${new Date(currentYear, currentMonth, 0).getDate().toString().padStart(2, '0')}`,
+]
+console.log(setDate)
+
 function App() {
-  const [dateRange, setDateRange] = useState({ startDate: '2025-11-01', endDate: '2025-11-30' })
+  const [dateRange, setDateRange] = useState({ startDate: setDate[0], endDate: setDate[1] })
   const [cycleType, setCycleType] = useState('monthly')
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

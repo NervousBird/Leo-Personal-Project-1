@@ -3,15 +3,15 @@ import { Income } from "../../models/incomes"
 import { useIncomes } from "../hooks/useIncomes"
 import { useTransactions } from "../hooks/useTransactions"
 interface Props {
-  startDate: string
-  endDate: string
+  incomes: Income
+  dates: {
+    startDate: string,
+    endDate: string,
+  }
+  // onHandleAddIncomes: (incomesData: Income) => void
 }
 
-interface TEST {
-  addIncomes: (incomeData: Income) => void
-}
-
-function IncomeRow(incomes: Income, dates: Props) {
+function IncomeRow({ incomes, dates }: Props) {
   const { data: transactions, isPending, isError, error } = useTransactions()
   const useIncome = useIncomes()
   const [incomeData, setIncomeData] = useState(incomes)
@@ -35,7 +35,7 @@ function IncomeRow(incomes: Income, dates: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actual, incomeData.expected, transactions])
 
-  const isDateBetween = (dateToCheck: Date, startDate: Date, endDate: Date) => {
+  const isDateBetween = (dateToCheck: Date | string, startDate: Date | string, endDate: Date | string) => {
     dateToCheck = new Date(dateToCheck)
     return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
   }
@@ -85,7 +85,7 @@ function IncomeRow(incomes: Income, dates: Props) {
       notes: incomeData.notes,
     })
     console.log(incomes)
-    // addIncomes(incomeData)
+    // onHandleAddIncomes(incomeData)
     setWarning(false)
   }
 
