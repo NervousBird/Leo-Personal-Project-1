@@ -35,7 +35,7 @@ function TransactionComponent(dates: Props) {
 
   return (
     <div>
-      <section>
+      <section className="transaction-component">
         <span className='table-header'>
           <h4>Name</h4>
           <h4>Type</h4>

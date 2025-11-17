@@ -8,10 +8,24 @@
   --color-black: #110601;
 
   --color-orange: #eca859;
-  --color-blue: #7f9fe6;  
+  --color-darkorange: #d17a16;
+  --color-blue: #7f9fe6;
+  --color-darkblue: #1e59d8; 
   --color-green: #85d685;
   --color-darkgreen: #0fa334;
   --color-red: #e74b4b;
+  --color-darkred: #b30f0f;
+
+  --button-neutralbase: #000000;
+  --button-neutralhover: #000000;
+  --button-neutralactive: #000000;
+  --button-positivebase: #000000;
+  --button-positivehover: #000000;
+  --button-positiveactive: #000000;
+  --button-negativebase: #000000;
+  --button-negativehover: #000000;
+  --button-negtaiveactive: #000000;
+
 }
 
 html, 
@@ -113,6 +127,22 @@ main {
   }
 }
 
+.income-component {
+  .table-header {
+    background-color: var(--color-blue);
+  }
+}
+.expense-component {
+  .table-header {
+    background-color: var(--color-red);
+  }
+}
+.transaction-component {
+  .table-header {
+    background-color: var(--color-darkgreen);
+  }
+}
+
 section {
   text-align: center;
 }
@@ -126,13 +156,14 @@ section {
     font-size: 1rem;
     border: none;
     border-radius: 0px;
-    background-color: #fdbdbd;
+    background-color: var(--color-darkred);
+    color: var(--color-white);
     margin: 0px;
     transition: background-color .2s ease-out;
   }
 
   button:hover {
-    background-color: #e47878;
+    background-color: var(--color-red);
     transition: background-color .2s ease-out;
   }
 }

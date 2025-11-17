@@ -45,7 +45,7 @@ function ExpenseComponent(dates: Props) {
   }
 
   return (
-    <section>
+    <section className="expense-component">
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
