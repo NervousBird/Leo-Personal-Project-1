@@ -3,11 +3,14 @@ import { Expense } from "../../models/expenses"
 import { useExpenses } from "../hooks/useExpenses"
 import { useTransactions } from "../hooks/useTransactions"
 interface Props {
-  startDate: string
-  endDate: string
+  expenses: Expense
+  dates: {
+    startDate: string
+    endDate: string
+  }
 }
 
-function ExpenseRow(expenses: Expense, dates: Props) {
+function ExpenseRow({ expenses, dates }: Props) {
   const { data: transactions, isPending, isError, error } = useTransactions()
   const useExpense = useExpenses()
   const [expenseData, setExpenseData] = useState(expenses)
@@ -31,14 +34,14 @@ function ExpenseRow(expenses: Expense, dates: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actual, expenseData.expected, transactions])
   
-  const isDateBetween = (dateToCheck: Date, startDate: Date, endDate: Date) => {
-    dateToCheck = new Date(dateToCheck)
-    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
+    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
+    return result
   }
   
   const countActualAmount = async () => {
     if (transactions) {
-      const amounts = transactions.filter(transaction => transaction.type === expenseData.type && isDateBetween(transactions.date, dates.startDate, dates.endDate)).map(transaction => transaction.amount)
+      const amounts = transactions.filter(transaction => transaction.type === expenseData.type && isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => transaction.amount)
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
@@ -75,7 +78,7 @@ function ExpenseRow(expenses: Expense, dates: Props) {
   }
 
   return (
-    <div className="income_component">
+    <div className="expense_component">
       <form onSubmit={handleSubmit}>
         {warning && <div className="warning">!</div>}
         <input

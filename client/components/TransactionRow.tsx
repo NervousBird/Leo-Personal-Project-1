@@ -4,7 +4,15 @@ import { useTransactions } from "../hooks/useTransactions"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
 
-function TransactionRow(transactionData: Transaction) {
+interface Props {
+  transactionData: Transaction
+  dates: {
+    startDate: string
+    endDate: string
+  }
+}
+
+function TransactionRow({ transactionData, dates }: Props) {
   // FIX THIS TO BE ONE ROUTE TO GRAB BOTH
   const { data: incomes } = useIncomes()
   const { data: expenses } = useExpenses()
@@ -41,11 +49,17 @@ function TransactionRow(transactionData: Transaction) {
     setWarning(true)
   }
 
+  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
+    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
+    return result
+  }
+
   useEffect(() => {
     if(incomes && expenses) {
-      const types = [...incomes.map(data => data.type), ...expenses.map(data => data.type)]
+      const types = [...new Set([...incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(data => data.type), ...expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(data => data.type)])]
       setTypesChoice(types)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [incomes, expenses])
 
   return (

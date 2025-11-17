@@ -39,9 +39,9 @@ function ExpenseComponent(dates: Props) {
     await useExpense.delete.mutateAsync(id)
   }
 
-  const isDateBetween = (dateToCheck: Date, startDate: Date, endDate: Date) => {
-    dateToCheck = new Date(dateToCheck)
-    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
+    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
+    return result
   }
 
   return (
@@ -58,7 +58,7 @@ function ExpenseComponent(dates: Props) {
       </span>
       {expenses && expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(expense => 
         <div key={expense.id} className='expense-row'>
-          <ExpenseRow {...expense}/>
+          <ExpenseRow expenses={expense} dates={dates}/>
           <button onClick={() => handleRemoveExpense(expense)}>X</button>
         </div>
       )}

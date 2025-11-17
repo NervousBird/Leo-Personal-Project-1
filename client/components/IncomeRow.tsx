@@ -35,14 +35,14 @@ function IncomeRow({ incomes, dates }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actual, incomeData.expected, transactions])
 
-  const isDateBetween = (dateToCheck: Date | string, startDate: Date | string, endDate: Date | string) => {
-    dateToCheck = new Date(dateToCheck)
-    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
+    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
+    return result
   }
 
   const countActualAmount = async () => {
     if (transactions) {
-      const amounts = transactions.filter(transaction => transaction.type === incomeData.type && isDateBetween(transaction.date, dates.endDate, dates.startDate)).map(transaction => transaction.amount)
+      const amounts = transactions.filter(transaction => transaction.type === incomeData.type && isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => transaction.amount)
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
@@ -84,7 +84,6 @@ function IncomeRow({ incomes, dates }: Props) {
       expected: incomeData.expected,
       notes: incomeData.notes,
     })
-    console.log(incomes)
     // onHandleAddIncomes(incomeData)
     setWarning(false)
   }
