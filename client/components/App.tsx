@@ -48,10 +48,11 @@ function App() {
         </header>
 
         <nav>
-          <button>Summary</button>
+          {/* <button>Summary</button>
           <button>Incomes</button>
           <button>Expenses</button>
-          <button>Transactions</button>
+          <button>Transactions</button> */}
+          <h2>{new Date().toLocaleString('default', { month: 'long' })}</h2>
           <button value={cycleType} onClick={handleCycleType}>{cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}</button>
           <span>
             <button name="back" onClick={handleChangeMonth}>{'<'}</button>

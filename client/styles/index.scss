@@ -21,6 +21,11 @@ input {
 }
 
 nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   button {
     font-size: 1.1rem;
     border: none;
@@ -34,6 +39,18 @@ nav {
   button:hover {
     background-color: #e47878;
     transition: background-color .2s ease-out;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+  }
+
+  input[type='date'] {
+    background-color: #f3f0e5;
+    height: 30px;
+    min-width: 120px;
+    font-size: 1rem;
   }
 }
 
