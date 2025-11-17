@@ -45,7 +45,7 @@ function TransactionComponent(dates: Props) {
         </span>
         {transactions && transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => 
           <div key={transaction.id} className='transaction-row'>
-            <TransactionRow { ...transaction }/>
+            <TransactionRow transactionData={transaction} dates={dates}/>
             <button onClick={() => handleRemoveTransaction(transaction)}>X</button>
           </div>
         )}

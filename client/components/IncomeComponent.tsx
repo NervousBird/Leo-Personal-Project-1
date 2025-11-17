@@ -40,9 +40,9 @@ function IncomeComponent(dates: Props) {
     await useIncome.delete.mutateAsync(id)
   }
 
-  const isDateBetween = (dateToCheck: string | Date, startDate: string | Date, endDate: string | Date) => {
-    dateToCheck = new Date(dateToCheck)
-    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
+    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
+    return result
   }
 
   // const handleAddIncomes = async (incomeData: Income) => {

@@ -2,11 +2,22 @@
 
 * {
   font-family: Sour Gummy;
+  color: var(--color-black);
+
+  --color-white: #deeaf3;
+  --color-black: #110601;
+
+  --color-orange: #eca859;
+  --color-blue: #7f9fe6;  
+  --color-green: #85d685;
+  --color-darkgreen: #0fa334;
+  --color-red: #e74b4b;
 }
 
 html, 
 body {
   font-family: 'Montserrat', sans-serif;
+  background-color: var(--color-white);
 }
 
 input {
@@ -29,7 +40,7 @@ nav {
   button {
     font-size: 1.1rem;
     border: none;
-    background-color: #e0baa4;
+    background-color: var(--color-orange);
     margin: 5px 2px 5px 2px;
     padding: 5px;
     border-radius: 5px;
@@ -37,7 +48,7 @@ nav {
   }
 
   button:hover {
-    background-color: #e47878;
+    background-color: #e74b4b;
     transition: background-color .2s ease-out;
   }
 
@@ -70,13 +81,13 @@ main {
     font-size: 1rem;
     border: none;
     border-radius: 5px;
-    background-color: #a4e0a4;
+    background-color: var(--color-green);
     margin: 5px;
     transition: background-color .2s ease-out;
   }
 
   button:hover {
-    background-color: #54bd7c;
+    background-color: var(--color-darkgreen);
     transition: background-color .2s ease-out;
   }
 
@@ -85,7 +96,7 @@ main {
     justify-content: space-between;
     width: 100%;
     font-size: 1.1rem;
-    background-color: #7f9fe6;
+    background-color: var(--color-blue);
 
     h4 {
       width: 120px;
@@ -149,6 +160,7 @@ section {
   }
 }
 
+.expense_component,
 .income_component {
   form {
     display: flex;
@@ -226,7 +238,7 @@ section {
 
     .warning {
       position: absolute;
-      background-color: #ff4444;
+      background-color: var(--color-red);
       color: white;
       border-radius: 5px;
       padding: 0px 5px 0px 5px;
@@ -240,7 +252,7 @@ section {
       min-width: 140px;
       border: none;
       border-radius: 5px;
-      color: #252525;
+      color: var(--color-black);
       background-color: transparent;
       padding: 2px 5px 2px 5px;
       transition: background-color .2s ease;
@@ -276,8 +288,8 @@ section {
 
     button {
       position: absolute;
-      background-color: #7ece6f;
-      color: white;
+      background-color: var(--color-green);
+      color: var(--color-white);
       border-radius: 5px;
       padding: 0px 5px 0px 5px;
       margin-left: 915px;
