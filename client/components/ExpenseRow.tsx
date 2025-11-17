@@ -2,9 +2,12 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Expense } from "../../models/expenses"
 import { useExpenses } from "../hooks/useExpenses"
 import { useTransactions } from "../hooks/useTransactions"
+interface Props {
+  startDate: string
+  endDate: string
+}
 
-
-function ExpenseRow(expenses: Expense) {
+function ExpenseRow(expenses: Expense, dates: Props) {
   const { data: transactions, isPending, isError, error } = useTransactions()
   const useExpense = useExpenses()
   const [expenseData, setExpenseData] = useState(expenses)
@@ -27,10 +30,15 @@ function ExpenseRow(expenses: Expense) {
     countActualAmount()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actual, expenseData.expected, transactions])
-
+  
+  const isDateBetween = (dateToCheck: Date, startDate: Date, endDate: Date) => {
+    dateToCheck = new Date(dateToCheck)
+    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  }
+  
   const countActualAmount = async () => {
     if (transactions) {
-      const amounts = transactions.filter(transaction => transaction.type === expenseData.type).map(transaction => transaction.amount)
+      const amounts = transactions.filter(transaction => transaction.type === expenseData.type && isDateBetween(transactions.date, dates.startDate, dates.endDate)).map(transaction => transaction.amount)
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))

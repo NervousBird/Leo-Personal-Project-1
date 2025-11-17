@@ -1,9 +1,12 @@
 import { Transaction } from "../../models/transactions"
 import { useTransactions } from "../hooks/useTransactions"
 import TransactionRow from "./TransactionRow"
+interface Props {
+  startDate: string
+  endDate: string
+}
 
-
-function TransactionComponent() {
+function TransactionComponent(dates: Props) {
   const { data: transactions } = useTransactions()
   const useTransaction = useTransactions()
 
@@ -12,7 +15,7 @@ function TransactionComponent() {
       await useTransaction.add.mutateAsync({
         name: '',
         type: '',
-        date: ``,
+        date: `${dates.startDate}`,
         amount: '0.00',
         notes: '',
       })
@@ -25,6 +28,11 @@ function TransactionComponent() {
     await useTransaction.delete.mutateAsync(id)
   }
 
+  const isDateBetween = (dateToCheck: Date, startDate: Date, endDate: Date) => {
+    dateToCheck = new Date(dateToCheck)
+    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  }
+
   return (
     <div>
       <section>
@@ -35,9 +43,9 @@ function TransactionComponent() {
           <h4>Amount</h4>
           <h4 className='notes'>Notes</h4>
         </span>
-        {transactions && transactions.map(transaction => 
+        {transactions && transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => 
           <div key={transaction.id} className='transaction-row'>
-            <TransactionRow { ...transaction } />
+            <TransactionRow { ...transaction }/>
             <button onClick={() => handleRemoveTransaction(transaction)}>X</button>
           </div>
         )}

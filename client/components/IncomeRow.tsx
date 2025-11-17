@@ -2,8 +2,16 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Income } from "../../models/incomes"
 import { useIncomes } from "../hooks/useIncomes"
 import { useTransactions } from "../hooks/useTransactions"
+interface Props {
+  incomes: Income
+  dates: {
+    startDate: string,
+    endDate: string,
+  }
+  // onHandleAddIncomes: (incomesData: Income) => void
+}
 
-function IncomeRow(incomes: Income) {
+function IncomeRow({ incomes, dates }: Props) {
   const { data: transactions, isPending, isError, error } = useTransactions()
   const useIncome = useIncomes()
   const [incomeData, setIncomeData] = useState(incomes)
@@ -27,9 +35,14 @@ function IncomeRow(incomes: Income) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actual, incomeData.expected, transactions])
 
+  const isDateBetween = (dateToCheck: Date | string, startDate: Date | string, endDate: Date | string) => {
+    dateToCheck = new Date(dateToCheck)
+    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  }
+
   const countActualAmount = async () => {
     if (transactions) {
-      const amounts = transactions.filter(transaction => transaction.type === incomeData.type).map(transaction => transaction.amount)
+      const amounts = transactions.filter(transaction => transaction.type === incomeData.type && isDateBetween(transaction.date, dates.endDate, dates.startDate)).map(transaction => transaction.amount)
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
@@ -60,8 +73,19 @@ function IncomeRow(incomes: Income) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    console.log(incomeData)
     incomeData.expected = `${Number(incomeData.expected).toFixed(2)}`
-    await useIncome.update.mutateAsync(incomeData)
+    await useIncome.update.mutateAsync({
+      id: incomeData.id,
+      name: incomeData.name, 
+      type: incomeData.type,
+      frequency: incomeData.frequency,
+      date: incomeData.date,
+      expected: incomeData.expected,
+      notes: incomeData.notes,
+    })
+    console.log(incomes)
+    // onHandleAddIncomes(incomeData)
     setWarning(false)
   }
 
