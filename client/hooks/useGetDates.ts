@@ -3,24 +3,28 @@ interface DateRange {
   endDate: string
 }
 
+export function useDateFunctions() {
+  return {
+    getDates: useGetDates(direction, dateRange, type),
+  }
+}
+
 export function useGetDates(
-  direction: string,
-  dateRange: DateRange,
-  type: string,
+  direction: string, // going forward a month or back a month
+  dateRange: DateRange, // the current displayed months
+  type: string, // always first and last day of month, or specific dates within the month
 ) {
   let newDates = { startDate: '', endDate: '' }
-  const dates = {
-    startDate: new Date(dateRange.startDate),
-    endDate: new Date(dateRange.endDate),
-  }
+  // const dates = {
+  //   startDate: new Date(dateRange.startDate),
+  //   endDate: new Date(dateRange.endDate),
+  // }
 
   if (type === 'monthly') {
     Object.keys(dateRange).forEach((date: string) => {
       const dateSplit = dateRange[date].split('-')
       let month
-
       const year = dateSplit[0]
-
       if (direction === 'back') {
         month =
           dateSplit[1] === '01'
@@ -46,7 +50,6 @@ export function useGetDates(
     Object.keys(dateRange).forEach((date: string) => {
       const dateSplit = dateRange[date].split('-')
       let month
-
       const year = dateSplit[0]
       if (direction === 'back') {
         month =
@@ -83,4 +86,15 @@ export function useGetDates(
   return newDates
 }
 
-//  db search "date", includes("year-month") // Ignore the day
+export function useGetMonthAsWord(dateRange: DateRange) {
+  const dateMonths = {
+    startDate: new Date(dateRange.startDate).toLocaleString('default', {
+      month: 'long',
+    }),
+    endDate: new Date(dateRange.endDate).toLocaleString('default', {
+      month: 'long',
+    }),
+  }
+
+  return Object.values(dateMonths)
+}

@@ -45,6 +45,15 @@ input {
   align-items: center;
 }
 
+header {
+  margin: 0px;
+  padding: 0px;
+
+  h1 {
+    margin: 0px;
+  }
+}
+
 nav {
   display: flex;
   flex-direction: column;
@@ -77,7 +86,18 @@ nav {
     min-width: 120px;
     font-size: 1rem;
   }
+
+  .monthtitle-container {
+    display: flex;
+    gap: 10px;
+
+    h2{
+      width: 120px;
+      text-align: center;
+    }
+  }
 }
+
 
 main {
   display: flex;
@@ -128,16 +148,19 @@ main {
 }
 
 .income-component {
+  margin: 1rem 0rem 1rem 0rem;
   .table-header {
     background-color: var(--color-blue);
   }
 }
 .expense-component {
-  .table-header {
+ margin: 1rem 0rem 1rem 0rem;
+ .table-header {
     background-color: var(--color-red);
   }
 }
 .transaction-component {
+  margin: 1rem 0rem 1rem 0rem;
   .table-header {
     background-color: var(--color-darkgreen);
   }
