@@ -3,6 +3,7 @@ import ExpenseComponent from './ExpenseComponent.tsx'
 import TransactionComponent from './TransactionComponent.tsx'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useGetDates, useGetMonthAsWord } from '../hooks/useGetDates.ts'
+import ReccuringForm from './ReccuringForm.tsx'
 
 const currentYear = new Date().getFullYear() 
 const currentMonth = new Date().getMonth()
@@ -46,7 +47,7 @@ function App() {
     // Check if set to start and end of month, otherwise load specific
   }
 
-  const handleCycleType = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCycleType = () => {
     if(cycleType === 'monthly') {
       setCycleType('specific')
     } else {
@@ -60,6 +61,10 @@ function App() {
         <header>
           <h1>2025</h1>
         </header>
+
+        <section>
+          <ReccuringForm />
+        </section>
 
         <nav>
           {/* <button>Summary</button>

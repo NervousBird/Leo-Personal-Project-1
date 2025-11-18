@@ -147,6 +147,87 @@ main {
   }
 }
 
+.recurringForm-container {
+  font-size: 1rem;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: var(--color-blue);
+    border-radius: 10px;
+    padding: 10px;
+
+    h3 {
+      font-size: 1.5rem;
+      margin: 10px;
+    }
+
+    section {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    span {
+      display: flex;
+      flex-direction: column;
+      width: 150px;
+      padding: 2px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: var(--color-blue);
+
+      select,
+      input {
+        font-size: 1rem;
+        padding: 5px;
+        min-width: 0%;
+        max-width: 100%;
+        height: 1.5rem;
+        border: none;
+        background-color: var(--color-white);
+      }
+      select {
+        height: 35px;
+      }
+      select:focus,
+      input:focus {
+        background-color: #7f9fe6;
+        border-radius: 5px;
+        outline:none;
+        transition: background-color .2s ease;
+      }
+    }
+
+    .button-container {
+      flex-basis: 1;
+      width: 100%;
+      align-items: center;
+      margin: 15px 0px 10px 0px;
+
+      button {
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--color-green);
+        padding: 5px;
+        margin: 5px;
+        transition: background-color .2s ease;
+        width: 150px;
+      }
+      button:hover {
+        background-color: var(--color-darkgreen);
+        transition: background-color .2s ease;
+      }
+      button:active {
+        background-color: var(--color-red);
+        transition: backgroud-color .2s ease;
+      }
+    }
+  }
+}
+
 .income-component {
   margin: 1rem 0rem 1rem 0rem;
   .table-header {
@@ -314,19 +395,19 @@ section {
 
     select {
       option {
-        background-color: #c1d7dd;
+        background-color: #c3ddc1;
         transition: background-color .2s ease;
       }
 
       option:hover {
-        background-color: #7f9fe6;
+        background-color: var(--color-darkgreen);
         transition: background-color .2s ease;
       }
     }
 
     select:focus,
     input:focus {
-      background-color: #7f9fe6;
+      background-color: var(--color-darkgreen);
       border-radius: 5px;
       outline:none;
       transition: background-color .2s ease;
@@ -350,5 +431,14 @@ section {
       align-self: center;
     }
 
+  }
+}
+
+.expense-component {
+  form {
+    select:focus,
+    input:focus {
+      background-color: #e74b4b;
+    }
   }
 }
