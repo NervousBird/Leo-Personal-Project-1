@@ -56,7 +56,10 @@ function TransactionRow({ transactionData, dates }: Props) {
 
   useEffect(() => {
     if(incomes && expenses) {
-      const types = [...new Set([...incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(data => data.type), ...expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(data => data.type)])]
+      const types = [...new Set(['empty',
+        ...incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(data => data.type), 
+        ...expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(data => data.type),
+      ])].filter(type => type !== '')
       setTypesChoice(types)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

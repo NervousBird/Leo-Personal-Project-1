@@ -28,9 +28,9 @@ function TransactionComponent(dates: Props) {
     await useTransaction.delete.mutateAsync(id)
   }
 
-  const isDateBetween = (dateToCheck: Date, startDate: Date, endDate: Date) => {
-    dateToCheck = new Date(dateToCheck)
-    return dateToCheck >= new Date(startDate) && dateToCheck <= new Date(endDate)
+  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
+    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
+    return result
   }
 
   return (

@@ -49,8 +49,8 @@ function ExpenseComponent(dates: Props) {
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
-        <h4 className='frequency'>Frequency</h4>
-        <h4 className='start'>Start Date</h4>
+        {/* <h4 className='frequency'>Frequency</h4> */}
+        <h4 className='start'>Date</h4>
         <h4 className='expected'>Expected</h4>
         <h4 className='actual'>Actual</h4>
         <h4 className='difference'>Difference</h4>

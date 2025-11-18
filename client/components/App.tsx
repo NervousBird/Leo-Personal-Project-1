@@ -1,8 +1,8 @@
 import IncomeComponent from './IncomeComponent.tsx'
 import ExpenseComponent from './ExpenseComponent.tsx'
 import TransactionComponent from './TransactionComponent.tsx'
-import React, { ChangeEvent, useState } from 'react'
-import { useGetDates } from '../hooks/useGetDates.ts'
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import { useGetDates, useGetMonthAsWord } from '../hooks/useGetDates.ts'
 
 const currentYear = new Date().getFullYear() 
 const currentMonth = new Date().getMonth()
@@ -16,6 +16,20 @@ console.log(setDate)
 function App() {
   const [dateRange, setDateRange] = useState({ startDate: setDate[0], endDate: setDate[1] })
   const [cycleType, setCycleType] = useState('monthly')
+  const [dateTitle, setDateTitle] = useState([] as string[])
+
+  useEffect(() => {
+    updateMonthDisplay()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dateRange])
+
+  const updateMonthDisplay = () => {
+    const newDateTitle = useGetMonthAsWord(dateRange)
+    console.log(newDateTitle)
+    const removeDuplicates = newDateTitle[0] === newDateTitle[1] ? [newDateTitle[1]] : [newDateTitle[0], newDateTitle[1]]
+    console.log(removeDuplicates)
+    setDateTitle(removeDuplicates)
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -44,7 +58,7 @@ function App() {
     <>
       <div className="app">
         <header>
-          <h1>Finances</h1>
+          <h1>2025</h1>
         </header>
 
         <nav>
@@ -52,7 +66,9 @@ function App() {
           <button>Incomes</button>
           <button>Expenses</button>
           <button>Transactions</button> */}
-          <h2>{new Date().toLocaleString('default', { month: 'long' })}</h2>
+          <span className='monthtitle-container'>
+          {dateTitle && dateTitle.map((month, idx) => <h2 key={idx}>{month}</h2>)}
+          </span>
           <button value={cycleType} onClick={handleCycleType}>{cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}</button>
           <span>
             <button name="back" onClick={handleChangeMonth}>{'<'}</button>

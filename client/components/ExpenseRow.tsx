@@ -95,7 +95,7 @@ function ExpenseRow({ expenses, dates }: Props) {
           onChange={handleChange}
           placeholder="type"
         />
-        <select className="frequency" id='frequency' name="frequency" value={expenseData.frequency} onChange={handleChange}>
+        {/* <select className="frequency" id='frequency' name="frequency" value={expenseData.frequency} onChange={handleChange}>
           <option value="daily">daily</option>
           <option value="weekly">weekly</option>
           <option value="fornightly">fortnightly</option>
@@ -103,7 +103,7 @@ function ExpenseRow({ expenses, dates }: Props) {
           <option value="bi-monthly">fortmonthly</option>
           <option value="bi-yearly">bi-yearly</option>
           <option value="yearly">yearly</option>
-        </select>
+        </select> */}
         <input 
           className="date"
           name="date"
