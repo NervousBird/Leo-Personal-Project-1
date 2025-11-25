@@ -7,7 +7,7 @@ interface Props {
 }
 
 function TransactionComponent(dates: Props) {
-  const { data: transactions } = useTransactions()
+  const { data: transactions, isPending, isError, error } = useTransactions()
   const useTransaction = useTransactions()
 
   const handleNewTransaction = async () => {
@@ -43,6 +43,8 @@ function TransactionComponent(dates: Props) {
           <h4>Amount</h4>
           <h4 className='notes'>Notes</h4>
         </span>
+        {isPending && <p>Loading...</p>}
+        {isError && <p>{error.message}</p>}
         {transactions && transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => 
           <div key={transaction.id} className='transaction-row'>
             <TransactionRow transactionData={transaction} dates={dates}/>

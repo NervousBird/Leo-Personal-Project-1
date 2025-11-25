@@ -19,3 +19,7 @@ export async function updateExpense(data: Expense) {
 export async function deleteExpense(id: Expense) {
   await request.delete(`${rootURL}/expenses`).send(id)
 }
+
+export async function addBulkExpense(data: ExpenseObject[]) {
+  await request.post(`${rootURL}/expenses/bulk`).send(data)
+}

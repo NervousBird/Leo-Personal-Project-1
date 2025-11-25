@@ -19,3 +19,7 @@ export async function updateIncome(data: Income) {
 export async function deleteIncome(id: Income) {
   await request.delete(`${rootURL}/incomes`).send(id)
 }
+
+export async function addBulkIncome(data: IncomeObject[]) {
+  await request.post(`${rootURL}/incomes/bulk`).send(data)
+}

@@ -13,6 +13,7 @@ export function useExpenses() {
     add: useAddExpense(),
     delete: useDeleteExpense(),
     update: useUpdateExpense(),
+    addBulk: useAddBulkExpense(),
   }
 }
 
@@ -39,4 +40,8 @@ export function useDeleteExpense() {
 
 export function useUpdateExpense() {
   return useExpenseMutation(API.updateExpense)
+}
+
+export function useAddBulkExpense() {
+  return useExpenseMutation(API.addBulkExpense)
 }
