@@ -1,17 +1,19 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Income } from "../../models/incomes"
 import { useIncomes } from "../hooks/useIncomes"
-import { useTransactions } from "../hooks/useTransactions"
+import { Transaction } from "../../models/transactions"
+import { getNextDate } from "../util/date-utils"
 interface Props {
   incomes: Income
+  transactions: Transaction[]
   dates: {
     startDate: string,
     endDate: string,
   }
 }
 
-function IncomeRow({ incomes, dates }: Props) {
-  const { data: transactions, isPending, isError, error } = useTransactions()
+function IncomeRow({ incomes, transactions, dates }: Props) {
+  // const { data: transactions, isPending, isError, error } = useTransactions()
   const useIncome = useIncomes()
   const [incomeData, setIncomeData] = useState(incomes)
   
@@ -19,20 +21,12 @@ function IncomeRow({ incomes, dates }: Props) {
   const [difference, setDifference] = useState('$0.00')
   const [actual, setActual] = useState('')
 
-  if(isPending) {
-    return <p>Loading...</p>
-  }
-  if(isError) {
-    return <p>Error! {error.toString()}</p>
-  }
-
-  // This is NOT a great solution right now, but will be fixed later
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     updateDifference()
     countActualAmount()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actual, incomeData.expected, transactions])
+  }, [incomes, actual, transactions])
 
   const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
     const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
@@ -41,7 +35,18 @@ function IncomeRow({ incomes, dates }: Props) {
 
   const countActualAmount = async () => {
     if (transactions) {
-      const amounts = transactions.filter(transaction => transaction.type === incomeData.type && isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => transaction.amount)
+      // filter transactions to be between the displayed dates
+      // This is bugged, and will stack the transactions across ALL incomes or expenses with the same name
+      const startDate = incomeData.date
+      const endDate = getNextDate(startDate, incomeData.frequency)
+      const amounts = transactions.filter(transaction => 
+        transaction.type === incomeData.type && 
+        isDateBetween(transaction.date, startDate, endDate))
+        .map(transaction => transaction.amount)
+
+      // Expand the above to filter based on the frequency, only transactions between that frequency should show
+      // IE: startDate: 01/01/2025, freq: monthly, filter things out if they are during or after 01/02/2025
+
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
@@ -105,15 +110,6 @@ function IncomeRow({ incomes, dates }: Props) {
           onChange={handleChange}
           placeholder="type"
         />
-        {/* <select className="frequency" id='frequency' name="frequency" value={incomeData.frequency} onChange={handleChange}>
-          <option value="daily">daily</option>
-          <option value="weekly">weekly</option>
-          <option value="fornightly">fortnightly</option>
-          <option value="monthly">monthly</option>
-          <option value="bi-monthly">fortmonthly</option>
-          <option value="bi-yearly">bi-yearly</option>
-          <option value="yearly">yearly</option>
-        </select> */}
         <input 
           className="date"
           name="date"

@@ -244,3 +244,64 @@ function getDatesByMonth(dateRange: DateRange, months: number): string[] {
 
 //   return datesArray
 // }
+
+export function getNextDate(startDate: string, frequency: string): string {
+  let nextDate
+  switch (frequency) {
+    case 'daily':
+      nextDate = getDateByDays(startDate, 1)
+      return nextDate
+    case 'weekly':
+      nextDate = getDateByDays(startDate, 7)
+      return nextDate
+    case 'fortnightly':
+      nextDate = getDateByDays(startDate, 14)
+      return nextDate
+    case 'monthly':
+      startDate = getDateByMonths(startDate, 1)
+      return startDate
+    case 'fortmonthly':
+      startDate = getDateByMonths(startDate, 2)
+      return startDate
+    case 'quarterly':
+      startDate = getDateByMonths(startDate, 4)
+      return startDate
+    case 'bi-annually':
+      startDate = getDateByMonths(startDate, 6)
+      return startDate
+    case 'annually':
+      startDate = getDateByMonths(startDate, 12)
+      return startDate
+    default:
+      return 'Error getting next date.'
+  }
+}
+
+function getDateByDays(startDate: string, days: number): string {
+  const { [0]: year, [1]: month, [2]: day } = startDate.split('-')
+  const nextDay = Number(day) + days
+  const finalDay = new Date(Number(year), Number(month), 0).getDate()
+
+  if (nextDay > finalDay) {
+    const remainder = nextDay - finalDay
+    const date = `${year}-${(month + 1).toString().padStart(2, '0')}-${remainder.toString().padStart(2, '0')}`
+    return date
+  } else {
+    const date = `${year}-${month}-${nextDay.toString().padStart(2, '0')}`
+    return date
+  }
+}
+
+function getDateByMonths(startDate: string, months: number): string {
+  const { [0]: year, [1]: month, [2]: day } = startDate.split('-')
+  const nextMonth = Number(month) + months
+  const finalDay = new Date(Number(year), Number(nextMonth), 0).getDate()
+
+  if (Number(day) > finalDay) {
+    const date = `${year}-${nextMonth.toString().padStart(2, '0')}-${finalDay.toString().padStart(2, '0')}`
+    return date
+  } else {
+    const date = `${year}-${nextMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
+    return date
+  }
+}

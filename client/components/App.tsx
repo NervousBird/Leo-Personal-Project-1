@@ -4,6 +4,9 @@ import TransactionComponent from './TransactionComponent.tsx'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { changeDatesByMonth, getMonthAsWord } from '../util/date-utils.ts'
 import ReccuringForm from './ReccuringForm.tsx'
+import { useIncomes } from '../hooks/useIncomes.ts'
+import { useExpenses } from '../hooks/useExpenses.ts'
+import { useTransactions } from '../hooks/useTransactions.ts'
 
 const currentYear = new Date().getFullYear() 
 const currentMonth = new Date().getMonth()
@@ -15,6 +18,11 @@ const setDate = [
 
 
 function App() {
+  // Load all data to feed to child components
+  const { data: incomes, isPending: incomesPending, isError: incomesError } = useIncomes()
+  const { data: expenses, isPending: expensesPending, isError: expensesError } = useExpenses()
+  const { data: transactions, isPending: transactionsPending, isError: transactionsError } = useTransactions()
+
   const [dateRange, setDateRange] = useState({ startDate: setDate[0], endDate: setDate[1] })
   const [cycleType, setCycleType] = useState('monthly')
   const [dateTitle, setDateTitle] = useState([] as string[])
@@ -76,7 +84,12 @@ function App() {
         </nav>
 
         {dateRange && <main>
-          <IncomeComponent {...dateRange}/>
+          {incomesError && <p>Error loading incomes ...</p>}
+          {incomesPending && <p>Loading incomes ...</p>}
+          {incomes && transactions &&
+            <IncomeComponent incomes={incomes} transactions={transactions} dates={dateRange}/>
+            }
+          
           <ExpenseComponent {...dateRange}/>
           <TransactionComponent {...dateRange}/>
         </main>}

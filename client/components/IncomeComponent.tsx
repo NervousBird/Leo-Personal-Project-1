@@ -1,23 +1,19 @@
 import { useIncomes } from "../hooks/useIncomes.ts"
 import { Income } from '../../models/incomes.ts'
 import IncomeRow from "./IncomeRow.tsx"
+import { Transaction } from "../../models/transactions.ts"
 
 interface Props {
-  startDate: string
-  endDate: string
+  incomes: Income[]
+  transactions: Transaction[]
+  dates: {
+    startDate: string
+    endDate: string
+  }
 }
 
-function IncomeComponent(dates: Props) {
-  const { data: incomes, isPending, isError, error } = useIncomes()
+function IncomeComponent({ incomes, transactions, dates }: Props) {
   const useIncome = useIncomes()
-
-  if(isPending) {
-    return <p>Loading...</p>
-  }
-
-  if(isError) {
-    return <p>Something went wrong. {error.toString()}</p>
-  }
 
   const handleNewIncome = async () => {
     try {
@@ -56,7 +52,7 @@ function IncomeComponent(dates: Props) {
       </span>
       {incomes && incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(income =>
           <div key={income.id} className='income-row'>
-            <IncomeRow incomes={income} dates={dates}/>
+            <IncomeRow incomes={income} transactions={transactions} dates={dates}/>
             <button onClick={() => handleRemoveIncome(income)}>X</button>
           </div>
         )}
