@@ -54,7 +54,7 @@ router.post('/bulk', async (req, res) => {
     res.sendStatus(204)
   } catch (error) {
     console.log(error)
-    res.sendStatus(500).json({ message: 'Something went wrong' })
+    res.status(500).json({ message: 'Something went wrong' })
   }
 })
 

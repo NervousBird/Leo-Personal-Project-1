@@ -24,7 +24,6 @@ function ReccuringForm() {
   const useIncome = useIncomes()
   const useExpense = useExpenses()
   const [formData, setFormData] = useState(defaultForm)
-  const [warning, setWarning] = useState(false)
   const [formWarning, setFormWarning] = useState({ state: false, message: '' })
 
   const handleSubmit = (e: FormEvent) => {
@@ -46,35 +45,42 @@ function ReccuringForm() {
     }
     // Calculate necessary future dates based on frequency, startDate, endDate
     const datesArray = getDatesToAdd({ startDate: formData.startDate, endDate: formData.endDate}, formData.frequency)
+    let filteredDates = [] as string[]
 
     if(datesArray?.length > 0) {
       // Check if they exist already (if they do, maybe mutate them?)
       if(formData.category === 'Income') {
-        const filteredIncomes = incomes?.filter(income => income.type !== formData.type)
-        filteredIncomes?.forEach((income) => {
-          datesArray.filter(date => date !== income.date)
-        })
+        const filteredIncomes = incomes?.filter(income => {
+          income.type === formData.type ? true : false
+        }).map(income => income.date)
+
+        filteredDates = datesArray.filter(date => !filteredIncomes?.includes(date))
       }
+      // change for expense
       if(formData.category === 'Expense') {
-        const filteredExpenses = expenses?.filter(expense => expense.type === formData.type)
-        filteredExpenses?.forEach((expense) => {
-          datesArray.filter(date => date !== expense.date)
-        })
+        const filteredExpenses = expenses?.filter(expense => {
+          expense.type === formData.type ? true : false
+        }).map(expense => expense.date)
+
+        filteredDates = datesArray.filter(date => !filteredExpenses?.includes(date))
       }
     }
+
     // Create non existing database entries, datesArray contains the DATES they should be posted
-    const dataArray = datesArray.map(date => {
-      return {
-        name: formData.name,
-        type: formData.type,
-        frequency: formData.frequency,
-        date: date,
-        expected: formData.expected,
-        notes: '',
-      }
-    }) as IncomeObject[]
-    console.log(dataArray)
-    addToDatabase(dataArray)
+    if(filteredDates.length !== 0) {
+      const dataArray = filteredDates.map(date => {
+        return {
+          name: formData.name,
+          type: formData.type,
+          frequency: formData.frequency,
+          date: date,
+          expected: formData.expected.replace("$", ""),
+          notes: '',
+        }
+      }) as IncomeObject[]
+      addToDatabase(dataArray)      
+    }
+
     // Wipe form/show success!
     setFormData(defaultForm)
     setFormWarning({ state: false, message: '' })
@@ -93,7 +99,7 @@ function ReccuringForm() {
             try {
             await useExpense.addBulk.mutateAsync(data)
         } catch (error) {
-          console.error('Error adding income:', error)
+          console.error('Error adding expense:', error)
         }
         break
       default:
@@ -113,7 +119,6 @@ function ReccuringForm() {
         setFormData((prev) => ({...prev, [name]: value}))
         break
     }
-    setWarning(true)
   }
   
   return (

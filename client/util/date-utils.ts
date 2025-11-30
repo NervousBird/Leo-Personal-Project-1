@@ -12,6 +12,7 @@ export function changeDatesByMonth(
   let newDates = { startDate: '', endDate: '' }
   if (type === 'monthly') {
     Object.keys(dateRange).forEach((date: string) => {
+      // REFACTOR THIS MESS
       const dateSplit = dateRange[date].split('-')
       let month = dateSplit[1]
       let year = dateSplit[0]
@@ -124,19 +125,19 @@ export function getDatesToAdd(
       datesArray = getDatesByDay(dateRange, 14)
       return datesArray
     case 'monthly':
-      datesArray = getDatesByDay(dateRange, 30)
+      datesArray = getDatesByMonth(dateRange, 1)
       return datesArray
     case 'fortmonthly':
-      datesArray = getDatesByDay(dateRange, 61)
+      datesArray = getDatesByMonth(dateRange, 2)
       return datesArray
     case 'quarterly':
-      datesArray = getDatesByDay(dateRange, 91)
+      datesArray = getDatesByMonth(dateRange, 4)
       return datesArray
     case 'bi-annually':
-      datesArray = getDatesByDay(dateRange, 177)
+      datesArray = getDatesByMonth(dateRange, 6)
       return datesArray
     case 'annually':
-      datesArray = getDatesByDay(dateRange, 365)
+      datesArray = getDatesByMonth(dateRange, 12)
       return datesArray
     default:
       return []
@@ -195,38 +196,47 @@ function getDatesByDay(dateRange: DateRange, days: number): string[] {
   return datesArray
 }
 
-// // Return array of dates between the start date by the number of months
-// function getDatesByMonth(dateRange: DateRange, months: number): string[] {
-//   const datesArray = []
+// Return array of dates between the start date by the number of months
+function getDatesByMonth(dateRange: DateRange, months: number): string[] {
+  const datesArray = [dateRange.startDate]
 
-//   const { [0]: year, [1]: month, [2]: day } = dateRange.startDate.split('-')
-//   const endDate = new Date(dateRange.endDate)
-//   let currentDate = new Date(dateRange.startDate)
-//   let currentMonth = Number(month)
-//   let currentDay = Number(day)
+  const { [0]: year, [1]: month, [2]: day } = dateRange.startDate.split('-')
+  const endDate = new Date(dateRange.endDate)
+  let currentDate = new Date(dateRange.startDate)
+  const currentDay = Number(day)
+  let currentMonth = Number(month)
 
-//   while (currentDate < endDate) {
-//     // get the max amount of days
-//     const finalDay = new Date(Number(year), Number(month), 0).getDate()
+  // Loop here
+  while (currentDate < endDate) {
+    // Increase month, check year
+    const nextMonth = currentMonth + months
 
-//     if(nextDay > finalDay) {
-//       // Set day to final of the month (then continue with setting it as the original?)
-//       datesArray.push(
-//         `${}`
-//       )
-//     }
+    if (Number(nextMonth) > 12) {
+      break
+    }
 
-//     if (Number(month) > 12) {
-//       break
-//     }
+    // get the max amount of days
+    const finalDay = new Date(Number(year), nextMonth, 0).getDate()
 
-//     currentDate = new Date(
-//       datesArray[datesArray.length - 1].split('-').reverse().join('-'),
-//     )
-//   }
+    if (currentDay > finalDay) {
+      // Set day to final of the month (then continue with setting it as the original?)
+      datesArray.push(
+        `${year}-${nextMonth.toString().padStart(2, '0')}-${finalDay.toString().padStart(2, '0')}`,
+      )
+    } else {
+      datesArray.push(
+        `${year}-${nextMonth.toString().padStart(2, '0')}-${currentDay.toString().padStart(2, '0')}`,
+      )
+    }
 
-//   return datesArray
-// }
+    currentDate = new Date(
+      datesArray[datesArray.length - 1].split('-').reverse().join('-'),
+    )
+    currentMonth = nextMonth
+  }
+
+  return datesArray
+}
 
 // // Return array of dates between the start date by the number of years
 // function getDatesByYear(dateRange: DateRange, years: number): string[] {
