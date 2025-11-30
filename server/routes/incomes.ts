@@ -47,4 +47,15 @@ router.delete('/', async (req, res) => {
   }
 })
 
+router.post('/bulk', async (req, res) => {
+  try {
+    const data = req.body
+    await db.addBulkIncome(data)
+    res.sendStatus(204)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Something went wrong' })
+  }
+})
+
 export default router

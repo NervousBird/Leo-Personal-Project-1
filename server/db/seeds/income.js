@@ -9,11 +9,11 @@ export async function seed(knex) {
   await knex('incomes').insert([
     {
       id: 1,
-      name: 'Test income 1',
-      type: 'Work',
-      frequency: 'Monthly',
-      date: '2025-11-10',
-      expected: '50.00',
+      name: 'test',
+      type: 'test',
+      frequency: 'monthly',
+      date: '2025-01-01',
+      expected: '0.00',
       notes: 'This is a test',
     },
   ])

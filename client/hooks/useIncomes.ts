@@ -13,6 +13,7 @@ export function useIncomes() {
     add: useAddIncome(),
     delete: useDeleteIncome(),
     update: useUpdateIncome(),
+    addBulk: useAddBulkIncome(),
   }
 }
 
@@ -39,4 +40,8 @@ export function useDeleteIncome() {
 
 export function useUpdateIncome() {
   return useIncomeMutation(API.updateIncome)
+}
+
+export function useAddBulkIncome() {
+  return useIncomeMutation(API.addBulkIncome)
 }

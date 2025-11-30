@@ -6,7 +6,6 @@ export async function getAllIncomes(db = connection): Promise<Income[]> {
 }
 
 export async function addIncome(data: IncomeObject, db = connection) {
-  console.log('db')
   return db('incomes').insert(data)
 }
 
@@ -16,4 +15,8 @@ export async function updateIncome(data: Income, db = connection) {
 
 export async function deleteIncome(id: number, db = connection) {
   return db('incomes').where('id', id).delete()
+}
+
+export async function addBulkIncome(data: IncomeObject[], db = connection) {
+  return db('incomes').insert(data)
 }

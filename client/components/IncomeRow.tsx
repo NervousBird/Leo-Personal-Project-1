@@ -8,7 +8,6 @@ interface Props {
     startDate: string,
     endDate: string,
   }
-  // onHandleAddIncomes: (incomesData: Income) => void
 }
 
 function IncomeRow({ incomes, dates }: Props) {
@@ -18,7 +17,7 @@ function IncomeRow({ incomes, dates }: Props) {
   
   const [warning, setWarning] = useState(false)
   const [difference, setDifference] = useState('$0.00')
-  const [actual, setActual] = useState('') // Grab this as ALL transactions relating to the "type"
+  const [actual, setActual] = useState('')
 
   if(isPending) {
     return <p>Loading...</p>

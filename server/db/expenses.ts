@@ -6,7 +6,6 @@ export async function getAllExpenses(db = connection): Promise<Expense[]> {
 }
 
 export async function addExpense(data: ExpenseObject, db = connection) {
-  console.log('db')
   return db('expenses').insert(data)
 }
 
@@ -16,4 +15,8 @@ export async function updateExpense(data: Expense, db = connection) {
 
 export async function deleteExpense(id: number, db = connection) {
   return db('expenses').where('id', id).delete()
+}
+
+export async function addBulkExpense(data: ExpenseObject[], db = connection) {
+  return db('expenses').insert(data)
 }

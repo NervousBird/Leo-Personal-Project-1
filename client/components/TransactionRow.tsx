@@ -13,9 +13,8 @@ interface Props {
 }
 
 function TransactionRow({ transactionData, dates }: Props) {
-  // FIX THIS TO BE ONE ROUTE TO GRAB BOTH
-  const { data: incomes } = useIncomes()
-  const { data: expenses } = useExpenses()
+  const { data: incomes, isPending: incomesPending, isError: incomesError } = useIncomes()
+  const { data: expenses, isPending: expensesPending, isError: expensesError } = useExpenses()
   const useTransaction = useTransactions()
 
   const [warning, setWarning] = useState(false)
@@ -67,42 +66,50 @@ function TransactionRow({ transactionData, dates }: Props) {
 
   return (
     <div className="transaction_component">
-      <form onSubmit={handleSubmit}>
-        {warning && <div className="warning">!</div>}
-        <input 
-          name="name"
-          value={transaction.name}
-          onChange={handleChange}
-          placeholder="name"
-        />
-        <select name="type" value={transaction.type} defaultValue={'type'} onChange={handleType}>
-          {typesChoice.map((type,idx) =>
-            <option key={idx} value={type}>{type}</option>
-          )}
-        </select>
-        <input
-          name="date"
-          value={transaction.date}
-          onChange={handleChange}
-          type="date"
-          placeholder="date" 
-        />
-        <input 
-          className="amount"
-          name="amount"
-          value={`$${transaction.amount}`}
-          onChange={handleChange}
-          placeholder="amount"
-        />
-        <input 
-          className="notes"
-          name="notes"
-          value={transaction.notes}
-          onChange={handleChange}
-          placeholder="notes"
-        />
-        {warning && <button type='submit'>✔</button>}
-      </form>
+      
+      {incomesPending && <p>Loading...</p>}
+      {expensesPending && <p>Loading...</p>}
+      {incomesError && <p>Error loading incomes...</p>}
+      {expensesError && <p>Error loading expense...</p>}
+
+      {incomes && expenses && 
+        <form onSubmit={handleSubmit}>
+          {warning && <div className="warning">!</div>}
+          <input 
+            name="name"
+            value={transaction.name}
+            onChange={handleChange}
+            placeholder="name"
+          />
+          <select name="type" value={transaction.type} onChange={handleType}>
+            {typesChoice.map((type,idx) =>
+              <option key={idx} value={type}>{type}</option>
+            )}
+          </select>
+          <input
+            name="date"
+            value={transaction.date}
+            onChange={handleChange}
+            type="date"
+            placeholder="date" 
+          />
+          <input 
+            className="amount"
+            name="amount"
+            value={`$${transaction.amount}`}
+            onChange={handleChange}
+            placeholder="amount"
+          />
+          <input 
+            className="notes"
+            name="notes"
+            value={transaction.notes}
+            onChange={handleChange}
+            placeholder="notes"
+          />
+          {warning && <button type='submit'>✔</button>}
+        </form>
+      }
     </div>
   )
 }
