@@ -6,13 +6,10 @@ import { getNextDate } from "../util/date-utils"
 interface Props {
   incomes: Income
   transactions: Transaction[]
-  dates: {
-    startDate: string,
-    endDate: string,
-  }
+
 }
 
-function IncomeRow({ incomes, transactions, dates }: Props) {
+function IncomeRow({ incomes, transactions }: Props) {
   // const { data: transactions, isPending, isError, error } = useTransactions()
   const useIncome = useIncomes()
   const [incomeData, setIncomeData] = useState(incomes)
@@ -39,6 +36,7 @@ function IncomeRow({ incomes, transactions, dates }: Props) {
       // This is bugged, and will stack the transactions across ALL incomes or expenses with the same name
       const startDate = incomeData.date
       const endDate = getNextDate(startDate, incomeData.frequency)
+      console.log(startDate, incomeData.frequency, endDate)
       const amounts = transactions.filter(transaction => 
         transaction.type === incomeData.type && 
         isDateBetween(transaction.date, startDate, endDate))
@@ -52,7 +50,7 @@ function IncomeRow({ incomes, transactions, dates }: Props) {
         setActual(Number(count).toFixed(2))
       } else {
         setActual(incomeData.expected)
-      }      
+      }
     }
   }
 
@@ -77,7 +75,6 @@ function IncomeRow({ incomes, transactions, dates }: Props) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    console.log(incomeData)
     incomeData.expected = `${Number(incomeData.expected).toFixed(2)}`
     await useIncome.update.mutateAsync({
       id: incomeData.id,
@@ -110,6 +107,20 @@ function IncomeRow({ incomes, transactions, dates }: Props) {
           onChange={handleChange}
           placeholder="type"
         />
+        <select 
+          className="frequency" 
+          id='frequency' 
+          name="frequency"
+          value={incomeData.frequency} 
+          onChange={handleChange}>
+          <option value="daily">daily</option>
+          <option value="weekly">weekly</option>
+          <option value="fornightly">fortnightly</option>
+          <option value="monthly">monthly</option>
+          <option value="bi-monthly">fortmonthly</option>
+          <option value="bi-yearly">bi-yearly</option>
+          <option value="yearly">yearly</option>
+        </select>
         <input 
           className="date"
           name="date"

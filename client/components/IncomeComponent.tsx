@@ -20,7 +20,7 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
       await useIncome.add.mutateAsync({
         name: '',
         type: '',
-        frequency: ``,
+        frequency: `weekly`,
         date: `${dates.startDate}`,
         expected: '0.00',
         notes: '',
@@ -44,6 +44,7 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
+        <h4 className='frequency'>Frequency</h4>
         <h4 className='start'>Date</h4>
         <h4 className='expected'>Expected</h4>
         <h4 className='actual'>Actual</h4>
@@ -52,7 +53,7 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
       </span>
       {incomes && incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(income =>
           <div key={income.id} className='income-row'>
-            <IncomeRow incomes={income} transactions={transactions} dates={dates}/>
+            <IncomeRow incomes={income} transactions={transactions} />
             <button onClick={() => handleRemoveIncome(income)}>X</button>
           </div>
         )}

@@ -8,14 +8,13 @@ import { useIncomes } from '../hooks/useIncomes.ts'
 import { useExpenses } from '../hooks/useExpenses.ts'
 import { useTransactions } from '../hooks/useTransactions.ts'
 
-const currentYear = new Date().getFullYear() 
+const currentYear = new Date().getFullYear()
 const currentMonth = new Date().getMonth()
 
-const setDate = [ 
+const setDate = [
   `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${new Date(currentYear, currentMonth).getDate().toString().padStart(2, '0')}`,
   `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${new Date(currentYear, currentMonth, 0).getDate().toString().padStart(2, '0')}`,
 ]
-
 
 function App() {
   // Load all data to feed to child components
@@ -34,7 +33,7 @@ function App() {
 
   const updateMonthDisplay = () => {
     const newDateTitle = getMonthAsWord(dateRange)
-    const removeDuplicates = newDateTitle[0] === newDateTitle[1] ? [newDateTitle[1]] : [newDateTitle[0], newDateTitle[1]]
+    const removeDuplicates = newDateTitle[0] === newDateTitle[1] ? [newDateTitle[1]] : [newDateTitle[0], '-' ,newDateTitle[1]]
     setDateTitle(removeDuplicates)
   }
 
@@ -72,13 +71,30 @@ function App() {
 
         <nav>
           <span className='monthtitle-container'>
-          {dateTitle && dateTitle.map((month, idx) => <h2 key={idx}>{month}</h2>)}
+            {dateTitle && dateTitle.map((month, idx) => <h2 key={idx}>{month}</h2>)}
           </span>
-          <button value={cycleType} onClick={handleCycleType}>{cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}</button>
+          <button 
+            value={cycleType} 
+            onClick={handleCycleType}>
+            {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
+          </button>
           <span>
             <button name="back" onClick={handleChangeMonth}>{'<'}</button>
-            <input type='date' id="startDate" name="startDate" value={dateRange.startDate} onChange={handleChange} />
-            <input type='date' id="endDate" name="endDate" min={dateRange.startDate} value={dateRange.endDate} onChange={handleChange} />
+            <input 
+              type='date' 
+              id="startDate" 
+              name="startDate" 
+              value={dateRange.startDate} 
+              onChange={handleChange} 
+            />
+            <input 
+              type='date' 
+              id="endDate" 
+              name="endDate" 
+              min={dateRange.startDate} 
+              value={dateRange.endDate} 
+              onChange={handleChange} 
+            />
             <button name="forward" onClick={handleChangeMonth}>{'>'}</button>
           </span>
         </nav>
@@ -88,10 +104,19 @@ function App() {
           {incomesPending && <p>Loading incomes ...</p>}
           {incomes && transactions &&
             <IncomeComponent incomes={incomes} transactions={transactions} dates={dateRange}/>
-            }
+          }
+
+          {expensesError && <p>Error loading expenses ...</p>}
+          {expensesPending && <p>Loading expenses ...</p>}
+          {expenses && transactions &&
+            <ExpenseComponent expenses={expenses} transactions={transactions} dates={dateRange} />
+          }
           
-          <ExpenseComponent {...dateRange}/>
-          <TransactionComponent {...dateRange}/>
+          {transactionsError && <p>Error loading transactions ...</p>}
+          {transactionsPending && <p>Loading transactions ...</p>}
+          {transactions &&
+            <TransactionComponent transactions={transactions} dates={dateRange} />
+          }
         </main>}
         
       </div>

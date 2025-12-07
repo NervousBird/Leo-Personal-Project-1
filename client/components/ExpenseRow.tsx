@@ -2,16 +2,14 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Expense } from "../../models/expenses"
 import { useExpenses } from "../hooks/useExpenses"
 import { useTransactions } from "../hooks/useTransactions"
+import { Transaction } from "../../models/transactions"
+import { getNextDate } from "../util/date-utils"
 interface Props {
   expenses: Expense
-  dates: {
-    startDate: string
-    endDate: string
-  }
+  transactions: Transaction[]
 }
 
-function ExpenseRow({ expenses, dates }: Props) {
-  const { data: transactions, isPending, isError, error } = useTransactions()
+function ExpenseRow({ expenses, transactions }: Props) {
   const useExpense = useExpenses()
   const [expenseData, setExpenseData] = useState(expenses)
   
@@ -19,14 +17,6 @@ function ExpenseRow({ expenses, dates }: Props) {
   const [difference, setDifference] = useState('$0.00')
   const [actual, setActual] = useState('') // Grab this as ALL transactions relating to the "type"
 
-  if(isPending) {
-    return <p>Loading...</p>
-  }
-  if(isError) {
-    return <p>Error! {error.toString()}</p>
-  }
-
-  // This is NOT a great solution right now, but will be fixed later
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     updateDifference()
@@ -41,7 +31,16 @@ function ExpenseRow({ expenses, dates }: Props) {
   
   const countActualAmount = async () => {
     if (transactions) {
-      const amounts = transactions.filter(transaction => transaction.type === expenseData.type && isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => transaction.amount)
+      const startDate = expenseData.date
+      const endDate = getNextDate(startDate, expenseData.frequency)
+      const amounts = transactions.filter(transaction => 
+        transaction.type === expenseData.type && 
+        isDateBetween(transaction.date, startDate, endDate))
+        .map(transaction => transaction.amount)
+
+      // Expand the above to filter based on the frequency, only transactions between that frequency should show
+      // IE: startDate: 01/01/2025, freq: monthly, filter things out if they are during or after 01/02/2025
+
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
@@ -73,7 +72,15 @@ function ExpenseRow({ expenses, dates }: Props) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     expenseData.expected = `${Number(expenseData.expected).toFixed(2)}`
-    await useExpense.update.mutateAsync(expenseData)
+    await useExpense.update.mutateAsync({
+      id: expenseData.id,
+      name: expenseData.name,
+      type: expenseData.type,
+      frequency: expenseData.frequency,
+      date: expenseData.date,
+      expected: expenseData.expected,
+      notes: expenseData.notes,
+    })
     setWarning(false)
   }
 
@@ -95,7 +102,12 @@ function ExpenseRow({ expenses, dates }: Props) {
           onChange={handleChange}
           placeholder="type"
         />
-        {/* <select className="frequency" id='frequency' name="frequency" value={expenseData.frequency} onChange={handleChange}>
+        <select 
+          className="frequency" 
+          id='frequency' 
+          name="frequency" 
+          value={expenseData.frequency} 
+          onChange={handleChange}>
           <option value="daily">daily</option>
           <option value="weekly">weekly</option>
           <option value="fornightly">fortnightly</option>
@@ -103,7 +115,7 @@ function ExpenseRow({ expenses, dates }: Props) {
           <option value="bi-monthly">fortmonthly</option>
           <option value="bi-yearly">bi-yearly</option>
           <option value="yearly">yearly</option>
-        </select> */}
+        </select>
         <input 
           className="date"
           name="date"
