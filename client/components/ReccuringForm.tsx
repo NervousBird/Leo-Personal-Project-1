@@ -128,20 +128,24 @@ function ReccuringForm() {
       {formWarning.state && <div><p>{formWarning.message}</p></div>}
       {incomes && expenses &&
         <form onSubmit={handleSubmit}>
-          <h3>Add yearly finance</h3>
+          <h3>Add Yearly Finance</h3>
           <section>
             <span>
               <label htmlFor="category">Category</label>
-              <input 
+              <select
+                className="category"
                 id="category"
                 name="category"
                 value={formData.category}
-                onChange={handleChange}
-              />
+                onChange={handleChange}>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
             </span>
             <span>
               <label htmlFor="name">Name</label>
-              <input 
+              <input
+                className="name"
                 id="name"
                 name="name"
                 value={formData.name}
@@ -151,6 +155,7 @@ function ReccuringForm() {
             <span>
               <label htmlFor="type">Type</label>
               <input
+                className="type"
                 id="type"
                 name="type"
                 value={formData.type}
@@ -160,6 +165,7 @@ function ReccuringForm() {
             <span>
               <label htmlFor="frequency">Frequency</label>
               <select
+                className="frequency"
                 id="frequency"
                 name="frequency"
                 value={formData.frequency}
@@ -170,6 +176,7 @@ function ReccuringForm() {
             <span>
               <label htmlFor="startDate">Start Date</label>
               <input
+                className="start-date"
                 id="startDate"
                 name="startDate"
                 value={formData.startDate}
@@ -180,6 +187,7 @@ function ReccuringForm() {
             <span>
               <label htmlFor="endDate">End Date</label>
               <input
+                className="end-date"
                 id="endDate"
                 name="endDate"
                 value={formData.endDate}
@@ -190,6 +198,7 @@ function ReccuringForm() {
             <span>
               <label htmlFor="expected">Expected</label>
               <input
+                className="expected"
                 id="expected"
                 name="expected"
                 value={formData.expected}

@@ -1,31 +1,26 @@
 import { useExpenses } from "../hooks/useExpenses"
 import { Expense } from "../../models/expenses"
 import ExpenseRow from "./ExpenseRow"
+import { Transaction } from "../../models/transactions"
+
 interface Props {
-  startDate: string
-  endDate: string
+  expenses: Expense[]
+  transactions: Transaction[]
+  dates: {
+    startDate: string
+    endDate: string
+  }
 }
 
-function ExpenseComponent(dates: Props) {
-  const { data: expenses, isPending, isError, error } = useExpenses()
+function ExpenseComponent({ expenses, transactions, dates }: Props) {
   const useExpense = useExpenses()
   
-  if(isPending) {
-    return <p>Loading...</p>
-  }
-
-  if(isError) {
-    return <p>Something went wrong. {error.toString()}</p>
-  }
-
   const handleNewExpense = async () => {
-    const today = new Date()
     try {
       await useExpense.add.mutateAsync({
         name: '',
         type: '',
-        frequency: ``,
-        // date: `${today.getFullYear()}-${today.getMonth()}-${today.getDate().toString().padStart(2, '0')}`,
+        frequency: `weekly`,
         date: `${dates.startDate}`,
         expected: '0.00',
         notes: '',
@@ -46,11 +41,12 @@ function ExpenseComponent(dates: Props) {
 
   return (
     <section className="expense-component">
+      <h3>Expenses</h3>
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
-        {/* <h4 className='frequency'>Frequency</h4> */}
-        <h4 className='start'>Date</h4>
+        <h4 className='frequency'>Frequency</h4>
+        <h4 className='date'>Date</h4>
         <h4 className='expected'>Expected</h4>
         <h4 className='actual'>Actual</h4>
         <h4 className='difference'>Difference</h4>
@@ -58,7 +54,7 @@ function ExpenseComponent(dates: Props) {
       </span>
       {expenses && expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(expense => 
         <div key={expense.id} className='expense-row'>
-          <ExpenseRow expenses={expense} dates={dates}/>
+          <ExpenseRow expenses={expense} transactions={transactions} />
           <button onClick={() => handleRemoveExpense(expense)}>X</button>
         </div>
       )}

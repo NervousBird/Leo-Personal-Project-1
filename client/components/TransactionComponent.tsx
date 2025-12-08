@@ -1,13 +1,16 @@
 import { Transaction } from "../../models/transactions"
 import { useTransactions } from "../hooks/useTransactions"
 import TransactionRow from "./TransactionRow"
+
 interface Props {
-  startDate: string
-  endDate: string
+  transactions: Transaction[]
+  dates: {
+    startDate: string
+    endDate: string
+  }
 }
 
-function TransactionComponent(dates: Props) {
-  const { data: transactions, isPending, isError, error } = useTransactions()
+function TransactionComponent({ transactions, dates }: Props) {
   const useTransaction = useTransactions()
 
   const handleNewTransaction = async () => {
@@ -34,26 +37,23 @@ function TransactionComponent(dates: Props) {
   }
 
   return (
-    <div>
-      <section className="transaction-component">
-        <span className='table-header'>
-          <h4>Name</h4>
-          <h4>Type</h4>
-          <h4>Date</h4>
-          <h4>Amount</h4>
-          <h4 className='notes'>Notes</h4>
-        </span>
-        {isPending && <p>Loading...</p>}
-        {isError && <p>{error.message}</p>}
-        {transactions && transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => 
-          <div key={transaction.id} className='transaction-row'>
-            <TransactionRow transactionData={transaction} dates={dates}/>
-            <button onClick={() => handleRemoveTransaction(transaction)}>X</button>
-          </div>
-        )}
-        <button onClick={handleNewTransaction}>+</button>
-      </section>
-    </div>
+    <section className="transaction-component">
+      <h3>Transactions</h3>
+      <span className='table-header'>
+        <h4 className='name'>Name</h4>
+        <h4 className='type'>Type</h4>
+        <h4 className='date'>Date</h4>
+        <h4 className='amount'>Amount</h4>
+        <h4 className='notes'>Notes</h4>
+      </span>
+      {transactions && transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => 
+        <div key={transaction.id} className='transaction-row'>
+          <TransactionRow transactionData={transaction} dates={dates}/>
+          <button onClick={() => handleRemoveTransaction(transaction)}>X</button>
+        </div>
+      )}
+      <button onClick={handleNewTransaction}>+</button>
+    </section>
   )
 }
 
