@@ -23,7 +23,7 @@ function IncomeRow({ incomes, transactions }: Props) {
     updateDifference()
     countActualAmount()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [incomes, actual, transactions])
+  }, [incomes, actual, transactions, incomeData.expected])
 
   const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
     const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
@@ -33,17 +33,12 @@ function IncomeRow({ incomes, transactions }: Props) {
   const countActualAmount = async () => {
     if (transactions) {
       // filter transactions to be between the displayed dates
-      // This is bugged, and will stack the transactions across ALL incomes or expenses with the same name
       const startDate = incomeData.date
       const endDate = getNextDate(startDate, incomeData.frequency)
-      console.log(startDate, incomeData.frequency, endDate)
       const amounts = transactions.filter(transaction => 
         transaction.type === incomeData.type && 
         isDateBetween(transaction.date, startDate, endDate))
         .map(transaction => transaction.amount)
-
-      // Expand the above to filter based on the frequency, only transactions between that frequency should show
-      // IE: startDate: 01/01/2025, freq: monthly, filter things out if they are during or after 01/02/2025
 
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)

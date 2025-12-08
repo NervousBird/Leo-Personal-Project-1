@@ -9,8 +9,8 @@ const currentYear = new Date().getFullYear()
 const currentMonth = new Date().getMonth()
 
 const setDate = [
-  `${currentYear}-${padDate(currentMonth)}-${padDate(new Date(currentYear, currentMonth).getDate())}`,
-  `${currentYear}-${padDate(currentMonth)}-${padDate(new Date(currentYear, currentMonth, 0).getDate())}`,
+  `${currentYear}-${padDate(currentMonth+1)}-${padDate(new Date(currentYear, currentMonth+1).getDate())}`,
+  `${currentYear}-${padDate(currentMonth+1)}-${padDate(new Date(currentYear, currentMonth+1, 0).getDate())}`,
 ]
 
 function Home() {

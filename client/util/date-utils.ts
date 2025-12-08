@@ -163,7 +163,7 @@ function getDatesByDay(dateRange: DateRange, days: number): string[] {
 
 // Return array of dates between the start date by the number of months
 function getDatesByMonth(dateRange: DateRange, months: number): string[] {
-  const datesArray = []
+  const datesArray = [dateRange.startDate]
   const { [0]: year, [1]: month, [2]: day } = dateRange.startDate.split('-')
 
   const endDate = new Date(dateRange.endDate)
@@ -311,8 +311,6 @@ export function getDatesByCycling(
   direction: string,
 ): DateRange2 {
   const amount = direction === 'forward' ? 1 : -1
-  console.log('cycling:', dateRange.startDate, dateRange.endDate)
-  // THIS DOESN'T WORK FOR SOME REASON
   // Get start date:
   const startDate = getNextDateByMonths(dateRange.startDate, amount)
   // Get end date:
@@ -321,8 +319,6 @@ export function getDatesByCycling(
   if (frequency === 'monthly') {
     endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 0)
   }
-
-  console.log('cycling:', startDate, endDate)
 
   return { startDate: startDate, endDate: endDate }
 }
@@ -406,9 +402,10 @@ export function getNextDateByMonths(startDate: Date, amount: number): Date {
 
   const newDate = new Date(yyyy, mm, dd)
   // Check for overflow into next month
-  // if (newDate.getMonth() !== mm) {
-  //   return new Date(yyyy, mm, 0)
-  // }
+  // (mm % 12 + 12) % 12 handles negative months correctly
+  if (newDate.getMonth() !== ((mm % 12) + 12) % 12) {
+    return new Date(yyyy, mm, 0)
+  }
   return newDate
 }
 

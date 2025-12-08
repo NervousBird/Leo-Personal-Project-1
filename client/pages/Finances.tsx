@@ -24,18 +24,6 @@ interface Props {
 
 function Finances({ incomes, expenses, transactions, dates, dateTitle, cycleType, onHandleChange, onHandleChangeMonth, onHandleCycleType }: Props) {
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onHandleChange(e)
-  }
-
-  const handleChangeMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
-    onHandleChangeMonth(e)
-  }
-
-  const handleCycleType = () => {
-    onHandleCycleType()
-  }
-
   return (
     <>
       <div className='app'>
@@ -50,31 +38,31 @@ function Finances({ incomes, expenses, transactions, dates, dateTitle, cycleType
           </span>
           <button 
             value={cycleType} 
-            onClick={handleCycleType}>
+            onClick={onHandleCycleType}>
             {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
           </button>
           <span>
-            <button name='back' onClick={handleChangeMonth}>{'<'}</button>
-            <input 
-              type='date' 
+            <button name='back' onClick={onHandleChangeMonth}>{'<'}</button>
+            <input
+              type='date'
               id='startDate'
               name='startDate'
-              value={dates.startDate} 
-              onChange={handleChange} 
+              value={dates.startDate}
+              onChange={onHandleChange}
             />
-            <input 
-              type='date' 
+            <input
+              type='date'
               id='endDate'
               name='endDate'
-              min={dates.startDate} 
-              value={dates.endDate} 
-              onChange={handleChange} 
+              min={dates.startDate}
+              value={dates.endDate}
+              onChange={onHandleChange}
             />
-            <button name='forward' onClick={handleChangeMonth}>{'>'}</button>
+            <button name='forward' onClick={onHandleChangeMonth}>{'>'}</button>
           </span>
         </nav>
 
-        {dates && 
+        {dates &&
           <main>
             {incomes && transactions &&
               <IncomeComponent incomes={incomes} transactions={transactions} dates={dates}/>
