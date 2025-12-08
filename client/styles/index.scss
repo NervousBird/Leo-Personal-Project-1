@@ -9,6 +9,8 @@
 
   --color-orange: #eca859;
   --color-darkorange: #d17a16;
+  --color-yellow: #e6dd66;
+  --color-darkyellow: #e4c53d;
   --color-blue: #7f9fe6;
   --color-darkblue: #1e59d8; 
   --color-green: #85d685;
@@ -16,16 +18,21 @@
   --color-red: #e74b4b;
   --color-darkred: #b30f0f;
 
-  --button-neutralbase: #000000;
-  --button-neutralhover: #000000;
-  --button-neutralactive: #000000;
-  --button-positivebase: #000000;
-  --button-positivehover: #000000;
-  --button-positiveactive: #000000;
-  --button-negativebase: #000000;
-  --button-negativehover: #000000;
-  --button-negtaiveactive: #000000;
+  --color-palegreen1: #a0dda3;
+  --color-palegreen2: #c0ebda;
+  --color-palered1: #e7a4ad;
+  --color-palered2: #e7c6c7;
+  --color-paleyellow1: #ebdb8e;
+  --color-paleyellow2: #ebdeb3;
+  --color-paleblue1: #a0bddd;
+  --color-paleblue2: #c0d4eb;
+  --color-paleorange1: #ebbb8e;
+  --color-paleorange2: #ebcab3;
 
+  border: none;
+  :focus {
+    outline: none;
+  }
 }
 
 html, 
@@ -34,8 +41,16 @@ body {
   background-color: var(--color-white);
 }
 
-input {
-  max-width: 100px;
+h3 {
+  font-family: "Chango";
+  font-weight: 300;
+  font-size: 1.5rem;
+  margin: 10px;
+}
+
+main {
+  background-color: var(--color-paleblue2);
+  border-radius: 10px;
 }
 
 .app {
@@ -45,25 +60,25 @@ input {
   align-items: center;
 }
 
-header {
-  margin: 0px;
-  padding: 0px;
-
-  h1 {
-    margin: 0px;
-  }
+.year-title {
+  font-size: 3rem;
 }
 
-nav {
+.finance-nav {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: var(--color-paleblue2);
+  border: 2px solid var(--color-paleblue2);
+  border-radius: 10px;
+  padding: 0rem 2rem 1rem 2rem;
+  margin: 10px;
+  width: 350px;
 
   button {
     font-size: 1.1rem;
-    border: none;
-    background-color: var(--color-orange);
+    background-color: var(--color-blue);
     margin: 5px 2px 5px 2px;
     padding: 5px;
     border-radius: 5px;
@@ -71,7 +86,7 @@ nav {
   }
 
   button:hover {
-    background-color: #e74b4b;
+    background-color: var(--color-darkblue);
     transition: background-color .2s ease-out;
   }
 
@@ -81,10 +96,11 @@ nav {
   }
 
   input[type='date'] {
-    background-color: #f3f0e5;
-    height: 30px;
+    background-color: var(--color-white);
+    height: 35px;
     min-width: 120px;
-    font-size: 1rem;
+    font-size: 1.2rem;
+    text-align: center;
   }
 
   .monthtitle-container {
@@ -98,55 +114,6 @@ nav {
   }
 }
 
-
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  span {
-    min-width: 20px;
-    align-self: center;
-    text-align: center;
-  }
-
-  button {
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--color-green);
-    margin: 5px;
-    transition: background-color .2s ease-out;
-  }
-
-  button:hover {
-    background-color: var(--color-darkgreen);
-    transition: background-color .2s ease-out;
-  }
-
-  .table-header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    font-size: 1.1rem;
-    background-color: var(--color-blue);
-
-    h4 {
-      width: 120px;
-      margin: 5px 0px 5px 0px;
-      padding: 0px;
-    }
-    .actual,
-    .difference {
-      width: 120px;
-    }
-    .notes {
-      width: 231px;
-    }
-  }
-}
-
 .recurringForm-container {
   font-size: 1rem;
 
@@ -155,47 +122,59 @@ main {
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
-    background-color: var(--color-blue);
+    background-color: var(--color-paleorange1);
     border-radius: 10px;
     padding: 10px;
 
-    h3 {
-      font-size: 1.5rem;
-      margin: 10px;
-    }
+    
 
     section {
       display: flex;
       flex-wrap: wrap;
+
+      .category,
+      .name,
+      .type {
+        width: 100px
+      }
+      .frequency {
+        width: 120px;
+      }
+      .start-date,
+      .end-date {
+        width: 130px;
+        text-align: center;
+      }
+      .expected {
+        text-align: right;
+        width: 100px
+      }
+
     }
 
     span {
       display: flex;
       flex-direction: column;
-      width: 150px;
       padding: 2px;
       font-size: 1.1rem;
       font-weight: bold;
-      background-color: var(--color-blue);
+      background-color: transparent;
 
       select,
       input {
         font-size: 1rem;
         padding: 5px;
-        min-width: 0%;
-        max-width: 100%;
         height: 1.5rem;
-        border: none;
         background-color: var(--color-white);
+        text-align: left;
       }
       select {
-        height: 35px;
+        height: 34px;
       }
       select:focus,
       input:focus {
         background-color: #7f9fe6;
         border-radius: 5px;
-        outline:none;
         transition: background-color .2s ease;
       }
     }
@@ -228,10 +207,69 @@ main {
   }
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    min-width: 20px;
+    align-self: center;
+    text-align: center;
+  }
+
+  button {
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-green);
+    margin: 5px;
+    transition: background-color .2s ease-out;
+  }
+
+  button:hover {
+    background-color: var(--color-darkgreen);
+    transition: background-color .2s ease-out;
+  }
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    background-color: var(--color-blue);
+
+    h4 {
+      margin: 5px 0px 5px 0px;
+      padding: 0px 5px 0px 5px;
+    }
+
+    .name,
+    .type {
+      width: 110px;
+    }
+    .frequency {
+      width: 110px;
+    }
+    .date {
+      width: 120px;
+      text-align: center;
+    }
+    .expected,
+    .actual,
+    .difference {
+      min-width: 100px;
+    }
+    .notes {
+      min-width: 220px;
+    }
+  }
+}
+
 .income-component {
   margin: 1rem 0rem 1rem 0rem;
   .table-header {
-    background-color: var(--color-blue);
+    background-color: var(--color-darkgreen);
   }
 }
 .expense-component {
@@ -243,7 +281,7 @@ main {
 .transaction-component {
   margin: 1rem 0rem 1rem 0rem;
   .table-header {
-    background-color: var(--color-darkgreen);
+    background-color: var(--color-darkyellow);
   }
 }
 
@@ -264,6 +302,7 @@ section {
     color: var(--color-white);
     margin: 0px;
     transition: background-color .2s ease-out;
+    width: 20px;
   }
 
   button:hover {
@@ -274,26 +313,28 @@ section {
 
 section {
   .income-row  {
-    background-color: #a0c2dd;
+    background-color: var(--color-palegreen1);
   }
   .income-row:nth-child(2n) {
-    background-color: #c1d7dd;
+    background-color: var(--color-palegreen2);
   }
 
   .expense-row  {
-    background-color: #e7a4ad;
+    background-color: var(--color-palered1);
   }
   .expense-row:nth-child(2n) {
-    background-color: #e7c6c7;
+    background-color: var(--color-palered2);
   }
 
   .transaction-row {
-    background-color: #a0dda3;
+    background-color: var(--color-paleyellow1);
   }
   .transaction-row:nth-child(2n) {
-    background-color: #c0ebda;
+    background-color: var(--color-paleyellow2);
   }
 }
+
+
 
 .expense_component,
 .income_component {
@@ -313,10 +354,9 @@ section {
     select,
     span {
       font-size: 1rem;
-      min-width: 110px;
       border: none;
       border-radius: 5px;
-      color: #252525;
+      color: var(--color-black);
       background-color: transparent;
       padding: 2px 5px 2px 5px;
       transition: background-color .2s ease;
@@ -324,37 +364,48 @@ section {
 
     select:focus,
     input:focus {
-      background-color: #7f9fe6;
+      background-color: var(--color-darkgreen); 
       border-radius: 5px;
       outline:none;
       transition: background-color .2s ease;
     }
 
+    .name,
+    .type {
+      width: 110px;
+    }
+    .frequency {
+      width: 120px;
+    }
+    .date {
+      width: 120px;
+      text-align: center;
+    }
+    .expected,
     .actual,
-    .difference,
-    .expected {
+    .difference {
       text-align: right;
+      width: 100px;
+    }
+    .notes {
+      width: 200px;
     }
 
     select {
       option {
-        background-color: #c1d7dd;
+        background-color: var(--color-palegreen2);
         transition: background-color .2s ease;
       }
 
       option:hover {
-        background-color: #7f9fe6;
+        background-color: var(--color-green);
         transition: background-color .2s ease;
       }
     }
 
-    .notes {
-      min-width: 200px;
-    }
-
     button {
       position: absolute;
-      background-color: #7ece6f;
+      background-color: var(--color-gre2n);
       color: white;
       border-radius: 5px;
       padding: 0px 5px 0px 5px;
@@ -364,11 +415,39 @@ section {
   }
 }
 
-.transaction_component {
+.expense-component {
+  form {
+    select {
+      option {
+        background-color: var(--color-palered2);
+      }
+      option:hover {
+        background-color: var(--color-red);
+      }
+    }
+  }
+}
+
+.transaction-component {
+  .table-header {
+    .name,
+    .type,
+    .frequency,
+    .amount {
+      width: 120px;
+    }
+    .notes {
+      width: 270px;
+    }
+    .date {
+      width: 120px;
+      text-align: center;
+    }
+  }
+
   form {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
     width: 100%;
 
     .warning {
@@ -384,7 +463,6 @@ section {
     select,
     span {
       font-size: 1rem;
-      min-width: 140px;
       border: none;
       border-radius: 5px;
       color: var(--color-black);
@@ -395,30 +473,41 @@ section {
 
     select {
       option {
-        background-color: #c3ddc1;
+        background-color: var(--color-paleyellow2);
         transition: background-color .2s ease;
       }
 
       option:hover {
-        background-color: var(--color-darkgreen);
+        background-color: var(--color-darkyellow);
         transition: background-color .2s ease;
       }
     }
 
     select:focus,
     input:focus {
-      background-color: var(--color-darkgreen);
+      background-color: var(--color-darkyellow);
       border-radius: 5px;
       outline:none;
       transition: background-color .2s ease;
     }
 
+    .name,
+    .frequency,
+    .amount {
+      width: 120px;
+    }
+    .type {
+      width: 130px
+    }
+    .notes {
+      width: 250px;
+    }
     .amount {
       text-align: right;
     }
-
-    .notes {
-      min-width: 250px;
+    .date {
+      width: 120px;
+      text-align: center;
     }
 
     button {
@@ -429,6 +518,7 @@ section {
       padding: 0px 5px 0px 5px;
       margin-left: 915px;
       align-self: center;
+      width: 20px;
     }
 
   }

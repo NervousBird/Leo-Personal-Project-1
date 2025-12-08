@@ -75,18 +75,24 @@ function TransactionRow({ transactionData, dates }: Props) {
       {incomes && expenses && 
         <form onSubmit={handleSubmit}>
           {warning && <div className="warning">!</div>}
-          <input 
+          <input
+            className="name"
             name="name"
             value={transaction.name}
             onChange={handleChange}
             placeholder="name"
           />
-          <select name="type" value={transaction.type} onChange={handleType}>
+          <select 
+            className="type"
+            name="type" 
+            value={transaction.type} 
+            onChange={handleType}>
             {typesChoice.map((type,idx) =>
               <option key={idx} value={type}>{type}</option>
             )}
           </select>
           <input
+            className="date"
             name="date"
             value={transaction.date}
             onChange={handleChange}

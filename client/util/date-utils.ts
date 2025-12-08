@@ -10,90 +10,57 @@ export function changeDatesByMonth(
   type: string, // always first and last day of month, or specific dates within the month
 ): DateRange {
   let newDates = { startDate: '', endDate: '' }
-  if (type === 'monthly') {
-    Object.keys(dateRange).forEach((date: string) => {
-      // REFACTOR THIS MESS
-      const dateSplit = dateRange[date].split('-')
-      let month = dateSplit[1]
-      let year = dateSplit[0]
-      // Handle month/year change
-      if (direction === 'back') {
-        if (month === '01') {
-          month = '12'
-          year = (Number(year) - 1).toString()
-        } else {
-          month = (Number(month) - 1).toString().padStart(2, '0')
-        }
+
+  Object.keys(dateRange).forEach((date: string) => {
+    let { [0]: year, [1]: month, [2]: day } = dateRange[date].split('-')
+
+    // Handle month/year change
+    if (direction === 'back') {
+      if (month === '01') {
+        month = '12'
+        year = (Number(year) - 1).toString()
       } else {
-        if (month === '12') {
-          month = '01'
-          year = (Number(year) + 1).toString()
-        } else {
-          month = (Number(month) + 1).toString().padStart(2, '0')
-        }
+        month = padDate(Number(month) - 1)
       }
+    } else {
+      if (month === '12') {
+        month = '01'
+        year = (Number(year) + 1).toString()
+      } else {
+        month = padDate(Number(month) + 1)
+      }
+    }
+
+    if (type === 'monthly') {
       // Handle day change
-      const day =
+      day =
         date === 'startDate'
           ? '01'
-          : new Date(Number(year), Number(month), 0)
-              .getDate()
-              .toString()
-              .padStart(2, '0')
+          : padDate(new Date(Number(year), Number(month), 0).getDate())
+
       newDates = { ...newDates, [date]: `${year}-${month}-${day}` }
-    })
-  } else {
-    Object.keys(dateRange).forEach((date: string) => {
-      const dateSplit = dateRange[date].split('-')
-      let month = dateSplit[1]
-      let year = dateSplit[0]
-      // Handle month/year change
-      if (direction === 'back') {
-        if (month === '01') {
-          month = '12'
-          year = (Number(year) - 1).toString()
-        } else {
-          month = (Number(month) - 1).toString().padStart(2, '0')
-        }
-      } else {
-        if (month === '12') {
-          month = '01'
-          year = (Number(year) + 1).toString()
-        } else {
-          month = (Number(month) + 1).toString().padStart(2, '0')
-        }
-      }
+    }
+
+    if (type === 'specific') {
       // Handle day change
       if (month === '02') {
-        const day =
-          Number(dateSplit[2]) > 29
-            ? new Date(Number(year), Number(month), 0)
-                .getDate()
-                .toString()
-                .padStart(2, '0')
-            : dateSplit[2]
+        day =
+          Number(day) > 29
+            ? padDate(new Date(Number(year), Number(month), 0).getDate())
+            : day
         newDates = { ...newDates, [date]: `${year}-${month}-${day}` }
       } else {
-        const day =
-          dateSplit[2] === '31'
-            ? new Date(Number(year), Number(month), 0)
-                .getDate()
-                .toString()
-                .padStart(2, '0')
-            : dateSplit[2]
+        day =
+          day === '31'
+            ? padDate(new Date(Number(year), Number(month), 0).getDate())
+            : day
         newDates = { ...newDates, [date]: `${year}-${month}-${day}` }
       }
-    })
-  }
+    }
+  })
 
   return newDates
 }
-
-// function cycleDatesByYear(dateRange: DateRange): DateRange {
-//   let newDates = { startDate: '', endDate: '' }
-//   // Can literally just change the year, no other coding needed
-//   return newDates
-// }
 
 export function getMonthAsWord(dateRange: DateRange): string[] {
   const dateMonths = {
@@ -108,6 +75,7 @@ export function getMonthAsWord(dateRange: DateRange): string[] {
   return Object.values(dateMonths)
 }
 
+// Get array of dates to add for recurring entry
 export function getDatesToAdd(
   dateRange: DateRange,
   frequency: string,
@@ -147,8 +115,8 @@ export function getDatesToAdd(
 // Return array of dates between the start date by the number of days
 function getDatesByDay(dateRange: DateRange, days: number): string[] {
   const datesArray = [dateRange.startDate]
-
   const { [0]: year, [1]: month, [2]: day } = dateRange.startDate.split('-')
+
   const endDate = new Date(dateRange.endDate)
   let currentDate = new Date(dateRange.startDate)
   let currentMonth = Number(month)
@@ -166,19 +134,16 @@ function getDatesByDay(dateRange: DateRange, days: number): string[] {
     if (nextDay > finalDay) {
       nextDay = nextDay - finalDay
       currentMonth = nextMonth
-      const newMonth = currentMonth.toString().padStart(2, '0')
+      const newMonth = padDate(currentMonth)
+
       // BREAK if the month is over 12
       if (Number(newMonth) > 12) {
         break
       }
-      datesArray.push(
-        // `${nextDay.toString().padStart(2, '0')}-${Number(month)}-${year}`,
-        `${year}-${newMonth}-${nextDay.toString().padStart(2, '0')}`,
-      )
+
+      datesArray.push(`${year}-${newMonth}-${padDate(nextDay)}`)
     } else {
-      datesArray.push(
-        `${year}-${currentMonth.toString().padStart(2, '0')}-${nextDay.toString().padStart(2, '0')}`,
-      )
+      datesArray.push(`${year}-${padDate(currentMonth)}-${padDate(nextDay)}`)
     }
     // Make sure current date is set to the last item in the array
     currentDate = new Date(datesArray[datesArray.length - 1])
@@ -199,19 +164,17 @@ function getDatesByDay(dateRange: DateRange, days: number): string[] {
 // Return array of dates between the start date by the number of months
 function getDatesByMonth(dateRange: DateRange, months: number): string[] {
   const datesArray = []
-
-  console.log(dateRange)
-
   const { [0]: year, [1]: month, [2]: day } = dateRange.startDate.split('-')
+
   const endDate = new Date(dateRange.endDate)
-  let currentDate = new Date(dateRange.startDate)
   const currentDay = Number(day)
+
+  let currentDate = new Date(dateRange.startDate)
   let currentMonth = Number(month)
 
   // Loop here
   while (currentDate < endDate) {
     // Increase month, check year
-    console.log(currentDate, endDate)
     const nextMonth = currentMonth + months
 
     if (Number(currentMonth) > 12) {
@@ -223,13 +186,9 @@ function getDatesByMonth(dateRange: DateRange, months: number): string[] {
 
     if (currentDay > finalDay) {
       // Set day to final of the month (then continue with setting it as the original?)
-      datesArray.push(
-        `${year}-${currentMonth.toString().padStart(2, '0')}-${finalDay.toString().padStart(2, '0')}`,
-      )
+      datesArray.push(`${year}-${padDate(currentMonth)}-${padDate(finalDay)}`)
     } else {
-      datesArray.push(
-        `${year}-${currentMonth.toString().padStart(2, '0')}-${currentDay.toString().padStart(2, '0')}`,
-      )
+      datesArray.push(`${year}-${padDate(currentMonth)}-${padDate(currentDay)}`)
     }
 
     currentDate = new Date(Number(year), currentMonth, Number(day))
@@ -239,13 +198,7 @@ function getDatesByMonth(dateRange: DateRange, months: number): string[] {
   return datesArray
 }
 
-// // Return array of dates between the start date by the number of years
-// function getDatesByYear(dateRange: DateRange, years: number): string[] {
-//   const datesArray = []
-
-//   return datesArray
-// }
-
+// Get singular date based off next day or month
 export function getNextDate(startDate: string, frequency: string): string {
   let nextDate
   switch (frequency) {
@@ -280,17 +233,19 @@ export function getNextDate(startDate: string, frequency: string): string {
 
 function getDateByDays(startDate: string, days: number): string {
   const { [0]: year, [1]: month, [2]: day } = startDate.split('-')
+
   const nextDay = Number(day) + days
   const finalDay = new Date(Number(year), Number(month), 0).getDate()
 
   if (nextDay > finalDay) {
     const remainder = nextDay - finalDay
-    const updatedMonth = Number(month) + 1 > 12 ? 1 : month + 1
+    const updatedMonth = Number(month) + 1 > 12 ? 1 : Number(month) + 1
     const updatedYear = updatedMonth === 1 ? year + 1 : year
-    const date = `${updatedYear}-${updatedMonth.toString().padStart(2, '0')}-${remainder.toString().padStart(2, '0')}`
+
+    const date = `${updatedYear}-${padDate(updatedMonth)}-${padDate(remainder)}`
     return date
   } else {
-    const date = `${year}-${month}-${nextDay.toString().padStart(2, '0')}`
+    const date = `${year}-${month}-${padDate(nextDay)}`
     return date
   }
 }
@@ -300,30 +255,36 @@ function getDateByMonths(startDate: string, months: number): string {
 
   let nextMonth = Number(month) + months
   let nextYear = Number(year)
+
+  // Check if new year
   if (nextMonth > 12) {
     nextMonth = Number(month) + months - 12
     nextYear = Number(year) + 1
   }
 
+  // Check the last day of the months (current month and next month)
   const thisFinalDay = new Date(Number(year), Number(month), 0).getDate()
   const nextFinalDay = new Date(Number(year), Number(nextMonth), 0).getDate()
 
+  // Check if the day is out of range for the new month
   if (Number(day) > nextFinalDay) {
-    const date = `${nextYear}-${nextMonth.toString().padStart(2, '0')}-${(nextFinalDay - 1).toString().padStart(2, '0')}`
+    const date = `${nextYear}-${padDate(nextMonth)}-${padDate(nextFinalDay - 1)}`
     return date
-  } else {
-    if (day === '01') {
-      const date = `${nextYear}-${nextMonth}-${thisFinalDay.toString().padStart(2, '0')}`
-      return date
-    } else {
-      const date = `${nextYear}-${nextMonth.toString().padStart(2, '0')}-${(
-        Number(day) - 1
-      )
-        .toString()
-        .padStart(2, '0')}`
-      return date
-    }
   }
+
+  // Check and return the first day of the next month
+  if (day === '01') {
+    const date = `${nextYear}-${nextMonth}-${padDate(thisFinalDay)}`
+    return date
+  }
+
+  // Return corrected next month date
+  const date = `${nextYear}-${padDate(nextMonth)}-${padDate(Number(day) - 1)}`
+  return date
+}
+
+export function padDate(date: number): string {
+  return date.toString().padStart(2, '0')
 }
 
 // =================================================================================================================
