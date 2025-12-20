@@ -9,4 +9,10 @@ export interface ExpenseObject {
   date: string
   expected: string
   notes: string
+  // [key: string]: string
+}
+
+export interface ExpenseFull extends Expense {
+  actual: string
+  difference: string
 }

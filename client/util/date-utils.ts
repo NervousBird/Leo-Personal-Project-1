@@ -4,6 +4,37 @@ interface DateRange {
   [date: string]: string
 }
 
+// Check if date is between two other dates
+export function isDateBetween(
+  dateToCheck: string,
+  startDate: string,
+  endDate: string,
+) {
+  const result =
+    new Date(dateToCheck) >= new Date(startDate) &&
+    new Date(dateToCheck) <= new Date(endDate)
+  return result
+}
+
+// Return dates as the actual month
+export function getMonthAsWord(dateRange: DateRange): string[] {
+  const dateMonths = {
+    startDate: new Date(dateRange.startDate).toLocaleString('default', {
+      month: 'long',
+    }),
+    endDate: new Date(dateRange.endDate).toLocaleString('default', {
+      month: 'long',
+    }),
+  }
+
+  return Object.values(dateMonths)
+}
+
+export function getYearByDate(date: string): string {
+  return ''
+}
+
+// Used for navigating by dates, returns date as string based on monthly (first to last of month) or custom (any day in the month)
 export function changeDatesByMonth(
   direction: string, // going forward a month or back a month
   dateRange: DateRange, // the current displayed months
@@ -60,19 +91,6 @@ export function changeDatesByMonth(
   })
 
   return newDates
-}
-
-export function getMonthAsWord(dateRange: DateRange): string[] {
-  const dateMonths = {
-    startDate: new Date(dateRange.startDate).toLocaleString('default', {
-      month: 'long',
-    }),
-    endDate: new Date(dateRange.endDate).toLocaleString('default', {
-      month: 'long',
-    }),
-  }
-
-  return Object.values(dateMonths)
 }
 
 // Get array of dates to add for recurring entry
@@ -231,6 +249,7 @@ export function getNextDate(startDate: string, frequency: string): string {
   }
 }
 
+// Return a single date x amount of days
 function getDateByDays(startDate: string, days: number): string {
   const { [0]: year, [1]: month, [2]: day } = startDate.split('-')
 
@@ -250,6 +269,7 @@ function getDateByDays(startDate: string, days: number): string {
   }
 }
 
+// Return a single date by x amount of months
 function getDateByMonths(startDate: string, months: number): string {
   const { [0]: year, [1]: month, [2]: day } = startDate.split('-')
 
@@ -287,6 +307,13 @@ export function padDate(date: number): string {
   return date.toString().padStart(2, '0')
 }
 
+// =================================================================================================================
+//
+//
+//
+//
+//
+//
 // =================================================================================================================
 
 // JAVASCRIPT DATES are worthless, and I hate them. It's better to handle it all manually, because it's such a
