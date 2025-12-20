@@ -1,6 +1,6 @@
 import { Income } from '../../models/incomes'
 import { Expense } from '../../models/expenses'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Transaction } from '../../models/transactions'
 import TargetComponent from '../components/TargetComponent.tsx'
 import { reduceByActual, reduceByType } from '../util/calculation-utils'
@@ -67,8 +67,10 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const { monthly, yearly} = e.target
-    setTargets({monthly: monthly.value, yearly: yearly.value})
+    const formData = new FormData(e.currentTarget)
+    const monthly = formData.get('monthly') as string || '0.00'
+    const yearly = formData.get('yearly') as string || '0.00'
+    setTargets({ monthly, yearly })
   }
 
   const handleHidden = () => {
@@ -149,8 +151,8 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
               <p>{`$${expenseExpected}`}</p>
               <p>{`$${expenseActual}`}</p>
               <section >
-                <p style={(Number(expenseExpected) - Number(expenseActual)) >= 0 ? {color: 'green'} : {color: 'red'}}>
-                  {`$${(Number(expenseActual) - Number(expenseExpected)).toFixed(2)}`}
+                <p style={Number(expenseDifference) >= 0 ? {color: 'green'} : {color: 'red'}}>
+                  {`$${expenseDifference}`}
                 </p>
               </section>
             </div>

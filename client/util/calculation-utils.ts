@@ -66,6 +66,7 @@ export function reduceByActual(
           return object.expected
         }
       }
+      return object.expected
     })
   if (filteredByDates.length !== 0) {
     const total = filteredByDates.reduce(

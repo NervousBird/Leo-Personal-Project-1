@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, FormEvent, ChangeEvent } from "react"
 
 interface Props {
   onHandleSubmit: (e: FormEvent<HTMLFormElement>) => void 
