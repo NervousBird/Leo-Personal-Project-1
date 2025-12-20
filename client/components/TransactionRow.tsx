@@ -3,6 +3,7 @@ import { Transaction } from "../../models/transactions"
 import { useTransactions } from "../hooks/useTransactions"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
+import { isDateBetween } from "../util/date-utils"
 
 interface Props {
   transactionData: Transaction
@@ -46,11 +47,6 @@ function TransactionRow({ transactionData, dates }: Props) {
     const { value } = e.target
     setTransaction((prev) => ({...prev, type: value}))
     setWarning(true)
-  }
-
-  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
-    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
-    return result
   }
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { Expense } from '../../models/expenses.ts'
 import { Income } from '../../models/incomes.ts'
 import { Transaction } from '../../models/transactions.ts'
 import { ChangeEvent } from 'react'
+import SummaryComponent from '../components/SummaryComponent.tsx'
 
 interface Props {
   incomes: Income[]
@@ -25,59 +26,58 @@ interface Props {
 function Finances({ incomes, expenses, transactions, dates, dateTitle, cycleType, onHandleChange, onHandleChangeMonth, onHandleCycleType }: Props) {
 
   return (
-    <>
-      <div className='app'>
+    <section className='finances'>
 
-        <section>
-          <ReccuringForm />
-        </section>
 
-        <nav className='finance-nav'>
-          <span className='monthtitle-container'>
-            {dateTitle && dateTitle.map((month, idx) => <h3 key={idx}>{month}</h3>)}
-          </span>
-          <button 
-            value={cycleType} 
-            onClick={onHandleCycleType}>
-            {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
-          </button>
-          <span>
-            <button name='back' onClick={onHandleChangeMonth}>{'<'}</button>
-            <input
-              type='date'
-              id='startDate'
-              name='startDate'
-              value={dates.startDate}
-              onChange={onHandleChange}
-            />
-            <input
-              type='date'
-              id='endDate'
-              name='endDate'
-              min={dates.startDate}
-              value={dates.endDate}
-              onChange={onHandleChange}
-            />
-            <button name='forward' onClick={onHandleChangeMonth}>{'>'}</button>
-          </span>
-        </nav>
+      <section>
+        <ReccuringForm />
+      </section>
 
-        {dates &&
-          <main>
-            {incomes && transactions &&
-              <IncomeComponent incomes={incomes} transactions={transactions} dates={dates}/>
-            }
-            {expenses && transactions &&
-              <ExpenseComponent expenses={expenses} transactions={transactions} dates={dates} />
-            }
-            {transactions &&
-              <TransactionComponent transactions={transactions} dates={dates} />
-            }
-          </main>
-        }
-        
-      </div>
-    </>
+      <nav className='finance-nav'>
+        <span className='monthtitle-container'>
+          {dateTitle && dateTitle.map((month, idx) => <h3 key={idx}>{month}</h3>)}
+        </span>
+        <button 
+          value={cycleType} 
+          onClick={onHandleCycleType}>
+          {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
+        </button>
+        <span>
+          <button name='back' onClick={onHandleChangeMonth}>{'<'}</button>
+          <input
+            type='date'
+            id='startDate'
+            name='startDate'
+            value={dates.startDate}
+            onChange={onHandleChange}
+          />
+          <input
+            type='date'
+            id='endDate'
+            name='endDate'
+            min={dates.startDate}
+            value={dates.endDate}
+            onChange={onHandleChange}
+          />
+          <button name='forward' onClick={onHandleChangeMonth}>{'>'}</button>
+        </span>
+      </nav>
+
+      {dates &&
+        <main>
+          {incomes && transactions &&
+            <IncomeComponent incomes={incomes} transactions={transactions} dates={dates}/>
+          }
+          {expenses && transactions &&
+            <ExpenseComponent expenses={expenses} transactions={transactions} dates={dates} />
+          }
+          {transactions &&
+            <TransactionComponent transactions={transactions} dates={dates} />
+          }
+        </main>
+      }
+      
+    </section>
   )
 }
 

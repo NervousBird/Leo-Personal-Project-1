@@ -8,4 +8,5 @@ export interface TransactionObject {
   date: string
   amount: string
   notes: string
+  // [key: string]: string
 }

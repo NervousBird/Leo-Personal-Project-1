@@ -9,4 +9,10 @@ export interface IncomeObject {
   date: string
   expected: string
   notes: string
+  // [key: string]: string
+}
+
+export interface IncomeFull extends Income {
+  actual: string
+  difference: string
 }

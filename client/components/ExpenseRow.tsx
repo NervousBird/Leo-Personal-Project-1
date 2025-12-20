@@ -1,9 +1,8 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Expense } from "../../models/expenses"
 import { useExpenses } from "../hooks/useExpenses"
-import { useTransactions } from "../hooks/useTransactions"
 import { Transaction } from "../../models/transactions"
-import { getNextDate } from "../util/date-utils"
+import { getNextDate, isDateBetween } from "../util/date-utils"
 interface Props {
   expenses: Expense
   transactions: Transaction[]
@@ -23,11 +22,6 @@ function ExpenseRow({ expenses, transactions }: Props) {
     countActualAmount()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actual, expenseData.expected, transactions])
-  
-  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
-    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
-    return result
-  }
   
   const countActualAmount = async () => {
     if (transactions) {
