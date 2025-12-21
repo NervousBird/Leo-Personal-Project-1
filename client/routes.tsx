@@ -2,6 +2,9 @@
 import { createRoutesFromElements, Route } from 'react-router'
 import App from './pages/App'
 
-const routes = createRoutesFromElements(<Route index element={<App />} />)
+const routes = createRoutesFromElements(
+  <Route index element={<App />}>
+  </Route> />
+)
 
 export default routes
