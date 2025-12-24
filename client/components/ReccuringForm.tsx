@@ -25,6 +25,7 @@ function ReccuringForm() {
   const useExpense = useExpenses()
   const [formData, setFormData] = useState(defaultForm)
   const [formWarning, setFormWarning] = useState({ state: false, message: '' })
+  const [hidden, setHidden] = useState()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -74,7 +75,7 @@ function ReccuringForm() {
           type: formData.type,
           frequency: formData.frequency,
           date: date,
-          expected: formData.expected.replace("$", ""),
+          expected: Number(formData.expected.replace("$", "")).toFixed(2),
           notes: '',
         }
       }) as IncomeObject[]
@@ -120,6 +121,11 @@ function ReccuringForm() {
         break
     }
   }
+
+  const handleHidden = (e: FormEvent) => {
+    e.preventDefault()
+    setHidden(!hidden)
+  }
   
   return (
     <div className="recurringForm-container">
@@ -128,8 +134,12 @@ function ReccuringForm() {
       {formWarning.state && <div><p>{formWarning.message}</p></div>}
       {incomes && expenses &&
         <form onSubmit={handleSubmit}>
-          <h3>Add Yearly Finance</h3>
-          <section>
+          <button className="form-button" onClick={handleHidden}>
+            <h3>Add Yearly Finance</h3>
+            {hidden  && <i className="bi bi-caret-up-fill" />}
+            {!hidden  && <i className="bi bi-caret-down-fill" />}
+          </button>
+          <section className={`recurringForm ${hidden === true ? "hidden" : ""}`}>
             <span>
               <label htmlFor="category">Category</label>
               <select
@@ -205,10 +215,10 @@ function ReccuringForm() {
                 onChange={handleChange}
               />
             </span>
+            <span className="button-container">
+              <button type="submit">Add to Tables</button>
+            </span>
           </section>
-          <span className="button-container">
-            <button type="submit">Add to Tables</button>
-          </span>
         </form>
       }
     </div>

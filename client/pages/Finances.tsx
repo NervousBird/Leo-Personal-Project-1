@@ -64,7 +64,7 @@ function Finances({ incomes, expenses, transactions, dates, dateTitle, cycleType
       </nav>
 
       {dates &&
-        <main>
+        <section>
           {incomes && transactions &&
             <IncomeComponent incomes={incomes} transactions={transactions} dates={dates}/>
           }
@@ -74,7 +74,7 @@ function Finances({ incomes, expenses, transactions, dates, dateTitle, cycleType
           {transactions &&
             <TransactionComponent transactions={transactions} dates={dates} />
           }
-        </main>
+        </section>
       }
       
     </section>

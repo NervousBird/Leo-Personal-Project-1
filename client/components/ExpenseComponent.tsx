@@ -1,4 +1,5 @@
 import { useExpenses } from "../hooks/useExpenses"
+import { useState } from "react"
 import { Expense } from "../../models/expenses"
 import ExpenseRow from "./ExpenseRow"
 import { Transaction } from "../../models/transactions"
@@ -14,6 +15,7 @@ interface Props {
 
 function ExpenseComponent({ expenses, transactions, dates }: Props) {
   const useExpense = useExpenses()
+  const [hidden, setHidden] = useState(false)
   
   const handleNewExpense = async () => {
     try {
@@ -39,9 +41,17 @@ function ExpenseComponent({ expenses, transactions, dates }: Props) {
     return result
   }
 
+  const handleHidden = () => {
+    setHidden(!hidden)
+  }
+
   return (
     <section className="expense-component">
-      <h3>Expenses</h3>
+      <button className="title" onClick={handleHidden}>
+        <h3>Expenses</h3>
+        {hidden  && <i className="bi bi-caret-up-fill" />}
+        {!hidden  && <i className="bi bi-caret-down-fill" />}
+      </button>
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
@@ -53,7 +63,7 @@ function ExpenseComponent({ expenses, transactions, dates }: Props) {
         <h4 className='notes'>Notes</h4>
       </span>
       {expenses && expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(expense => 
-        <div key={expense.id} className='expense-row'>
+        <div key={expense.id} className={hidden === true ? 'expense-row hidden' : 'expense-row'}>
           <ExpenseRow expenses={expense} transactions={transactions} />
           <button onClick={() => handleRemoveExpense(expense)}>X</button>
         </div>

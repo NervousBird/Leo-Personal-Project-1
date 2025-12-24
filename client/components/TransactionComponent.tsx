@@ -1,4 +1,5 @@
 import { Transaction } from "../../models/transactions"
+import { useState } from "react"
 import { useTransactions } from "../hooks/useTransactions"
 import TransactionRow from "./TransactionRow"
 
@@ -12,6 +13,7 @@ interface Props {
 
 function TransactionComponent({ transactions, dates }: Props) {
   const useTransaction = useTransactions()
+  const [hidden, setHidden] = useState(false)
 
   const handleNewTransaction = async () => {
     try {
@@ -36,9 +38,17 @@ function TransactionComponent({ transactions, dates }: Props) {
     return result
   }
 
+  const handleHidden = () => {
+    setHidden(!hidden)
+  }
+
   return (
     <section className="transaction-component">
-      <h3>Transactions</h3>
+      <button className="title" onClick={handleHidden}>
+        <h3>Transactions</h3>
+        {hidden  && <i className="bi bi-caret-up-fill" />}
+        {!hidden  && <i className="bi bi-caret-down-fill" />}
+      </button>
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
@@ -47,7 +57,7 @@ function TransactionComponent({ transactions, dates }: Props) {
         <h4 className='notes'>Notes</h4>
       </span>
       {transactions && transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => 
-        <div key={transaction.id} className='transaction-row'>
+        <div key={transaction.id} className={hidden === true ? 'transaction-row hidden' : 'transaction-row'}>
           <TransactionRow transactionData={transaction} dates={dates}/>
           <button onClick={() => handleRemoveTransaction(transaction)}>X</button>
         </div>

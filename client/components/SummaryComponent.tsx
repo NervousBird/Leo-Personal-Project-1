@@ -72,7 +72,6 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
     setYearlyIncomeDifference((Number(yearlyIncomeInfo.actual) - Number(yearlyIncomeInfo.expected)).toFixed(2))
 
     setYearlyExpenseDifference((Number(yearlyExpenseInfo.expected) - Number(yearlyExpenseInfo.actual)).toFixed(2))
-
   }, [incomeInfo, expenseInfo, yearlyExpenseInfo, yearlyIncomeInfo])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -85,10 +84,13 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
 
   return (
     <section className="summary">
+      <h2>Summary and Targets</h2>
       <button
         className="titles"
         onClick={() => setHidden(!hidden)}>
         <h3>{getMonthAsWord(dates)[0]}</h3>
+        {hidden  && <i className="bi bi-caret-up-fill" />}
+        {!hidden  && <i className="bi bi-caret-down-fill" />}
         <p>{date}</p>
       </button>
 

@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react"
+import { Link } from "react-router"
 import { changeDatesByMonth, getMonthAsWord, padDate } from "../util/date-utils"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
@@ -60,9 +61,13 @@ function Home() {
       setCycleType('monthly')
     }
   }
-  
+
   return (
-    <main>
+    <section>
+      <Link to="/" viewTransition>
+        Home
+      </Link>
+
       <header>
         <h1 className='year-title'>{yearTitle}</h1>
       </header>
@@ -93,7 +98,7 @@ function Home() {
           onHandleCycleType={handleCycleType}
         /> 
       }
-    </main>
+    </section>
   )
 }
 
