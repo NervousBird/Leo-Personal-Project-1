@@ -30,7 +30,6 @@ function ReccuringForm() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
   
-    console.log('working')
     // Check form is valid (REQUIRES: category, type, frequency, startDate)  
     if(formData.category === '') {
       return setFormWarning({ state: true, message: 'Category must have a valid input!' })
@@ -44,6 +43,7 @@ function ReccuringForm() {
     if(formData.startDate === '') {
       return setFormWarning({ state: true, message: 'Start Date must have a valid input!' })
     }
+
     // Calculate necessary future dates based on frequency, startDate, endDate
     const datesArray = getDatesToAdd({ startDate: formData.startDate, endDate: formData.endDate}, formData.frequency)
     let filteredDates = [] as string[]
@@ -125,16 +125,19 @@ function ReccuringForm() {
   const handleHidden = (e: FormEvent) => {
     e.preventDefault()
     setHidden(!hidden)
+    console.log("test")
   }
   
   return (
     <div className="recurringForm-container">
       {incomesPending && expensesPending && <p>Loading...</p>}
       {incomesError && expensesError && <p>Error loading...</p>}
-      {formWarning.state && <div><p>{formWarning.message}</p></div>}
+
+      {formWarning.state && <div className="warning-container"><p>{formWarning.message}</p></div>}
+      
       {incomes && expenses &&
         <form onSubmit={handleSubmit}>
-          <button className="form-button" onClick={handleHidden}>
+          <button className="form-button" onClick={handleHidden} type="button">
             <h3>Add Yearly Finance</h3>
             {hidden  && <i className="bi bi-caret-up-fill" />}
             {!hidden  && <i className="bi bi-caret-down-fill" />}
