@@ -76,3 +76,8 @@ export function reduceByActual(
   }
   return '0.00'
 }
+
+export function minusCurrency(a: string, b: string):number {
+  const result = (Number(a) - Number(b)).toFixed(2)
+  return result
+}

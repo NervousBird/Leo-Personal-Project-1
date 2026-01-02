@@ -3,7 +3,7 @@ import { Expense } from '../../models/expenses'
 import { FormEvent, useEffect, useState } from 'react'
 import { Transaction } from '../../models/transactions'
 import TargetComponent from '../components/TargetComponent.tsx'
-import { reduceByActual, reduceByType } from '../util/calculation-utils'
+import { reduceByActual, reduceByType, minusCurrency } from '../util/calculation-utils'
 import { getMonthAsWord } from '../util/date-utils'
 
 interface Props {
@@ -37,6 +37,7 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
 
   // Load basic informations
   useEffect(() => {
+    const currentYear = { startDate: `${new Date(dates.startDate).getFullYear()}-01-01`, endDate: `${new Date().getFullYear()}-12-31` }
 
     setIncomeInfo({ 
       expected: reduceByType(incomes, dates, 'expected'),
@@ -49,29 +50,29 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
     })
 
     setYearlyIncomeInfo({
-      expected: reduceByType(incomes, { startDate: `${new Date(dates.startDate).getFullYear()}-01-01`, endDate: `${new Date().getFullYear()}-12-31` }, 'expected'),
-      actual: reduceByActual(incomes, transactions, { startDate: `${new Date(dates.startDate).getFullYear()}-01-01`, endDate: `${new Date(dates.startDate).getFullYear()}-12-31` }),
+      expected: reduceByType(incomes, currentYear, 'expected'),
+      actual: reduceByActual(incomes, transactions, currentYear),
     })
 
     setYearlyExpenseInfo({
-      expected: reduceByType(expenses, { startDate: `${new Date(dates.startDate).getFullYear()}-01-01`, endDate: `${new Date().getFullYear()}-12-31` }, 'expected'),
-      actual: reduceByActual(expenses, transactions, { startDate: `${new Date(dates.startDate).getFullYear()}-01-01`, endDate: `${new Date(dates.startDate).getFullYear()}-12-31` }),
-    })
+      expected: reduceByType(expenses, currentYear, 'expected'),
+      actual: reduceByActual(expenses, transactions, currentYear)}),
 
-    setDate(`${new Date(dates.startDate).getFullYear()}-01-01 - ${new Date(dates.startDate).getFullYear()}-12-31`)
+    setDate(`${currentYear.startDate} - ${currentYear.endDate}`)
 
   }, [dates, incomes, expenses, transactions])
 
   // Update the difference
   useEffect(() => {
 
-    setIncomeDifference((Number(incomeInfo.actual) - Number(incomeInfo.expected)).toFixed(2))
+    setIncomeDifference(minusCurrency(incomeInfo.actual, incomeInfo.expected))
 
-    setExpenseDifference((Number(expenseInfo.expected) - Number(expenseInfo.actual)).toFixed(2))
+    setExpenseDifference(minusCurrency(expenseInfo.expected, expenseInfo.actual))
 
-    setYearlyIncomeDifference((Number(yearlyIncomeInfo.actual) - Number(yearlyIncomeInfo.expected)).toFixed(2))
+    setYearlyIncomeDifference(minusCurrency(yearlyIncomeInfo.actual, yearlyIncomeInfo.expected))
 
-    setYearlyExpenseDifference((Number(yearlyExpenseInfo.expected) - Number(yearlyExpenseInfo.actual)).toFixed(2))
+    setYearlyExpenseDifference(minusCurrency(yearlyExpenseInfo.expected, yearlyExpenseInfo.actual))
+
   }, [incomeInfo, expenseInfo, yearlyExpenseInfo, yearlyIncomeInfo])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -94,15 +95,15 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
         <p>{date}</p>
       </button>
 
-      <section className={`summary-items ${hidden === false? "hidden" : ""}`}>
+      <section className={`summary-items ${hidden === true ? "hidden" : ""}`}>
 
         <TargetComponent onHandleSubmit={handleSubmit} year={dates.startDate} />
 
         <div className="summary-container">
           <div className="summary-title-income">
-            <h3>Income</h3>
+            <h3>Incomes</h3>
             <h3>Yearly</h3>
-            <h3>Month</h3>
+            <h3>Monthly</h3>
             <h3>Monthly Target</h3>
           </div>
 
@@ -137,18 +138,18 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
                 {`$${Number(targets.monthly).toFixed(2)}`}
               </p>
               <p>
-                {`$${(Number(incomeInfo.actual) - Number(expenseInfo.actual)).toFixed(2)}`}
+                {`$${minusCurrency(incomeInfo.actual, expenseInfo.actual)}`}
               </p>
-              <p style={((Number(incomeInfo.actual) - Number(expenseInfo.actual)) - Number(targets.monthly)) >= 0 ? {color: 'green'} : {color: 'red'}}>
-                {`$${((Number(incomeInfo.actual) - Number(expenseInfo.actual)) - Number(targets.monthly)).toFixed(2)}`}
+              <p style={minusCurrency(incomeInfo.actual, expenseInfo.actual) - Number(targets.monthly) >= 0 ? {color: 'green'} : {color: 'red'}}>
+                {`$${minusCurrency(minusCurrency(incomeInfo.actual, expenseInfo.actual), targets.monthly)}`}
               </p>
             </div>
           </div>
 
           <div className="summary-title-expense">
-            <h3>Income</h3>
+            <h3>Expenses</h3>
             <h3>Yearly</h3>
-            <h3>Month</h3>
+            <h3>Monthly</h3>
             <h3>Yearly Target</h3>
           </div>
 
@@ -183,12 +184,19 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
                 {`$${Number(targets.yearly).toFixed(2)}`}
               </p>
               <p>
-                {`$${(Number(yearlyIncomeInfo.actual) - Number(yearlyExpenseInfo.actual)).toFixed(2)}`}
+                {`$${minusCurrency(yearlyIncomeInfo.actual, yearlyExpenseInfo.actual)}`}
               </p>
-              <p style={((Number(yearlyIncomeInfo.actual) - Number(yearlyExpenseInfo.actual)) - Number(targets.yearly)) >= 0 ? {color: 'green'} : {color: 'red'}}>
-                {`$${((Number(yearlyIncomeInfo.actual) - Number(yearlyExpenseInfo.actual)) - Number(targets.yearly)).toFixed(2)}`}
+              <p style={minusCurrency(yearlyIncomeInfo.actual, yearlyExpenseInfo.actual) - Number(targets.yearly) >= 0 ? {color: 'green'} : {color: 'red'}}>
+                {`$${minusCurrency(minusCurrency(yearlyIncomeInfo.actual, yearlyExpenseInfo.actual), targets.yearly)}`}
               </p>
             </div>
+          </div>
+
+          <div className="summary-title-total">
+            <h3>Totals</h3>
+            <h3>Yearly</h3>
+            <h3>Monthly</h3>
+            <h3>Difference</h3>
           </div>
 
           <div className="summary-totals">
@@ -196,18 +204,18 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
               <h4>Total</h4>
             </div>
             <div className="table">
-              <p style={(Number(yearlyIncomeInfo.actual) - Number(yearlyExpenseInfo.actual)) >= 0 ? {color: 'green'} : {color: 'red'}}>
-                {`$${(Number(yearlyIncomeInfo.actual) - Number(yearlyExpenseInfo.actual)).toFixed(2)}`}
+              <p style={minusCurrency(yearlyIncomeInfo.actual, yearlyExpenseInfo.actual) >= 0 ? {color: 'green'} : {color: 'red'}}>
+                {`$${minusCurrency(yearlyIncomeInfo.actual, yearlyExpenseInfo.actual)}`}
               </p>
             </div>
             <div className="table">
-              <p style={(Number(incomeInfo.actual) - Number(expenseInfo.actual)) >= 0 ? {color: 'green'} : {color: 'red'}}>
+              <p style={minusCurrency(incomeInfo.actual, expenseInfo.actual) >= 0 ? {color: 'green'} : {color: 'red'}}>
                 {`$${(Number(incomeInfo.actual) - Number(expenseInfo.actual)).toFixed(2)}`}
               </p>
             </div>
             <div className="table">
-              <p style={(Number(yearlyIncomeDifference) - Number(yearlyExpenseDifference)) >= 0 ? {color: 'green'} : {color: 'red'}}>
-                {`$${(Number(yearlyIncomeDifference) - Number(yearlyExpenseDifference)).toFixed(2)}`}
+              <p style={(Number(yearlyIncomeDifference) + Number(yearlyExpenseDifference)) >= 0 ? {color: 'green'} : {color: 'red'}}>
+                {`$${(Number(yearlyIncomeDifference) + Number(yearlyExpenseDifference)).toFixed(2)}`}
               </p>
             </div>
           </div>
