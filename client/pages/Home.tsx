@@ -69,35 +69,37 @@ function Home() {
       </Link>
 
       <header>
-        <h1 className='year-title'>{yearTitle}</h1>
+        <h1 className="year-title">{yearTitle}</h1>
       </header>
 
-      {/* Add nav bar to cycle summary and tables? */}
-      {incomes && expenses && transactions &&
-        <SummaryComponent incomes={incomes} expenses={expenses} transactions={transactions} dates={dateRange} />
-      }
+      <div className="information-container">
 
-      {incomesPending && <p>Loading Incomes ...</p>}
-      {expensesPending && <p>Loading Expenses ...</p>}
-      {transactionsPending && <p>Loading Transactions ...</p>}
+        {incomesPending && <p>Loading Incomes ...</p>}
+        {expensesPending && <p>Loading Expenses ...</p>}
+        {transactionsPending && <p>Loading Transactions ...</p>}
 
-      {incomesError && <p>Error Loading Incomes ...</p>}
-      {expensesError && <p>Error Loading Expenses...</p>}
-      {transactionsError && <p>Error Loading Transactions ...</p>}
+        {incomesError && <p>Error Loading Incomes ...</p>}
+        {expensesError && <p>Error Loading Expenses...</p>}
+        {transactionsError && <p>Error Loading Transactions ...</p>}
 
-      {incomes && expenses && transactions &&
-        <Finances
-          incomes={incomes}
-          expenses={expenses}
-          transactions={transactions}
-          dates={dateRange}
-          dateTitle={dateTitle}
-          cycleType={cycleType}
-          onHandleChange={handleChange}
-          onHandleChangeMonth={handleChangeMonth}
-          onHandleCycleType={handleCycleType}
-        /> 
-      }
+        {incomes && expenses && transactions &&
+          <Finances
+            incomes={incomes}
+            expenses={expenses}
+            transactions={transactions}
+            dates={dateRange}
+            dateTitle={dateTitle}
+            cycleType={cycleType}
+            onHandleChange={handleChange}
+            onHandleChangeMonth={handleChangeMonth}
+            onHandleCycleType={handleCycleType}
+          /> 
+        }
+        {/* Add nav bar to cycle summary and tables? */}
+        {incomes && expenses && transactions &&
+          <SummaryComponent incomes={incomes} expenses={expenses} transactions={transactions} dates={dateRange} />
+        }
+      </div>
     </section>
   )
 }
