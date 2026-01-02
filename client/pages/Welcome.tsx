@@ -6,9 +6,12 @@ function Welcome() {
     <section className="welcome-container">
 
       <div className="title-container">
-        <h1>Finances</h1>
+        <h1>Finances!</h1>
         <span>By Leo Walton</span>
-        <p>Track your finances and create goals, keep track of it all, what else could you want?<br /> Probably more, you greedy bastard.</p>
+        <div className="blurb">
+          <p>Track your finances and create goals, keep track of it all, what else could you want?</p>
+          <p>Probably more, you greedy bastard.</p>
+        </div>
       </div>
       <div className="button-container">
         <Link to="/home" viewTransition >

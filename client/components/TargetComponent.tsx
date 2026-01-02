@@ -1,12 +1,14 @@
 import { useState, FormEvent, ChangeEvent } from "react"
 
 interface Props {
-  onHandleSubmit: (e: FormEvent<HTMLFormElement>) => void 
+  onHandleSubmit: (e: FormEvent<HTMLFormElement>) => void
+  year: string
 }
 
-function TargetComponent({ onHandleSubmit }: Props) {
+function TargetComponent({ onHandleSubmit, year }: Props) {
   const [targets, setTargets] = useState({ monthly: "0.00", yearly: "0.00" })
   const [warning, setWarning] = useState()
+  // const [year, setYear] = useState("2026")
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -17,6 +19,7 @@ function TargetComponent({ onHandleSubmit }: Props) {
 	return (
 		<section className="targets-component" >
 			<h3 className="title">Targets!</h3>
+      <h3 className="year">{year.slice(0, 4)}</h3>
 			<div className="titles">	
 				<h4>Monthly:</h4>
 				<h4>Yearly:</h4>

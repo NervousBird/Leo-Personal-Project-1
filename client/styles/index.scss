@@ -35,6 +35,12 @@
   }
 }
 
+@font-face {
+  font-family: HIMO;
+  src: url('fonts/HIMORounded-Regular.ttf');
+  font-weight: bold;
+}
+
 html, 
 body {
   font-family: 'Montserrat', sans-serif;
@@ -44,9 +50,9 @@ body {
 }
 
 h3 {
-  font-family: "Chango";
+  font-family: HIMO;
   font-weight: 300;
-  font-size: 1.5rem;
+  font-size: 2.8rem;
   margin: 10px;
 }
 
@@ -65,7 +71,7 @@ main {
   max-width: 600px;
   padding: 10px;
   margin: 20px;
-  background: linear-gradient(to bottom, var(--color-blue), var(--color-paleblue1) );
+  background: linear-gradient(to bottom, var(--color-darkblue), var(--color-paleblue1) );
   border: 2px solid var(--color-orange);
   border-radius: 10px;
   animation: appear 1s forwards;
@@ -74,9 +80,11 @@ main {
     max-width: 500px;
 
     h1 {
-      font-size: 4rem;
+      font-family: HIMO;
+      font-size: 5rem;
       color: var(--color-white);
-      text-decoration: underline;
+      margin: 20px 0px;
+      // text-decoration: underline;
     }
     h1:hover {
       // animation: change-color 10s infinite;
@@ -84,12 +92,20 @@ main {
     span {
       color: var(--color-darkblue);
     }
-    p {
-      margin: 0rem 1rem 5rem 1rem;
-      padding: 10px;
-      font-size: 1.1rem;
+    .blurb {
       border: 2px solid var(--color-darkyellow);
+      border-radius: 10px;
       background: var(--color-paleyellow2);
+      margin: 0rem 1rem 3rem 1rem;
+
+      p {
+        margin: 0rem;
+        padding: 10px;
+        font-size: .9rem;
+      }
+      p:nth-child(2) {
+        font-size: .8rem;
+      }
     }
   }
 
@@ -107,8 +123,8 @@ main {
       padding: 0;
       margin: 0;
       position: absolute;
-      background-color: var(--color-paleorange1);
-      border: 2px solid var(--color-paleorange1);
+      background-color: var(--color-orange);
+      border: 2px solid var(--color-darkorange);
 
       svg {
         width: 140px;
@@ -117,25 +133,25 @@ main {
         align-self: center;
 
         .circle-1 {
-          fill: var(--color-palered1);
+          fill: var(--color-red);
           cx: 0;
           cy: 200;
           r: 70;
         }
         .circle-2 {
-          fill: var(--color-palered1);
+          fill: var(--color-red);
           cx: 110;
           cy: 200;
           r: 80;
         }
         .circle-3 {
-          fill: var(--color-paleyellow1);
+          fill: var(--color-yellow);
           cx: 40;
           cy: 200;
           r: 60;
         }
         .circle-4 {
-          fill: var(--color-paleyellow1);
+          fill: var(--color-yellow);
           cx: 120;
           cy: 200;
           r: 80;
@@ -259,22 +275,35 @@ main {
     display: flex;
     gap: 10px;
     overflow: hidden;
-    height: 231px;
+    height: 280px;
     transition: height .4s ease;
 
     .summary-container {
       display: flex;
       flex-direction: column;
-      background-color: var(--color-orange);
-      border-radius: 10px;
+      // background-color: var(--color-orange);
+      // border-radius: 10px;
 
-      .summary-title {
+      .summary-title-income,
+      .summary-title-expense {
         display: flex;
 
         h3 {
-          font-size: calc(.7rem + .2vw);
-          width: 80px;
+          font-size: 1.2rem;
+          font-weight: 100;
+          margin: 5px;
+          width: 120px;
+          align-self: center;
         }
+      }
+
+      .summary-title-income {
+        background-color: var(--color-darkgreen);
+        border-radius: 10px 10px 0px 0px;
+      }
+
+      .summary-title-expense {
+        background-color: var(--color-red);
       }
 
       .summary-table {
@@ -351,7 +380,7 @@ main {
   padding: 10px;
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 2rem;
   }
 
   .titles {
@@ -402,7 +431,9 @@ main {
 }
 
 .year-title {
-  font-size: 3rem;
+  font-family: HIMO;
+  font-size: 5rem;
+  margin: 0;
 }
 
 .finance-nav {
