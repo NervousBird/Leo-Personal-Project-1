@@ -139,14 +139,19 @@ function getDatesByDay(dateRange: DateRange, days: number): string[] {
   let currentDate = new Date(dateRange.startDate)
   let currentMonth = Number(month)
   let currentDay = Number(day)
+  let currentYear = Number(year)
 
   // Loop here
   while (currentDate < endDate) {
     // get the max amount of days
-    const finalDay = new Date(Number(year), Number(month), 0).getDate()
+    const finalDay = new Date(Number(currentYear), Number(currentMonth), 0).getDate()
+    console.log(new Date(Number(currentYear), Number(currentMonth), 0))
+    console.log(finalDay)
     // Add 7 days to next week
     const nextMonth = currentMonth + 1
     let nextDay = currentDay + days
+
+    // Check if date is above the range... i.e 31st Feb?????? why is this not automatic with the Date Object?
 
     // Check if day switches over to next month
     if (nextDay > finalDay) {

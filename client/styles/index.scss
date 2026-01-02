@@ -489,6 +489,15 @@ main {
 .recurringForm-container {
   font-size: 1rem;
 
+  .warning-container {
+    position: absolute;
+    justify-self: center;
+
+    p {
+      color: var(--color-red);
+    }
+  }
+
   .form-button {
     background-color: transparent;
   }
@@ -513,7 +522,7 @@ main {
     flex-wrap: wrap;
     background-color: var(--color-paleblue1);
     border-radius: 10px;
-    padding: 10px;
+    padding: 40px 0px 0px 0px;
 
     section {
       display: flex;
