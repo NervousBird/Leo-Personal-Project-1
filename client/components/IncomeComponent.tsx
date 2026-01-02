@@ -1,4 +1,5 @@
 import { useIncomes } from "../hooks/useIncomes.ts"
+import { useState } from "react"
 import { Income } from '../../models/incomes.ts'
 import IncomeRow from "./IncomeRow.tsx"
 import { Transaction } from "../../models/transactions.ts"
@@ -14,6 +15,7 @@ interface Props {
 
 function IncomeComponent({ incomes, transactions, dates }: Props) {
   const useIncome = useIncomes()
+  const [hidden, setHidden] = useState(false)
 
   const handleNewIncome = async () => {
     try {
@@ -39,9 +41,17 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
     return result
   }
 
+  const handleHidden = () => {
+    setHidden(!hidden)
+  }
+
   return (
     <section className="income-component">
-      <h3>Incomes</h3>
+      <button className="title" onClick={handleHidden}>
+        <h3>Incomes</h3>
+        {hidden  && <i className="bi bi-caret-up-fill" />}
+        {!hidden  && <i className="bi bi-caret-down-fill" />}
+      </button>
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
@@ -53,7 +63,7 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
         <h4 className='notes'>Notes</h4>
       </span>
       {incomes && incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(income =>
-          <div key={income.id} className='income-row'>
+          <div key={income.id} className={hidden === true ? "income-row hidden" : "income-row"}>
             <IncomeRow incomes={income} transactions={transactions} />
             <button onClick={() => handleRemoveIncome(income)}>X</button>
           </div>

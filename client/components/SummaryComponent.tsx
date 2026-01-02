@@ -72,7 +72,6 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
     setYearlyIncomeDifference((Number(yearlyIncomeInfo.actual) - Number(yearlyIncomeInfo.expected)).toFixed(2))
 
     setYearlyExpenseDifference((Number(yearlyExpenseInfo.expected) - Number(yearlyExpenseInfo.actual)).toFixed(2))
-
   }, [incomeInfo, expenseInfo, yearlyExpenseInfo, yearlyIncomeInfo])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -85,30 +84,36 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
 
   return (
     <section className="summary">
+      <h2>Summary and Targets</h2>
       <button
         className="titles"
         onClick={() => setHidden(!hidden)}>
         <h3>{getMonthAsWord(dates)[0]}</h3>
+        {hidden  && <i className="bi bi-caret-up-fill" />}
+        {!hidden  && <i className="bi bi-caret-down-fill" />}
         <p>{date}</p>
       </button>
 
       <section className={`summary-items ${hidden === false? "hidden" : ""}`}>
-        <TargetComponent onHandleSubmit={handleSubmit} />
+
+        <TargetComponent onHandleSubmit={handleSubmit} year={dates.startDate} />
 
         <div className="summary-container">
-          <div className="summary-title">
-            <h3>Type</h3>
+          <div className="summary-title-income">
+            <h3>Income</h3>
             <h3>Yearly</h3>
             <h3>Month</h3>
-            <h3>Target</h3>
+            <h3>Monthly Target</h3>
           </div>
 
           <div className="summary-table">
+            
             <div className="table">
               <h4>Expected</h4>
               <h4>Actual</h4>
               <h4>Difference</h4>
             </div>
+
             <div className="table">
               <p>{`$${yearlyIncomeInfo.expected}`}</p>
               <p>{`$${yearlyIncomeInfo.actual}`}</p>
@@ -116,6 +121,7 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
                 {`$${yearlyIncomeDifference}`}
               </p>
             </div>
+
             <div className="table">
               <p>{`$${incomeInfo.expected}`}</p>
               <p>{`$${incomeInfo.actual}`}</p>
@@ -125,6 +131,7 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
                 </p>
               </section>}
             </div>
+
             <div className="table">
               <p>
                 {`$${Number(targets.monthly).toFixed(2)}`}
@@ -138,12 +145,21 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
             </div>
           </div>
 
+          <div className="summary-title-expense">
+            <h3>Income</h3>
+            <h3>Yearly</h3>
+            <h3>Month</h3>
+            <h3>Yearly Target</h3>
+          </div>
+
           <div className="summary-table">
+
             <div className="table">
               <h4>Expected</h4>
               <h4>Actual</h4>
               <h4>Difference</h4>
             </div>
+
             <div className="table">
               <p>{`$${yearlyExpenseInfo.expected}`}</p>
               <p>{`$${yearlyExpenseInfo.actual}`}</p>
@@ -151,6 +167,7 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
                 {`$${yearlyExpenseDifference}`}
               </p>
             </div>
+
             <div className="table">
               <p>{`$${expenseInfo.expected}`}</p>
               <p>{`$${expenseInfo.actual}`}</p>
@@ -160,6 +177,7 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
                 </p>
               </section>
             </div>
+
             <div key={targets.yearly} className="table">
               <p>
                 {`$${Number(targets.yearly).toFixed(2)}`}
