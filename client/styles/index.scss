@@ -2,6 +2,8 @@
 
 * {
   font-family: Sour Gummy;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
   color: var(--color-black);
 
   --color-white: #deeaf3;
@@ -41,7 +43,7 @@
   font-weight: bold;
 }
 
-html, 
+html,
 body {
   font-family: 'Montserrat', sans-serif;
   background-color: var(--color-white);
@@ -386,7 +388,7 @@ main {
 }
 
 .targets-component {
-  background-color: var(--color-paleblue1);
+  background-color: var(--color-blue);
   border-radius: 10px;
   padding: 10px;
   height: 92%;
@@ -678,41 +680,57 @@ main {
   }
 }
 
-.income-component {
-  .title {
-    padding: 5px;
-    background-color: var(--color-darkgreen);
-    h3 {
-      margin: 0;
-    }
-  }
-  margin: 1rem 0rem 1rem 0rem;
-  .table-header {
-    background-color: var(--color-darkgreen);
-  }
-}
-.expense-component {
-  .title {
-    padding: 5px;
-    background-color: var(--color-red);
-    h3 {
-      margin: 0;
-    }
-  }
-  margin: 1rem 0rem 1rem 0rem;
-  .table-header {
-    background-color: var(--color-red);
-  }
-}
+.income-component,
+.expense-component, 
 .transaction-component {
-  .title {
-    padding: 5px;
-    background-color: var(--color-darkyellow);
-    h3 {
-      margin: 0;
+  margin: 1rem 0rem 1rem 0rem;
+
+  .topbar {
+    display: grid;
+    grid-template-columns: 50% auto;
+
+    .title {
+      justify-self: end;
+      transform: translateX(54%);
+      padding: 5px;
+      background-color: var(--color-darkgreen);
+      h3 {
+        margin: 0;
+      }
+    }
+
+    .search {
+      justify-self: end;
+      align-self: end;
+
+      input {
+        width: 200px;
+      }
     }
   }
-  margin: 1rem 0rem 1rem 0rem;
+
+  .table-header {
+    background-color: var(--color-darkgreen);
+  }
+}
+
+.expense-component {
+  .topbar {
+    .title {
+      background-color: var(--color-red);
+    }
+  }
+  .table-header {
+    background-color: var(--color-red);
+  }
+}
+
+.transaction-component {
+  .topbar {
+    .title {
+      background-color: var(--color-darkyellow);
+    }
+  }
   .table-header {
     background-color: var(--color-darkyellow);
   }
