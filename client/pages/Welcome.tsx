@@ -23,7 +23,7 @@ function Welcome() {
             <text></text>
           </svg>
         </Link>
-        <span>To Finances!</span>
+        <span>Get started!</span>
       </div>
     </section>
   )

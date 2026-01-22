@@ -81,3 +81,31 @@ export function minusCurrency(a: string, b: string):number {
   const result = (Number(a) - Number(b)).toFixed(2)
   return result
 }
+
+export function changeHexColor(colour: string, amount: number): string {
+  const hexcode = colour.replace(/^#/, '')
+
+  let r = parseInt(hexcode.substring(0,2), 16)
+  let g = parseInt(hexcode.substring(2,4), 16)
+  let b = parseInt(hexcode.substring(4,6), 16)
+
+  r = r + amount
+  g = g + amount
+  b = b + amount
+
+  r = (r > 255) ? 255 : r
+  g = (g > 255) ? 255 : g
+  b = (b > 255) ? 255 : b
+
+  r = (r < 0) ? 0 : r
+  g = (g < 0) ? 0 : g
+  b = (b < 0) ? 0 : b
+
+  r = ((r.toString(16).length==1)?"0"+r.toString(16):r.toString(16))
+  g = ((g.toString(16).length==1)?"0"+g.toString(16):g.toString(16))
+  b = ((b.toString(16).length==1)?"0"+b.toString(16):b.toString(16))
+
+  console.log(`#${r}${g}${b}`)
+
+  return `#${r}${g}${b}`
+}

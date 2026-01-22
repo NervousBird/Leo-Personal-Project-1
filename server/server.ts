@@ -3,11 +3,13 @@ import * as Path from 'node:path'
 import incomeRoutes from './routes/incomes.ts'
 import expenseRoutes from './routes/expenses.ts'
 import transactionRoutes from './routes/transactions.ts'
+import userDataRoutes from './routes/userData.ts'
 
 const server = express()
 
 server.use(express.json())
 
+server.use('/api/v1/user_data', userDataRoutes)
 server.use('/api/v1/transactions', transactionRoutes)
 server.use('/api/v1/incomes', incomeRoutes)
 server.use('/api/v1/expenses', expenseRoutes)
