@@ -282,7 +282,7 @@ main {
   .customisation-containers {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    height: 260px;
+    height: 270px;
     overflow: hidden;
     transition: height .4s ease;
     background-color: var(--background4);
@@ -293,7 +293,8 @@ main {
       margin: 5px;
 
       .customisation-preset-group {
-
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
@@ -570,7 +571,6 @@ main {
 
 .year-title {
   justify-self: center;
-  width: 200px;
 
   h1 {
     background-color: var(--background2);
@@ -578,6 +578,7 @@ main {
     border-radius: 10px;
     font-family: HIMO;
     font-size: 5rem;
+    padding: 0 20px;
     margin: 5px;
   }
 }

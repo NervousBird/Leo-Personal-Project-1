@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.patch('/', async (req, res) => {
   try {
     const data = req.body
     await db.updateUserData(data)

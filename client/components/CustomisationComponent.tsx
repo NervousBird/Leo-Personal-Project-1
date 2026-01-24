@@ -1,46 +1,52 @@
 import { useState } from 'react'
 import { changeHexColor } from '../util/calculation-utils.ts'
-
+import { appColourSchemes } from '../util/colour-scheme-utils.ts'
+import { useUserData } from '../hooks/useUserData.ts'
 
 function CustomisationComponent() {
+  const userData = useUserData()
   const [hidden, setHidden] = useState(true)
   const [formData, setFormData] = useState({
-  font: "#110601",
-  background: "#deeaf3",
-  background1: "#deeaf3",
-  background2: "#7f9fe6",
-  background3: "#a0bddd",
-  background4: "#c0d4eb",
-  button1: "#85d685",
-  button2: "#e6dd66",
-  button3: "#b30f0f",
-  button4: "#bbbbbb",
-  color1: "#eca859",
-  color1dark: "#d17a16",
-  color1light1: "#ebbb8e",
-  color1light2: "#ebcab3",
-  color2: "#e6dd66",
-  color2dark: "#e4c53d",
-  color2light1: "#ebdb8e",
-  color2light2: "#ebdeb3",
-  color3: "#7f9fe6",
-  color3dark: "#1e59d8",
-  color3light1: "#a0bddd",
-  color3light2: "#c0d4eb",
-  color4: "#85d685",
-  color4dark: "#0fa334",
-  color4light1: "#a0dda3",
-  color4light2: "#c0ebda",
-  color5: "#e74b4b",
-  color5dark: "#b30f0f",
-  color5light1: "#e7a4ad",
-  color5light2: "#e7c6c7",
+    font: "#110601",
+    background: "#deeaf3",
+    background1: "#deeaf3",
+    background2: "#7f9fe6",
+    background3: "#a0bddd",
+    background4: "#c0d4eb",
+    button1: "#85d685",
+    button2: "#e6dd66",
+    button3: "#b30f0f",
+    button4: "#bbbbbb",
+    color1: "#eca859",
+    color1dark: "#d17a16",
+    color1light1: "#ebbb8e",
+    color1light2: "#ebcab3",
+    color2: "#e6dd66",
+    color2dark: "#e4c53d",
+    color2light1: "#ebdb8e",
+    color2light2: "#ebdeb3",
+    color3: "#7f9fe6",
+    color3dark: "#1e59d8",
+    color3light1: "#a0bddd",
+    color3light2: "#c0d4eb",
+    color4: "#85d685",
+    color4dark: "#0fa334",
+    color4light1: "#a0dda3",
+    color4light2: "#c0ebda",
+    color5: "#e74b4b",
+    color5dark: "#b30f0f",
+    color5light1: "#e7a4ad",
+    color5light2: "#e7c6c7",
   })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({...prev, [name]: value}))
 
+    changeColorStyles(name, value)
+  }
+
+  const changeColorStyles = (name, value) => {
     const dark = changeHexColor(value, -20)
     const light1 = changeHexColor(value, 20)
     const light2 = changeHexColor(value, 40)
@@ -116,9 +122,28 @@ function CustomisationComponent() {
 
   const handleSave = () => {
     // Handle User Customisation database update
+    userData.update.mutateAsync({ id: 1, colors: JSON.stringify(formData), dates_range: '', leaving_point: '', user_id: 1 })
   }
+
   const handleReset = () => {
     // Handle User Customisation database update
+  }
+
+  const handleColorChange = (e: ButtonElement) => {
+    const { name } = e.target
+    const keys = Object.keys(appColourSchemes[name])
+    const values = Object.values(appColourSchemes[name])
+
+    for(let i = 0; i < keys.length; i++) {
+      changeColorStyles(keys[i], values[i])
+    }
+
+    setFormData(appColourSchemes[name])
+    console.log(JSON.stringify(formData))
+  }
+
+  const handleLogColours = () => {
+    console.log(formData)
   }
 
   return (
@@ -248,8 +273,38 @@ function CustomisationComponent() {
 
         <div className="customisation-presets-container">
           <div className="customisation-preset-group">
-
+            <div className="custom-group">
+              <h4>Original Colours</h4>
+              <span></span>
+              <button name="original" onClick={handleColorChange}>Switch</button>
+            </div>
+            <div className="custom-group">
+              <h4>Dark Mode</h4>
+              <span></span>
+              <button name="darkMode" onClick={handleColorChange}>Switch</button>
+            </div>
+            <div className="custom-group">
+              <h4>High Constrast</h4>
+              <span></span>
+              <button name="highContrast" onClick={handleColorChange}>Switch</button>
+            </div>
+            <div className="custom-group">
+              <h4>Retro</h4>
+              <span></span>
+              <button name="retro" onClick={handleColorChange}>Switch</button>
+            </div>
+            <div className="custom-group">
+              <h4>Sleak Look</h4>
+              <span></span>
+              <button name="sleak" onClick={handleColorChange}>Switch</button>
+            </div>
+            <div className="custom-group">
+              <h4>Nature</h4>
+              <span></span>
+              <button name="nature" onClick={handleColorChange}>Switch</button>
+            </div>
           </div>
+          <button onClick={handleLogColours}>Log Colour Scheme</button>
         </div>
         <button className="customisation-save" onClick={handleSave}>Save</button>
         <button className="customisation-reset" onClick={handleReset}>Reset</button>

@@ -12,7 +12,7 @@ function App() {
 
   return (
     <main>
-      {data && <div>Hello {data}</div>}
+      {data && <div>Hello {console.log(data)}</div>}
       <Outlet />
     </main>
   )
