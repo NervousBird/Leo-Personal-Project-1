@@ -5,7 +5,7 @@ import * as db from '../db/userData.ts'
 const router = Router()
 
 router.get('/', async (req, res) => {
-  const { id } = req.params
+  // const { id } = req.params
 
   try {
     const userData = await db.getUserData()

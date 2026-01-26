@@ -6,33 +6,6 @@
   font-feature-settings: "tnum";
   color: var(--color-black);
 
-  --color-white: #deeaf3;
-  --color-black: #110601;
-
-  --color-orange: #eca859;
-  --color-darkorange: #d17a16;
-  --color-yellow: #e6dd66;
-  --color-darkyellow: #e4c53d;
-  --color-blue: #7f9fe6;
-  --color-darkblue: #1e59d8;
-  --color-green: #85d685;
-  --color-darkgreen: #0fa334;
-  --color-red: #e74b4b;
-  --color-darkred: #b30f0f;
-
-  --color-paleorange1: #ebbb8e;
-  --color-paleorange2: #ebcab3;
-  --color-paleyellow1: #ebdb8e;
-  --color-paleyellow2: #ebdeb3;
-  --color-paleblue1: #a0bddd;
-  --color-paleblue2: #c0d4eb;
-  --color-palegreen1: #a0dda3;
-  --color-palegreen2: #c0ebda;
-  --color-palered1: #e7a4ad;
-  --color-palered2: #e7c6c7;
-
-
-
   --font: #110601;
   --background: #deeaf3;
 
@@ -71,8 +44,11 @@
   --color5-light1: #e7a4ad;
   --color5-light2: #e7c6c7;
 
+  --border-radius: 10px;
+  --button-radius: 5px;
 
   border: none;
+
   :focus {
     outline: none;
   }
@@ -112,6 +88,34 @@ main {
   min-height: 100vh;
 }
 
+input {
+  border: none;
+}
+input:focus {
+  background: var(--background2);
+}
+
+select {
+  border: none;
+}
+select:focus {
+  background: var(--background2);
+}
+
+option {
+  background: var(--background1);
+}
+
+input[type="range"] {
+  width: 50px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  border-radius: 2px;
+  background-color: var(--background);
+  outline: 1px solid var(--font);
+}
+
 .welcome-container {
   display: flex;
   flex-direction: column;
@@ -122,7 +126,7 @@ main {
   margin: 20px;
   background: linear-gradient(to bottom, var(--background2), var(--background3));
   border: 2px solid var(--font);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   animation: appear 1s forwards;
 
   .title-container {
@@ -141,7 +145,7 @@ main {
 
     .blurb {
       border: 2px solid var(--font);
-      border-radius: 10px;
+      border-radius: var(--border-radius);
       background: var(--background4);
       margin: 0rem 1rem 3rem 1rem;
 
@@ -276,39 +280,108 @@ main {
   flex-direction: column;
   background-color: var(--background3);
   border: 2px solid var(--font);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   padding: 5px;
 
+  h3 {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  button {
+    margin: 0;
+  }
+
   .customisation-containers {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    height: 270px;
+    display: flex;
+    flex-direction: columns;
+    flex-wrap: wrap;
+    // grid-template-columns: repeat(2, 1fr);
+    height: 280px;
     overflow: hidden;
     transition: height .4s ease;
     background-color: var(--background4);
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     outline: 2px solid var(--font);
 
     .customisation-presets-container {
+      // flex-basis: 50%;
       margin: 5px;
+
+      h3 {
+        padding: 0;
+        margin: 0;
+        font-size: 1.5rem;
+      }
 
       .customisation-preset-group {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
+        justify-self: center;
+
+        .custom-group {
+          padding: 5px;
+
+          h4 {
+            margin: 5px;
+          }
+
+          span {
+            display: flex;
+
+            div {
+              width: 10px;
+              height: 20px;
+            }
+          }
+
+          button {
+            margin: 2px;
+            padding: 5px;
+            background-color: var(--button4);
+          }
+          button:hover {
+            background-color: color-mix(in hsl, var(--button4), black 20%);
+          }
+        }
       }
     }
 
     .customisation-options-container {
       margin: 5px;
 
+      h3 {
+        padding: 0;
+        margin: 0;
+        font-size: 1.5rem;
+      }
+
       .customisation-group {
         display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        gap: 5px;
+        grid-template-columns: repeat(4, 115px 90px);
+        justify-self: center;
+        align-self: center;
+        gap: 0px;
+        align-items: baseline;
+
+        h4 {
+          margin: 5px;
+        }
 
         input,
         label {
           margin: 5px;
+          max-width: 100px;
+          justify-self: center;
+        }
+
+        div {
+          display: flex;
+          p {
+            padding: 5px;
+            margin: 0;
+            text-align: right;
+          }
         }
       }
     }
@@ -329,11 +402,18 @@ main {
   }
 
   .customisation-save {
-    justify-self: right;
-    background-color: var(--button1);
-  }
-  .customisation-save:hover {
-    background-color: color-mix(in hsl, var(--button1), black 30%);
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    flex-basis: 100%;
+
+    button {
+      background-color: var(--button1);
+      padding: 5px 10px;
+    }
+    button:hover {
+      background-color: color-mix(in hsl, var(--button1), black 30%);
+    }
   }
 
   .customisation-reset {
@@ -352,17 +432,18 @@ main {
   max-width: 800px;
   height: 100%;
   justify-self: center;
-  background-color: var(--color1-light2);
+  background-color: var(--background2);
   border: 2px solid var(--font);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   position: sticky;
   top: 19vh;
+  overflow: hidden;
 
   h2 {
     margin: 0;
     padding: 5px;
-    background-color: var(--color1-light1);
-    border-radius: 10px 10px 0px 0px;
+    background-color: var(--background3);
+    border-radius: var(--border-radius) var(--border-radius) 0px 0px;
   }
 
   .titles {
@@ -373,7 +454,7 @@ main {
     background-color: transparent;
 
     h3 {
-      background-color: var(--color1-light1);
+      background-color: var(--background3);
       margin: 0;
       padding: 4px;
     }
@@ -411,7 +492,7 @@ main {
 
       .summary-title-income {
         background-color: var(--color4-dark);
-        border-radius: 10px 10px 0px 0px;
+        border-radius: var(--border-radius) var(--border-radius) 0px 0px;
       }
 
       .summary-title-expense {
@@ -450,7 +531,7 @@ main {
         display: flex;
         justify-content: space-between;
         background-color: var(--color3-light1);
-        border-radius: 0 0 10px 10px;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
         width: 100%;
 
         .table {
@@ -471,7 +552,7 @@ main {
   .summary-summaries-table {
 
     h3 {
-      background-color: var(--color1-light1);
+      background-color: var(--background3);
       margin: 10px 0px 10px 0px;
       padding: 5px;
     }
@@ -514,7 +595,7 @@ main {
 
 .targets-component {
   background-color: var(--background3);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
   padding: 10px;
   height: 92%;
 
@@ -564,9 +645,9 @@ main {
   justify-content: center;
   align-items: center;
   padding: 10px 30px;
-  background: linear-gradient(to bottom in hsl, var(--background2), var(--background3));
+  background: var(--background2);
   border: 2px solid var(--font);
-  border-radius: 10px;
+  border-radius: var(--border-radius);
 }
 
 .year-title {
@@ -575,7 +656,7 @@ main {
   h1 {
     background-color: var(--background2);
     border: 2px solid var(--font);
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     font-family: HIMO;
     font-size: 5rem;
     padding: 0 20px;
@@ -590,17 +671,18 @@ main {
   align-items: center;
   background-color: var(--background3);
   border: 2px solid var(--font);
-  border-radius: 10px;
-  padding: 0rem 2rem 1rem 2rem;
+  border-radius: var(--border-radius);
+  padding: 0rem 3rem 1rem 3rem;
   margin: 10px;
   width: 350px;
+  overflow: hidden;
 
   button {
     font-size: 1.1rem;
     background-color: var(--button2);
     margin: 5px 2px 5px 2px;
     padding: 5px;
-    border-radius: 5px;
+    border-radius: var(--button-radius);
     transition: background-color .2s ease-out;
   }
 
@@ -667,7 +749,7 @@ main {
     justify-content: center;
     flex-wrap: wrap;
     background-color: var(--background3);
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     padding: 40px 0px 0px 0px;
 
     section {
@@ -715,8 +797,8 @@ main {
       }
       select:focus,
       input:focus {
-        background-color: #7f9fe6;
-        border-radius: 5px;
+        background-color: var(--color1);
+        border-radius: var(--button-radius);
         transition: background-color .2s ease;
       }
     }
@@ -730,7 +812,7 @@ main {
       button {
         font-size: 1rem;
         border: none;
-        border-radius: 5px;
+        border-radius: var(--button-radius);
         background-color: var(--button1);
         padding: 5px;
         margin: 5px;
@@ -763,7 +845,7 @@ main {
   button {
     font-size: 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--button-radius);
     background-color: var(--button1);
     margin: 5px;
     transition: background-color .2s ease-out;
@@ -959,7 +1041,7 @@ section {
       position: absolute;
       background-color: #ff4444;
       color: white;
-      border-radius: 5px;
+      border-radius: var(--border-radius);
       padding: 0px 5px 0px 5px;
       margin-left: -15px;
       align-self: center;
@@ -970,7 +1052,7 @@ section {
     span {
       font-size: 1rem;
       border: none;
-      border-radius: 5px;
+      border-radius: var(--button-radius);
       color: var(--font);
       background-color: transparent;
       padding: 2px 5px 2px 5px;
@@ -980,7 +1062,7 @@ section {
     select:focus,
     input:focus {
       background-color: var(--color4-dark); 
-      border-radius: 5px;
+      border-radius: var(--button-radius);
       outline:none;
       transition: background-color .2s ease;
     }
@@ -1013,7 +1095,7 @@ section {
       }
 
       option:hover {
-        background-color: var(--color4);
+        background-color: var(--color4-dark);
         transition: background-color .2s ease;
       }
     }
@@ -1022,7 +1104,7 @@ section {
       position: absolute;
       background-color: var(--color4-dark);
       color: white;
-      border-radius: 5px;
+      border-radius: var(--button-radius);
       padding: 0px 5px 0px 5px;
       margin-left: 1055px;
       align-self: center;
@@ -1037,7 +1119,7 @@ section {
         background-color: var(--color5-light2);
       }
       option:hover {
-        background-color: var(--color5);
+        background-color: var(--color5-dark);
       }
     }
   }
@@ -1080,7 +1162,7 @@ section {
       position: absolute;
       background-color: var(--color5);
       color: white;
-      border-radius: 5px;
+      border-radius: var(--border-radius);
       padding: 0px 5px 0px 5px;
       margin-left: -15px;
       align-self: center;
@@ -1091,7 +1173,7 @@ section {
     span {
       font-size: 1rem;
       border: none;
-      border-radius: 5px;
+      border-radius: var(--button-radius);
       color: var(--font);
       background-color: transparent;
       padding: 2px 5px 2px 5px;
@@ -1113,7 +1195,7 @@ section {
     select:focus,
     input:focus {
       background-color: var(--color2-dark);
-      border-radius: 5px;
+      border-radius: var(--button-radius);
       outline:none;
       transition: background-color .2s ease;
     }
@@ -1141,7 +1223,7 @@ section {
       position: absolute;
       background-color: var(--button4);
       color: var(--color-white);
-      border-radius: 5px;
+      border-radius: var(--button-radius);
       padding: 0px 5px 0px 5px;
       margin-left: 803px;
       align-self: center;

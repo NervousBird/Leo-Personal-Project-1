@@ -74,7 +74,7 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
         </button>
         <div className="search">
           <label htmlFor="search">Search:</label>
-          <input type="text" name="search" value={searchString.search} onChange={handleChange} />
+          <input id="search" type="text" name="search" value={searchString.search} onChange={handleChange} />
         </div>
       </div>
 
@@ -94,12 +94,6 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
             <button onClick={() => handleRemoveIncome(income)}>X</button>
           </div>
       )}
-      {/* {incomes && incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(income => */}
-      {/*     <div key={income.id} className={hidden === true ? "income-row hidden" : "income-row"}> */}
-      {/*       <IncomeRow incomes={income} transactions={transactions} /> */}
-      {/*       <button onClick={() => handleRemoveIncome(income)}>X</button> */}
-      {/*     </div> */}
-      {/*   )} */}
       <button onClick={handleNewIncome}>+</button>
     </section>
   )

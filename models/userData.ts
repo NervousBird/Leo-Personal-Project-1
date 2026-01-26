@@ -2,8 +2,11 @@ export interface UserData extends UserDataObject {
   id: number
 }
 
-export interface UserObject {
-  name: string
-  email: string
-  sub: string
+export interface UserDataObject {
+  colors: string
+  borders: string
+  fonts: string
+  datesRange: string
+  leavingPoint: string
+  userId: number
 }

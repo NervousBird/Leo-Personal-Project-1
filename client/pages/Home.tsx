@@ -21,7 +21,7 @@ function Home() {
   const { data: incomes, isPending: incomesPending, isError: incomesError } = useIncomes()
   const { data: expenses, isPending: expensesPending, isError: expensesError } = useExpenses()
   const { data: transactions, isPending: transactionsPending, isError: transactionsError } = useTransactions()
-  const { data: userDate, isPending: userDataPending, isError: userDataError } = useUserData()
+  const { data: userData, isPending: userDataPending, isError: userDataError } = useUserData()
 
   const [dateRange, setDateRange] = useState({ startDate: setDate[0], endDate: setDate[1] })
   const [cycleType, setCycleType] = useState('monthly')
@@ -70,7 +70,9 @@ function Home() {
         Home
       </Link>
 
-      <CustomisationComponent />
+      {userData &&
+        <CustomisationComponent data={userData} />
+      }
 
       <header className="year-title">
         <h1>{yearTitle}</h1>
