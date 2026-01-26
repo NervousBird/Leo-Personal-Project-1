@@ -4,8 +4,10 @@ import { changeDatesByMonth, getMonthAsWord, padDate } from "../util/date-utils"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
 import { useTransactions } from "../hooks/useTransactions"
+import { useUserData } from "../hooks/useUserData.ts"
 import Finances from "./Finances"
 import SummaryComponent from "../components/SummaryComponent"
+import CustomisationComponent from "../components/CustomisationComponent.tsx"
 
 const currentYear = new Date().getFullYear()
 const currentMonth = new Date().getMonth()
@@ -19,7 +21,8 @@ function Home() {
   const { data: incomes, isPending: incomesPending, isError: incomesError } = useIncomes()
   const { data: expenses, isPending: expensesPending, isError: expensesError } = useExpenses()
   const { data: transactions, isPending: transactionsPending, isError: transactionsError } = useTransactions()
-  
+  const { data: userData, isPending: userDataPending, isError: userDataError } = useUserData()
+
   const [dateRange, setDateRange] = useState({ startDate: setDate[0], endDate: setDate[1] })
   const [cycleType, setCycleType] = useState('monthly')
   const [dateTitle, setDateTitle] = useState([] as string[])
@@ -28,7 +31,6 @@ function Home() {
   useEffect(() => {
     updateMonthDisplay()
     updateYearDisplay()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dateRange])
 
   const updateMonthDisplay = () => {
@@ -68,8 +70,12 @@ function Home() {
         Home
       </Link>
 
-      <header>
-        <h1 className="year-title">{yearTitle}</h1>
+      {userData &&
+        <CustomisationComponent data={userData} />
+      }
+
+      <header className="year-title">
+        <h1>{yearTitle}</h1>
       </header>
 
       <div className="information-container">
@@ -93,9 +99,11 @@ function Home() {
             onHandleChange={handleChange}
             onHandleChangeMonth={handleChangeMonth}
             onHandleCycleType={handleCycleType}
-          /> 
+          />
         }
+
         {/* Add nav bar to cycle summary and tables? */}
+
         {incomes && expenses && transactions &&
           <SummaryComponent incomes={incomes} expenses={expenses} transactions={transactions} dates={dateRange} />
         }

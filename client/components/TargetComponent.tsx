@@ -28,7 +28,8 @@ function TargetComponent({ onHandleSubmit, year }: Props) {
         <div className="input-container">
           <div className="input">
             <label htmlFor="monthly">Target:</label>
-            <input 
+            <input
+              id="monthly"
               name="monthly"
               value={targets.monthly}
               onChange={handleChange}
@@ -37,8 +38,9 @@ function TargetComponent({ onHandleSubmit, year }: Props) {
           </div>
           <div className="input">
             <label htmlFor="yearly">Target:</label>
-            <input 
-              name="yearly" 
+            <input
+              id="yearly"
+              name="yearly"
               value={targets.yearly}
               onChange={handleChange}
               placeholder="yearly"

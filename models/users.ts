@@ -3,7 +3,8 @@ export interface User extends UserObject {
 }
 
 export interface UserObject {
-  name: string
-  email: string
-  sub: string
+  colors: string
+  dates_range: string
+  leaving_point: string
+  userId: number
 }

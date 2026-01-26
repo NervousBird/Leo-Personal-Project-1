@@ -10,19 +10,16 @@ interface Props {
 }
 
 function IncomeRow({ incomes, transactions }: Props) {
-  // const { data: transactions, isPending, isError, error } = useTransactions()
   const useIncome = useIncomes()
   const [incomeData, setIncomeData] = useState(incomes)
-  
+
   const [warning, setWarning] = useState(false)
   const [difference, setDifference] = useState('$0.00')
   const [actual, setActual] = useState('')
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     updateDifference()
     countActualAmount()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [incomes, actual, transactions, incomeData.expected])
 
   const countActualAmount = async () => {
@@ -75,7 +72,6 @@ function IncomeRow({ incomes, transactions }: Props) {
       expected: incomeData.expected,
       notes: incomeData.notes,
     })
-    // onHandleAddIncomes(incomeData)
     setWarning(false)
   }
 

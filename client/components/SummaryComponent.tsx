@@ -222,6 +222,27 @@ function SummaryComponent({ incomes, expenses, transactions, dates }: Props) {
 
         </div>
       </section>
+
+      <section className="summary-summaries-table">
+        <h3>Summary Table</h3>
+        <button
+          className="titles"
+          onClick={() => setHidden(!hidden)}>
+          {hidden  && <i className="bi bi-caret-up-fill" />}
+          {!hidden  && <i className="bi bi-caret-down-fill" />}
+          <p>{date}</p>
+        </button>
+
+        <div>
+          <p>Currently on track for <b>{getMonthAsWord(dates)[0]}</b> to make:</p>
+          <p>{`$${(Number(incomeInfo.actual) - Number(expenseInfo.actual)).toFixed(2)}`}</p>
+        </div>
+ 
+        <div>
+          <p>Currently on track for <b>{dates.startDate.slice(0, 4)}</b> to make: </p>
+          <p>{`$${minusCurrency(yearlyIncomeInfo.actual, yearlyExpenseInfo.actual)}`}</p>
+        </div>
+      </section>
     </section>
   )
 }

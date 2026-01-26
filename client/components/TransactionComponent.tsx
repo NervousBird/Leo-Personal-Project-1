@@ -1,5 +1,5 @@
 import { Transaction } from "../../models/transactions"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTransactions } from "../hooks/useTransactions"
 import TransactionRow from "./TransactionRow"
 
@@ -14,6 +14,9 @@ interface Props {
 function TransactionComponent({ transactions, dates }: Props) {
   const useTransaction = useTransactions()
   const [hidden, setHidden] = useState(false)
+  const [filteredTransactions, setFilteredTransactions] = useState(transactions)
+  const [searchString, setSearchString] = useState({ search: "" })
+
 
   const handleNewTransaction = async () => {
     try {
@@ -25,7 +28,7 @@ function TransactionComponent({ transactions, dates }: Props) {
         notes: '',
       })
     } catch (error) {
-      console.error('Error adding income:', error)
+      console.error('Error adding transaction:', error)
     }
   }
 
@@ -42,13 +45,38 @@ function TransactionComponent({ transactions, dates }: Props) {
     setHidden(!hidden)
   }
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setSearchString((prev) => ({...prev, [name]: value}))
+  }
+
+  const filterTransaction = () => {
+    let filter = transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate))
+    if(searchString.search !== "") {
+      filter = filter.filter(transaction => transaction.name.toLowerCase().includes(searchString.search.toLowerCase()))
+    }
+    setFilteredTransactions(filter)
+  }
+
+  useEffect(() => {
+    filterTransaction()
+  }, [transactions, dates, searchString])
+
+
   return (
     <section className="transaction-component">
-      <button className="title" onClick={handleHidden}>
-        <h3>Transactions</h3>
-        {hidden  && <i className="bi bi-caret-up-fill" />}
-        {!hidden  && <i className="bi bi-caret-down-fill" />}
-      </button>
+      <div className="topbar">
+        <button className="title" onClick={handleHidden}>
+          <h3>Transactions</h3>
+          {hidden  && <i className="bi bi-caret-up-fill" />}
+          {!hidden  && <i className="bi bi-caret-down-fill" />}
+        </button>
+        <div className="search">
+          <label htmlFor="search">Search:</label>
+          <input type="text" name="search" value={searchString.search} onChange={handleChange} />
+        </div>
+      </div>
+
       <span className='table-header'>
         <h4 className='name'>Name</h4>
         <h4 className='type'>Type</h4>
@@ -56,7 +84,7 @@ function TransactionComponent({ transactions, dates }: Props) {
         <h4 className='amount'>Amount</h4>
         <h4 className='notes'>Notes</h4>
       </span>
-      {transactions && transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate)).map(transaction => 
+      {filteredTransactions && filteredTransactions.map(transaction => 
         <div key={transaction.id} className={hidden === true ? 'transaction-row hidden' : 'transaction-row'}>
           <TransactionRow transactionData={transaction} dates={dates}/>
           <button onClick={() => handleRemoveTransaction(transaction)}>X</button>
