@@ -57,7 +57,6 @@ function TransactionRow({ transactionData, dates }: Props) {
       ])].filter(type => type !== '')
       setTypesChoice(types)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [incomes, expenses])
 
   return (

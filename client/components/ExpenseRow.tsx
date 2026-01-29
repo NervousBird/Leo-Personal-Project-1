@@ -3,6 +3,7 @@ import { Expense } from "../../models/expenses"
 import { useExpenses } from "../hooks/useExpenses"
 import { Transaction } from "../../models/transactions"
 import { getNextDate, isDateBetween } from "../util/date-utils"
+
 interface Props {
   expenses: Expense
   transactions: Transaction[]
@@ -11,18 +12,16 @@ interface Props {
 function ExpenseRow({ expenses, transactions }: Props) {
   const useExpense = useExpenses()
   const [expenseData, setExpenseData] = useState(expenses)
-  
+
   const [warning, setWarning] = useState(false)
   const [difference, setDifference] = useState('$0.00')
-  const [actual, setActual] = useState('') // Grab this as ALL transactions relating to the "type"
+  const [actual, setActual] = useState('')
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     updateDifference()
     countActualAmount()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actual, expenseData.expected, transactions])
-  
+
   const countActualAmount = async () => {
     if (transactions) {
       const startDate = expenseData.date
@@ -32,15 +31,12 @@ function ExpenseRow({ expenses, transactions }: Props) {
         isDateBetween(transaction.date, startDate, endDate))
         .map(transaction => transaction.amount)
 
-      // Expand the above to filter based on the frequency, only transactions between that frequency should show
-      // IE: startDate: 01/01/2025, freq: monthly, filter things out if they are during or after 01/02/2025
-
       if (amounts.length !== 0) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
       } else {
         setActual(expenseData.expected)
-      }      
+      }
     }
   }
 
@@ -49,7 +45,7 @@ function ExpenseRow({ expenses, transactions }: Props) {
     const actualNum = Number(actual.replace('$', ''))
     setDifference(`${(expectedNum - actualNum).toFixed(2)}`)
   }
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     switch(name) {
@@ -96,11 +92,11 @@ function ExpenseRow({ expenses, transactions }: Props) {
           onChange={handleChange}
           placeholder="type"
         />
-        <select 
-          className="frequency" 
-          id='frequency' 
-          name="frequency" 
-          value={expenseData.frequency} 
+        <select
+          className="frequency"
+          id='frequency'
+          name="frequency"
+          value={expenseData.frequency}
           onChange={handleChange}>
           <option value="daily">daily</option>
           <option value="weekly">weekly</option>
@@ -110,7 +106,7 @@ function ExpenseRow({ expenses, transactions }: Props) {
           <option value="bi-yearly">bi-yearly</option>
           <option value="yearly">yearly</option>
         </select>
-        <input 
+        <input
           className="date"
           name="date"
           value={expenseData.date}

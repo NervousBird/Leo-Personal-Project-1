@@ -25,12 +25,11 @@ function ReccuringForm() {
   const useExpense = useExpenses()
   const [formData, setFormData] = useState(defaultForm)
   const [formWarning, setFormWarning] = useState({ state: false, message: '' })
-  const [hidden, setHidden] = useState()
+  const [hidden, setHidden] = useState(false)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
   
-    // Check form is valid (REQUIRES: category, type, frequency, startDate)  
     if(formData.category === '') {
       return setFormWarning({ state: true, message: 'Category must have a valid input!' })
     }
@@ -44,12 +43,10 @@ function ReccuringForm() {
       return setFormWarning({ state: true, message: 'Start Date must have a valid input!' })
     }
 
-    // Calculate necessary future dates based on frequency, startDate, endDate
     const datesArray = getDatesToAdd({ startDate: formData.startDate, endDate: formData.endDate}, formData.frequency)
     let filteredDates = [] as string[]
 
     if(datesArray?.length > 0) {
-      // Check if they exist already (if they do, maybe mutate them?)
       if(formData.category === 'Income') {
         const filteredIncomes = incomes?.filter(income => {
           income.type === formData.type ? true : false
@@ -57,7 +54,7 @@ function ReccuringForm() {
 
         filteredDates = datesArray.filter(date => !filteredIncomes?.includes(date))
       }
-      // change for expense
+
       if(formData.category === 'Expense') {
         const filteredExpenses = expenses?.filter(expense => {
           expense.type === formData.type ? true : false
@@ -125,7 +122,6 @@ function ReccuringForm() {
   const handleHidden = (e: FormEvent) => {
     e.preventDefault()
     setHidden(!hidden)
-    console.log("test")
   }
   
   return (
