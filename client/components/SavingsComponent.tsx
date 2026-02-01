@@ -1,11 +1,11 @@
-import { useIncomes } from "../hooks/useIncomes.ts"
 import { useState, useEffect, ChangeEvent } from "react"
-import { Income } from '../../models/incomes.ts'
-import IncomeRow from "./IncomeRow.tsx"
+import { useSavings } from "../hooks/useSavings.ts"
+import { Savings } from '../../models/savings.ts'
+import SavingsRow from "./SavingsRow.tsx"
 import { Transaction } from "../../models/transactions.ts"
 
 interface Props {
-  incomes: Income[]
+  savings: Savings[]
   transactions: Transaction[]
   dates: {
     startDate: string
@@ -13,20 +13,19 @@ interface Props {
   }
 }
 
-function IncomeComponent({ incomes, transactions, dates }: Props) {
-  const useIncome = useIncomes()
+function SavingsComponent({ savings, transactions, dates }: Props) {
+  const useSaving = useSavings()
   const [hidden, setHidden] = useState(false)
-  const [filteredIncomes, setFilteredIncomes] = useState(incomes)
+  const [filteredSavings, setFilteredSavings] = useState(savings)
   const [searchString, setSearchString] = useState({ search: "" })
 
-  const handleNewIncome = async () => {
+  const handleNewSavings = async () => {
     try {
-      await useIncome.add.mutateAsync({
+      await useSaving.add.mutateAsync({
         name: '',
-        type: '',
+        amount: '0.00',
         frequency: `weekly`,
-        date: `${dates.startDate}`,
-        expected: '0.00',
+        startingDate: `${dates.startDate}`,
         notes: '',
       })
     } catch (error) {
@@ -34,8 +33,8 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
     }
   }
 
-  const handleRemoveIncome = async (id: Income) => {
-    await useIncome.delete.mutateAsync(id)
+  const handleRemoveSavings = async (id: Savings) => {
+    await useSaving.delete.mutateAsync(id)
   }
 
   const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
@@ -52,23 +51,23 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
     setSearchString((prev) => ({...prev, [name]: value}))
   }
 
-  const filterIncome = () => {
-    let filter = incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate))
+  const filterSavings = () => {
+    let filter = savings.filter(saving=> isDateBetween(saving.startingDate, dates.startDate, dates.endDate))
     if(searchString.search !== "") {
-      filter = filter.filter(income => income.name.toLowerCase().includes(searchString.search.toLowerCase()))
+      filter = filter.filter(saving=> saving.name.toLowerCase().includes(searchString.search.toLowerCase()))
     }
-    setFilteredIncomes(filter)
+    setFilteredSavings(filter)
   }
 
   useEffect(() => {
-    filterIncome()
-  }, [incomes, dates, searchString])
+    filterSavings()
+  }, [savings, dates, searchString])
 
   return (
-    <section className="income-component">
+    <section className="savings-component">
       <div className="topbar">
         <button className="title" onClick={handleHidden}>
-          <h3>Incomes</h3>
+          <h3>Savings</h3>
           {hidden  && <i className="bi bi-caret-up-fill" />}
           {!hidden  && <i className="bi bi-caret-down-fill" />}
         </button>
@@ -80,7 +79,6 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
 
       <span className='table-header'>
         <h4 className='name'>Name</h4>
-        <h4 className='type'>Type</h4>
         <h4 className='frequency'>Frequency</h4>
         <h4 className='date'>Date</h4>
         <h4 className='expected'>Expected</h4>
@@ -88,15 +86,15 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
         <h4 className='difference'>Difference</h4>
         <h4 className='notes'>Notes</h4>
       </span>
-      {filteredIncomes && filteredIncomes.map(income =>
-          <div key={income.id} className={hidden === true ? "income-row hidden" : "income-row"}>
-            <IncomeRow incomes={income} transactions={transactions} />
-            <button onClick={() => handleRemoveIncome(income)}>X</button>
+      {filteredSavings && filteredSavings.map(saving=>
+          <div key={saving.id} className={hidden === true ? "savings-row hidden" : "savings-row"}>
+            <SavingsRow savings={saving} transactions={transactions} />
+            <button onClick={() => handleRemoveSavings(saving)}>X</button>
           </div>
       )}
-      <button onClick={handleNewIncome}>+</button>
+      <button onClick={handleNewSavings}>+</button>
     </section>
   )
 }
 
-export default IncomeComponent
+export default SavingsComponent

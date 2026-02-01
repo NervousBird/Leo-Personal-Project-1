@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, ChangeEvent, FormEvent } from 'react'
 import { changeColorStyles, appColourSchemes, appRadiusSchemes } from '../util/colour-scheme-utils.ts'
 import { useUserData } from '../hooks/useUserData.ts'
 import { UserData } from '../../models/userData.ts'
+import { UserColorScheme, UserColorArray, BorderScheme, UserBorderScheme } from '../../models/customisations.ts'
 
 interface Props {
   data: UserData
@@ -10,8 +11,8 @@ interface Props {
 function CustomisationComponent({ data }: Props) {
   const userData = useUserData()
   const [hidden, setHidden] = useState(true)
-  const [formData, setFormData] = useState(JSON.parse(data.colors))
-  const [radiusForm, setRadiusForm] = useState(JSON.parse(data.borders))
+  const [formData, setFormData] = useState<UserColorScheme>(JSON.parse(data.colors))
+  const [radiusForm, setRadiusForm] = useState<BorderScheme>(JSON.parse(data.borders))
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -32,39 +33,34 @@ function CustomisationComponent({ data }: Props) {
       colors: JSON.stringify(formData),
       borders: JSON.stringify(radiusForm),
       fonts: '',
-      dates_range: '',
-      leaving_point: '',
-      user_id: 1,
+      datesRange: '',
+      leavingPoint: '',
+      userId: 1,
     })
-    console.log('saved')
   }
 
-  const handleReset = () => {
-    // Handle User Customisation database update
-  }
-
-  const handleLoadScheme = (e: ButtonElement) => {
+  const handleLoadScheme = (e: React.MouseEvent<HTMLButtonElement>) => {
     handleColorChange(e)
 
-    const { name } = e.target
-    document.documentElement.style.setProperty('--border-radius', appRadiusSchemes[name].border)
-    document.documentElement.style.setProperty('--button-radius', appRadiusSchemes[name].button)
-    setRadiusForm(appRadiusSchemes[name])
+    const { name } = e.target as HTMLButtonElement
+    document.documentElement.style.setProperty('--border-radius', appRadiusSchemes[name as keyof UserBorderScheme].border)
+    document.documentElement.style.setProperty('--button-radius', appRadiusSchemes[name as keyof UserBorderScheme].button)
+    setRadiusForm(appRadiusSchemes[name as keyof UserBorderScheme])
   }
 
-  const handleColorChange = (e: ButtonElement) => {
-    const { name } = e.target
-    const keys = Object.keys(appColourSchemes[name])
-    const values = Object.values(appColourSchemes[name])
+  const handleColorChange = (e: ChangeEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>) => {
+    const { name } = e.target as HTMLButtonElement
+    const keys = Object.keys(appColourSchemes[name as keyof UserColorArray])
+    const values = Object.values(appColourSchemes[name as keyof UserColorArray]) as []
 
     for (let i = 0; i < keys.length; i++) {
       changeColorStyles(keys[i], values[i])
     }
 
-    setFormData(appColourSchemes[name])
+    setFormData(appColourSchemes[name as keyof UserColorArray])
   }
 
-  const handleRadiusChange = (e: HTMLInputElement) => {
+  const handleRadiusChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     if (name === 'border') {
       document.documentElement.style.setProperty(
@@ -77,7 +73,6 @@ function CustomisationComponent({ data }: Props) {
         `${value}px`,
       )
     }
-    console.log(name, value)
     setRadiusForm((prev) => ({ ...prev, [name]: `${value}px` }))
   }
 
@@ -85,11 +80,9 @@ function CustomisationComponent({ data }: Props) {
     console.log(formData)
   }
 
-  console.log(Object.values(appColourSchemes).map((scheme) => scheme.font))
-
   return (
     <section
-      key={formData}
+      key={formData.font}
       className="customisation-container"
       style={{ color: `${formData.font} !important` }}
     >
@@ -251,11 +244,11 @@ function CustomisationComponent({ data }: Props) {
           <h3>Palettes</h3>
           <div className="customisation-preset-group">
             <div className="custom-group">
-              <h4>Original Colours</h4>
+              <h4>Original</h4>
               <span>
                 {Object.values(appColourSchemes.original).map((scheme, idx) => (
                   <div
-                    key={(scheme, idx)}
+                    key={idx}
                     style={{ backgroundColor: scheme }}
                   ></div>
                 ))}
@@ -269,7 +262,7 @@ function CustomisationComponent({ data }: Props) {
               <span>
                 {Object.values(appColourSchemes.darkMode).map((scheme, idx) => (
                   <div
-                    key={(scheme, idx)}
+                    key={idx}
                     style={{ backgroundColor: scheme }}
                   ></div>
                 ))}
@@ -284,7 +277,7 @@ function CustomisationComponent({ data }: Props) {
                 {Object.values(appColourSchemes.highContrast).map(
                   (scheme, idx) => (
                     <div
-                      key={(scheme, idx)}
+                      key={idx}
                       style={{ backgroundColor: scheme }}
                     ></div>
                   ),
@@ -299,7 +292,7 @@ function CustomisationComponent({ data }: Props) {
               <span>
                 {Object.values(appColourSchemes.retro).map((scheme, idx) => (
                   <div
-                    key={(scheme, idx)}
+                    key={idx}
                     style={{ backgroundColor: scheme }}
                   ></div>
                 ))}
@@ -313,7 +306,7 @@ function CustomisationComponent({ data }: Props) {
               <span>
                 {Object.values(appColourSchemes.sleak).map((scheme, idx) => (
                   <div
-                    key={(scheme, idx)}
+                    key={idx}
                     style={{ backgroundColor: scheme }}
                   ></div>
                 ))}
@@ -327,7 +320,7 @@ function CustomisationComponent({ data }: Props) {
               <span>
                 {Object.values(appColourSchemes.nature).map((scheme, idx) => (
                   <div
-                    key={(scheme, idx)}
+                    key={idx}
                     style={{ backgroundColor: scheme }}
                   ></div>
                 ))}

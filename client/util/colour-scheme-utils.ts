@@ -1,3 +1,5 @@
+import { UserBorderScheme, UserColorArray, UserFontScheme } from '../../models/customisations.ts'
+
 export function changeHexColor(colour: string, amount: number): string {
   const hexcode = colour.replace(/^#/, '')
 
@@ -17,14 +19,14 @@ export function changeHexColor(colour: string, amount: number): string {
   g = g < 0 ? 0 : g
   b = b < 0 ? 0 : b
 
-  r = r.toString(16).length == 1 ? '0' + r.toString(16) : r.toString(16)
-  g = g.toString(16).length == 1 ? '0' + g.toString(16) : g.toString(16)
-  b = b.toString(16).length == 1 ? '0' + b.toString(16) : b.toString(16)
+  const rr = r.toString(16).length == 1 ? '0' + r.toString(16) : r.toString(16)
+  const gg = g.toString(16).length == 1 ? '0' + g.toString(16) : g.toString(16)
+  const bb = b.toString(16).length == 1 ? '0' + b.toString(16) : b.toString(16)
 
-  return `#${r}${g}${b}`
+  return `#${rr}${gg}${bb}`
 }
 
-export const changeColorStyles = (name, value) => {
+export const changeColorStyles = (name:string, value:string) => {
   const dark = changeHexColor(value, -20)
   const light1 = changeHexColor(value, 20)
   const light2 = changeHexColor(value, 40)
@@ -93,7 +95,7 @@ export const changeColorStyles = (name, value) => {
   }
 }
 
-export const appColourSchemes = {
+export const appColourSchemes: UserColorArray = {
   original: {
     font: '#110601',
     background: '#deeaf3',
@@ -288,7 +290,7 @@ export const appColourSchemes = {
   },
 }
 
-export const appRadiusSchemes = {
+export const appRadiusSchemes: UserBorderScheme = {
   original: { border: '10px', button: '5px' },
   darkMode: { border: '10px', button: '5px' },
   highContrast: { border: '0px', button: '0px' },
@@ -297,7 +299,7 @@ export const appRadiusSchemes = {
   nature: { border: '0px', button: '0px' },
 }
 
-export const appFontSchemes = {
+export const appFontSchemes: UserFontScheme = {
   original: { header: '', main: '' },
   darkMode: { header: '', main: '' },
   highContrast: { header: '', main: '' },

@@ -5,7 +5,8 @@ export function up(knex) {
     table.string('amount')
     table.string('frequency')
     table.string('starting_date')
-    table.string('saving_id')
+    table.integer('saving_id')
+    table.string('notes')
   })
 }
 

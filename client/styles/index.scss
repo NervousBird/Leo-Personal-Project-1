@@ -912,7 +912,8 @@ main {
 
 .income-component,
 .expense-component, 
-.transaction-component {
+.transaction-component,
+.savings-component {
   margin: 1rem 0rem 1rem 0rem;
 
   form {
@@ -962,6 +963,17 @@ main {
   }
 }
 
+.savings-component {
+  .topbar {
+    .title {
+      background-color: var(--color1);
+    }
+  }
+  .table-header {
+    background-color: var(--color1);
+  }
+}
+
 .transaction-component {
   .topbar {
     .title {
@@ -979,7 +991,8 @@ section {
 
 .transaction-row,
 .expense-row,
-.income-row {
+.income-row,
+.savings-row {
   display: flex;
   height: 27px;
   overflow: hidden;
@@ -1009,18 +1022,22 @@ section {
 
 .transaction-row.hidden,
 .expense-row.hidden,
-.income-row.hidden {
+.income-row.hidden,
+.savings-row.hidden {
   height: 0px !important;
   transition: height .4s ease;
-}
-.transaction-row:hover {
-  outline: 2px solid var(--color2-dark);
 }
 .expense-row:hover {
   outline: 2px solid var(--color5-dark);
 }
 .income-row:hover {
   outline: 2px solid var(--color4-dark);
+}
+.savings-row:hover {
+  outline: 2px solid var(--color1-dark)
+}
+.transaction-row:hover {
+  outline: 2px solid var(--color2-dark);
 }
 
 section {
@@ -1038,6 +1055,13 @@ section {
     background-color: var(--color5-light2);
   }
 
+  .savings-row {
+    background-color: var(--color1-light1);
+  }
+  .savings-row:nth-child(2n) {
+    background-color: var(--color1-light2);
+  }
+
   .transaction-row {
     background-color: var(--color2-light1);
   }
@@ -1045,8 +1069,6 @@ section {
     background-color: var(--color2-light2);
   }
 }
-
-
 
 .expense_component,
 .income_component {
@@ -1118,8 +1140,8 @@ section {
 
     button {
       position: absolute;
-      background-color: var(--color4-dark);
-      color: white;
+      background-color: var(--button4);
+      color: var(--font);
       border-radius: var(--button-radius);
       padding: 0px 5px 0px 5px;
       margin-left: 1055px;
@@ -1137,6 +1159,100 @@ section {
       option:hover {
         background-color: var(--color5-dark);
       }
+    }
+  }
+}
+
+.savings-component {
+  justify-self: center;
+
+  .title {
+    background-color: var(--color1-dark);
+  }
+
+  .table-header {
+    width: fit-content;
+
+    .name {
+      width: 110px;
+    }
+    .frequency {
+      width: 110px;
+    }
+    .date {
+      width: 130px;
+      text-align: center;
+    }
+    .expected,
+    .actual,
+    .difference {
+      width: 100px;
+    }
+    .notes {
+      width: 270px;
+    }
+  }
+
+  .savings-row {
+    width: fit-content;
+  }
+
+  form {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .warning {
+      position: absolute;
+      background-color: var(--color1);
+      color: white;
+      border-radius: var(--border-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: -15px;
+      align-self: center;
+    }
+
+    input,
+    select,
+    span {
+      font-size: 1rem;
+      border: none;
+      border-radius: var(--button-radius);
+      color: var(--font);
+      background-color: transparent;
+      padding: 2px 5px 2px 5px;
+      transition: background-color .2s ease;
+    }
+
+    select {
+      option {
+        background-color: var(--color1-light2);
+        transition: background-color .2s ease;
+      }
+
+      option:hover {
+        background-color: var(--color1-dark);
+        transition: background-color .2s ease;
+      }
+    }
+
+    select:focus,
+    input:focus {
+      background-color: var(--color1-dark);
+      border-radius: var(--button-radius);
+      outline:none;
+      transition: background-color .2s ease;
+    }
+
+    button {
+      position: absolute;
+      background-color: var(--button4);
+      color: var(--font);
+      border-radius: var(--button-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: 40px;
+      align-self: center;
+      width: 20px;
     }
   }
 }
@@ -1238,7 +1354,7 @@ section {
     button {
       position: absolute;
       background-color: var(--button4);
-      color: var(--color-white);
+      color: var(--font);
       border-radius: var(--button-radius);
       padding: 0px 5px 0px 5px;
       margin-left: 803px;
@@ -1253,6 +1369,84 @@ section {
     select:focus,
     input:focus {
       background-color: var(--color5-dark);
+    }
+  }
+}
+
+.savings_component {
+  form {
+    display: flex;
+
+    .warning {
+      position: absolute;
+      background-color: #ff4444;
+      color: white;
+      border-radius: var(--border-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: -15px;
+      align-self: center;
+    }
+
+    input,
+    select,
+    span {
+      font-size: 1rem;
+      border: none;
+      border-radius: var(--button-radius);
+      color: var(--font);
+      background-color: transparent;
+      padding: 2px 5px 2px 5px;
+      transition: background-color .2s ease;
+    }
+
+    select:focus,
+    input:focus {
+      background-color: var(--color1-dark);
+      border-radius: var(--button-radius);
+      outline:none;
+      transition: background-color .2s ease;
+    }
+
+    .name {
+      width: 110px;
+    }
+    .frequency {
+      width: 120px;
+    }
+    .date {
+      width: 130px;
+      text-align: center;
+    }
+    .expected,
+    .actual,
+    .difference {
+      text-align: right;
+      width: 100px;
+    }
+    .notes {
+      width: 250px;
+    }
+
+    select {
+      option {
+        background-color: var(--color4-light2);
+        transition: background-color .2s ease;
+      }
+
+      option:hover {
+        background-color: var(--color4-dark);
+        transition: background-color .2s ease;
+      }
+    }
+
+    button {
+      position: absolute;
+      background-color: var(--button4);
+      color: var(--font);
+      border-radius: var(--button-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: 993px;
+      align-self: center;
     }
   }
 }
