@@ -47,9 +47,10 @@ export function useAddBulkSavings() {
 }
 
 export function useSaving() {
-  const query = useQuery({ queryKey: ['saving'], queryFn: API.getSaving })
+  const query = useQuery({ queryKey: ['saving'], queryFn: API.getAllSaving })
   return {
     ...query,
+    byName: useSavingByName(),
     add: useAddSaving(),
     delete: useDeleteSaving(),
     update: useUpdateSaving(),
@@ -70,14 +71,18 @@ export function useSavingMutation<TData = unknown, TVariables = unknown>(
   return mutation
 }
 
+export function useSavingByName() {
+  return useSavingMutation(API.getSavingByName)
+}
+
 export function useAddSaving() {
-  return useSavingsMutation(API.addSaving)
+  return useSavingMutation(API.addSaving)
 }
 
 export function useDeleteSaving() {
-  return useSavingsMutation(API.deleteSaving)
+  return useSavingMutation(API.deleteSaving)
 }
 
 export function useUpdateSaving() {
-  return useSavingsMutation(API.updateSaving)
+  return useSavingMutation(API.updateSaving)
 }

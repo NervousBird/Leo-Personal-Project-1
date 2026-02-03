@@ -58,10 +58,22 @@ router.post('/savings/bulk', async (req, res) => {
   }
 })
 
-export default router
+
 router.get('/saving', async (req, res) => {
   try {
     const saving = await db.getAllSaving()
+    res.json(saving)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Something went wrong' })
+  }
+})
+
+router.get('/saving/:name', async (req, res) => {
+  try {
+    const data = req.params.name
+    console.log("data:", data )
+    const saving = await db.getSavingByName(data)
     res.json(saving)
   } catch (error) {
     console.log(error)
@@ -101,3 +113,5 @@ router.delete('/saving', async (req, res) => {
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
+
+export default router

@@ -436,14 +436,61 @@ input[type="range"]::-webkit-slider-runnable-track {
   border: 2px solid var(--font);
   border-radius: var(--border-radius);
   position: sticky;
-  top: 19vh;
+  top: 1vh;
   overflow: hidden;
 
+  .summary-finances-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .finances-summary-container {
+    height: 200px;
+    transition: height .4s ease;
+
+    .summary-goals-groups {
+      // display: flex;
+
+      .summary-goal-group {
+        display: grid;
+        grid-template-columns: 400px 200px;
+        justify-content: center;
+        margin-top: 3px;
+
+        p {
+          font-size: 1.1rem;
+          padding: 5px;
+          margin: 0;
+          background-color: var(--color3-light2);
+        }
+        p:nth-child(2n) {
+          background-color: var(--background1);
+        }
+      }
+    }
+  }
+  .finances-summary-container.hidden {
+    height: 0px;
+    transition: height .4s ease;
+  }
+
   h2 {
+    font-family: "HIMO";
     margin: 0;
     padding: 5px;
     background-color: var(--background3);
     border-radius: var(--border-radius) var(--border-radius) 0px 0px;
+    font-size: 2.3rem;
+  }
+
+  h3 {
+    font-family: "Sour Gummy";
+    background-color: var(--background3);
+    margin: 0;
+    padding: 4px;
+    font-size: 1.6rem;
+    font-weight: 500;
   }
 
   .titles {
@@ -452,13 +499,6 @@ input[type="range"]::-webkit-slider-runnable-track {
     padding: 0;
     margin: 0px 0px 10px 0px;
     background-color: transparent;
-
-    h3 {
-      background-color: var(--background3);
-      margin: 0;
-      padding: 4px;
-      font-size: 2rem;
-    }
     p {
       margin: 0;
     }
@@ -466,6 +506,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 
   .summary-items {
     display: flex;
+    justify-content: center;
     gap: 10px;
     overflow: hidden;
     height: 323px;
@@ -475,20 +516,26 @@ input[type="range"]::-webkit-slider-runnable-track {
     .summary-container {
       display: flex;
       flex-direction: column;
+      width: 350px;
+
+      h3 {
+        font-size: 1rem;
+        background-color: transparent;
+        min-width: 80px;
+        font-weight: 700;
+      }
+      h4 {
+        font-weight: 500;
+      }
+      p{
+        font-weight: 300;
+      }
 
       .summary-title-income,
       .summary-title-expense,
       .summary-title-total {
         display: flex;
-
-        h3 {
-          font-family: "Sour Gummy";
-          font-size: 1rem;
-          font-weight: 800;
-          margin: 5px;
-          width: 120px;
-          align-self: center;
-        }
+        justify-content: space-around;
       }
 
       .summary-title-income {
@@ -551,12 +598,7 @@ input[type="range"]::-webkit-slider-runnable-track {
   }
 
   .summary-summaries-table {
-    h3 {
-      background-color: var(--background3);
-      margin: 10px 0px 10px 0px;
-      padding: 5px;
-      font-size: 2rem;
-    }
+    overflow: hidden;
 
     button {
       justify-self: center;
@@ -572,11 +614,75 @@ input[type="range"]::-webkit-slider-runnable-track {
       height: 150px;
       transition: height .4s ease;
 
-      .summary-group {
+      .savings-selection-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+
+        h4 {
+          margin: 0;
+          font-size: 1.2rem;
+        }
+
+        select {
+          font-size: 1.05rem;
+          padding: 0 5px;
+          width: 150px;
+          background-color: var(--background1);
+        }
+      }
+
+      .savings-targets-container {
+        display: flex;
+        justify-content: center;
+        margin: 5px;
+
+        button {
+          background-color: var(--button3);
+        }
+        button:hover {
+          background-color: color-mix(in hsl, var(--button3), black 30%);
+        }
+
+        form {
+          input {
+            height: 20px;
+            padding: 2px;
+            margin: 0 5px;
+            width: 130px;
+            font-size: 1rem;
+            background-color: var(--background1);
+          }
+          button {
+            background-color: var(--button1)
+          }
+          button:hover {
+            background-color: color-mix(in hsl, var(--button1), black 30%);
+          }
+        }
+      }
+
+      .summary-groups {
         display: grid;
-        grid-template-columns: 2fr 1fr;
-        width: 100%;
-        justify-self: center;
+        grid-template-columns: auto auto;
+
+        .summary-group {
+          display: grid;
+          grid-template-columns: 200px 120px;
+          width: 100%;
+          justify-self: center;
+          margin-top: 2px;
+
+          p {
+            font-size: 1.1rem;
+            padding: 5px;
+            margin: 0;
+            background-color: var(--color3-light2);
+          }
+          p:nth-child(2n) {
+            background-color: var(--background1);
+          }
+        }
       }
     }
     .summaries-container.hidden {

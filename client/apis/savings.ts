@@ -26,9 +26,14 @@ export async function addBulkSavings(data: SavingsObject[]) {
 
 // Saving
 
-export async function getSaving(): Promise<Saving[]> {
+export async function getAllSaving(): Promise<Saving[]> {
   const response = await request.get(`${rootURL}/savings/saving`)
   return response.body as Saving[]
+}
+
+export async function getSavingByName(name: string): Promise<Saving> {
+  const response = await request.get(`${rootURL}/savings/saving/${name}`)
+  return response.body as Saving
 }
 
 export async function addSaving(data: SavingObject) {

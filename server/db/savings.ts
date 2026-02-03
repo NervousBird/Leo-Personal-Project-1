@@ -42,23 +42,39 @@ export async function addBulkSavings(data: SavingsObject[], db = connection) {
   return db('savings').insert(data)
 }
 
+const savingColumns = [
+  "id",
+  "name",
+  "target",
+  "target_date as targetDate"
+]
+
 // For the Summaries
 export async function getAllSaving(db = connection): Promise<Saving[]> {
-  return db('saving').select()
+  return db('saving').select(...savingColumns)
+}
+
+export async function getSavingByName(name: string, db = connection): Promise<Saving> {
+  const saving = await db('saving').where('name', name).first().select(...savingColumns)
+  console.log(name, saving)
+  return saving
 }
 
 export async function addSaving(data: SavingObject, db = connection) {
-  return db('saving').insert(data)
+  return db('saving').insert({
+    name: data.name,
+    target: data.target,
+    target_date: data.targetDate,
+  })
 }
 
 export async function updateSaving(data: Saving, db = connection) {
-  return db('saving').where('id', data.id).update(data)
+  return db('saving').where('name', data.name).update({
+    target: data.target,
+    target_date: data.targetDate
+  })
 }
 
 export async function deleteSaving(id: number, db = connection) {
   return db('saving').where('id', id).delete()
-}
-
-export async function addBulkSaving(data: SavingObject[], db = connection) {
-  return db('saving').insert(data)
 }

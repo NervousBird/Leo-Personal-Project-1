@@ -16,7 +16,7 @@ interface Props {
 function SavingsComponent({ savings, transactions, dates }: Props) {
   const useSaving = useSavings()
   const [hidden, setHidden] = useState(false)
-  const [filteredSavings, setFilteredSavings] = useState(savings)
+  const [filteredSavings, setFilteredSavings] = useState(savings.sort((a, b) => { return (a.name).localeCompare(b.name)}))
   const [searchString, setSearchString] = useState({ search: "" })
 
   const handleNewSavings = async () => {
