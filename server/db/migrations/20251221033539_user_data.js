@@ -4,6 +4,7 @@ export function up(knex) {
     table.string('colors')
     table.string('borders')
     table.string('fonts')
+
     table.string('dates_range')
     table.string('leaving_point')
     table.integer('user_id')

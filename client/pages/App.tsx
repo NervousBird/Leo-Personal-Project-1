@@ -5,21 +5,22 @@ import { changeColorStyles } from '../util/colour-scheme-utils.ts'
 
 function App() {
   const { data, isPending, isError } = useUserData()
-  const userData = useUserData()
   const [trigger, setTrigger] = useState(false)
 
   const updateUserScheme = () => {
-    const bordersScheme = JSON.parse(data.borders)
-    const colorScheme = JSON.parse(data.colors)
-    const colorKeys = Object.keys(colorScheme)
-    const colorValues = Object.values(colorScheme)
+    if(data) {
+      const bordersScheme = JSON.parse(data.borders)
+      const colorScheme = JSON.parse(data.colors)
+      const colorKeys = Object.keys(colorScheme)
+      const colorValues = Object.values(colorScheme)
 
-    for(let i = 0; i < colorKeys.length; i++) {
-      changeColorStyles(colorKeys[i], colorValues[i])
+      for(let i = 0; i < colorKeys.length; i++) {
+        changeColorStyles(colorKeys[i], colorValues[i])
+      }
+
+      document.documentElement.style.setProperty('--border-radius', bordersScheme.border)
+      document.documentElement.style.setProperty('--button-radius', bordersScheme.button)
     }
-
-    document.documentElement.style.setProperty('--border-radius', bordersScheme.border)
-    document.documentElement.style.setProperty('--button-radius', bordersScheme.button)
   }
 
   useEffect(() => {

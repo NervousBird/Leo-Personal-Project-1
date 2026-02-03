@@ -1,17 +1,17 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { Expense } from "../../models/expenses"
-import { useExpenses } from "../hooks/useExpenses"
-import { Transaction } from "../../models/transactions"
+import { Savings } from "../../models/savings.ts"
+import { useSavings } from "../hooks/useSavings.ts"
+import { Transaction } from "../../models/transactions.ts"
 import { getNextDate, isDateBetween } from "../util/date-utils"
 
 interface Props {
-  expenses: Expense
+  savings: Savings
   transactions: Transaction[]
 }
 
-function ExpenseRow({ expenses, transactions }: Props) {
-  const useExpense = useExpenses()
-  const [expenseData, setExpenseData] = useState(expenses)
+function IncomeRow({ savings, transactions }: Props) {
+  const useSaving = useSavings()
+  const [savingsData, setSavingsData] = useState(savings)
 
   const [warning, setWarning] = useState(false)
   const [difference, setDifference] = useState('$0.00')
@@ -20,14 +20,14 @@ function ExpenseRow({ expenses, transactions }: Props) {
   useEffect(() => {
     updateDifference()
     countActualAmount()
-  }, [actual, expenseData.expected, transactions])
+  }, [savings, actual, transactions, savingsData.amount])
 
   const countActualAmount = async () => {
     if (transactions) {
-      const startDate = expenseData.date
-      const endDate = getNextDate(startDate, expenseData.frequency)
+      const startDate = savingsData.startingDate
+      const endDate = getNextDate(startDate, savingsData.frequency)
       const amounts = transactions.filter(transaction => 
-        transaction.type === expenseData.type && 
+        transaction.name === savingsData.name && 
         isDateBetween(transaction.date, startDate, endDate))
         .map(transaction => transaction.amount)
 
@@ -35,68 +35,61 @@ function ExpenseRow({ expenses, transactions }: Props) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
       } else {
-        setActual(expenseData.expected)
+        setActual(savings.amount)
       }
     }
   }
 
   const updateDifference = () => {
-    const expectedNum = Number(expenseData.expected.replace('$', ''))
+    const expectedNum = Number(savingsData.amount.replace('$', ''))
     const actualNum = Number(actual.replace('$', ''))
-    setDifference(`${(expectedNum - actualNum).toFixed(2)}`)
+    setDifference(`${(actualNum - expectedNum).toFixed(2)}`)
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     switch(name) {
-      case 'expected':
-        setExpenseData((prev) => ({...prev, [name]: value.replace('$', '')}))
+      case 'amount':
+        setSavingsData((prev) => ({...prev, [name]: value.replace('$', '')}))
         break
       default:
-        setExpenseData((prev) => ({...prev, [name]: value}))
+        setSavingsData((prev) => ({...prev, [name]: value}))
         break
     }
     setWarning(true)
   }
 
   const handleSubmit = async (e: FormEvent) => {
+    console.log(savingsData)
     e.preventDefault()
-    expenseData.expected = `${Number(expenseData.expected).toFixed(2)}`
-    await useExpense.update.mutateAsync({
-      id: expenseData.id,
-      name: expenseData.name,
-      type: expenseData.type,
-      frequency: expenseData.frequency,
-      date: expenseData.date,
-      expected: expenseData.expected,
-      notes: expenseData.notes,
+    savingsData.amount = `${Number(savingsData.amount).toFixed(2)}`
+    await useSaving.update.mutateAsync({
+      id: savingsData.id,
+      name: savingsData.name,
+      amount: savingsData.amount,
+      frequency: savingsData.frequency,
+      startingDate: savingsData.startingDate,
+      notes: savingsData.notes,
     })
     setWarning(false)
   }
 
   return (
-    <div className="expense_component">
+    <div className="savings_component">
       <form onSubmit={handleSubmit}>
         {warning && <div className="warning">!</div>}
         <input
           className="name"
           name="name"
-          value={expenseData.name}
+          value={savingsData.name}
           onChange={handleChange}
           placeholder="name"
-        />
-        <input
-          className="type"
-          name="type"
-          value={expenseData.type}
-          onChange={handleChange}
-          placeholder="type"
         />
         <select
           className="frequency"
           id='frequency'
           name="frequency"
-          value={expenseData.frequency}
+          value={savingsData.frequency}
           onChange={handleChange}>
           <option value="daily">daily</option>
           <option value="weekly">weekly</option>
@@ -108,16 +101,16 @@ function ExpenseRow({ expenses, transactions }: Props) {
         </select>
         <input
           className="date"
-          name="date"
-          value={expenseData.date}
+          name="startingDate"
+          value={savingsData.startingDate}
           onChange={handleChange}
           type="date"
           placeholder="starting date"
         />
         <input
           className="expected"
-          name="expected"
-          value={`$${expenseData.expected}`}
+          name="amount"
+          value={`$${savingsData.amount}`}
           onChange={handleChange}
           placeholder="expected"
         />
@@ -126,7 +119,7 @@ function ExpenseRow({ expenses, transactions }: Props) {
         <input
           className="notes"
           name="notes"
-          value={expenseData.notes}
+          value={savingsData.notes}
           onChange={handleChange}
           placeholder="notes"
         />
@@ -136,4 +129,4 @@ function ExpenseRow({ expenses, transactions }: Props) {
   )
 }
 
-export default ExpenseRow
+export default IncomeRow

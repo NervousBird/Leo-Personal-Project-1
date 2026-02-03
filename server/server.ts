@@ -4,6 +4,7 @@ import incomeRoutes from './routes/incomes.ts'
 import expenseRoutes from './routes/expenses.ts'
 import transactionRoutes from './routes/transactions.ts'
 import userDataRoutes from './routes/userData.ts'
+import savingsRoutes from './routes/savings.ts'
 
 const server = express()
 
@@ -13,6 +14,7 @@ server.use('/api/v1/userData', userDataRoutes)
 server.use('/api/v1/transactions', transactionRoutes)
 server.use('/api/v1/incomes', incomeRoutes)
 server.use('/api/v1/expenses', expenseRoutes)
+server.use('/api/v1/savings', savingsRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

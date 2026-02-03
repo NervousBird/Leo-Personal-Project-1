@@ -27,8 +27,8 @@ function IncomeRow({ incomes, transactions }: Props) {
       // filter transactions to be between the displayed dates
       const startDate = incomeData.date
       const endDate = getNextDate(startDate, incomeData.frequency)
-      const amounts = transactions.filter(transaction => 
-        transaction.type === incomeData.type && 
+      const amounts = transactions.filter(transaction =>
+        transaction.type === incomeData.type &&
         isDateBetween(transaction.date, startDate, endDate))
         .map(transaction => transaction.amount)
 
@@ -46,7 +46,7 @@ function IncomeRow({ incomes, transactions }: Props) {
     const actualNum = Number(actual.replace('$', ''))
     setDifference(`${(actualNum - expectedNum).toFixed(2)}`)
   }
-  
+ 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     switch(name) {
@@ -94,10 +94,10 @@ function IncomeRow({ incomes, transactions }: Props) {
           placeholder="type"
         />
         <select 
-          className="frequency" 
-          id='frequency' 
+          className="frequency"
+          id='frequency'
           name="frequency"
-          value={incomeData.frequency} 
+          value={incomeData.frequency}
           onChange={handleChange}>
           <option value="daily">daily</option>
           <option value="weekly">weekly</option>

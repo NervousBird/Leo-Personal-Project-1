@@ -436,14 +436,61 @@ input[type="range"]::-webkit-slider-runnable-track {
   border: 2px solid var(--font);
   border-radius: var(--border-radius);
   position: sticky;
-  top: 19vh;
+  top: 1vh;
   overflow: hidden;
 
+  .summary-finances-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .finances-summary-container {
+    height: 200px;
+    transition: height .4s ease;
+
+    .summary-goals-groups {
+      // display: flex;
+
+      .summary-goal-group {
+        display: grid;
+        grid-template-columns: 400px 200px;
+        justify-content: center;
+        margin-top: 3px;
+
+        p {
+          font-size: 1.1rem;
+          padding: 5px;
+          margin: 0;
+          background-color: var(--color3-light2);
+        }
+        p:nth-child(2n) {
+          background-color: var(--background1);
+        }
+      }
+    }
+  }
+  .finances-summary-container.hidden {
+    height: 0px;
+    transition: height .4s ease;
+  }
+
   h2 {
+    font-family: "HIMO";
     margin: 0;
     padding: 5px;
     background-color: var(--background3);
     border-radius: var(--border-radius) var(--border-radius) 0px 0px;
+    font-size: 2.3rem;
+  }
+
+  h3 {
+    font-family: "Sour Gummy";
+    background-color: var(--background3);
+    margin: 0;
+    padding: 4px;
+    font-size: 1.6rem;
+    font-weight: 500;
   }
 
   .titles {
@@ -452,12 +499,6 @@ input[type="range"]::-webkit-slider-runnable-track {
     padding: 0;
     margin: 0px 0px 10px 0px;
     background-color: transparent;
-
-    h3 {
-      background-color: var(--background3);
-      margin: 0;
-      padding: 4px;
-    }
     p {
       margin: 0;
     }
@@ -465,6 +506,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 
   .summary-items {
     display: flex;
+    justify-content: center;
     gap: 10px;
     overflow: hidden;
     height: 323px;
@@ -474,20 +516,26 @@ input[type="range"]::-webkit-slider-runnable-track {
     .summary-container {
       display: flex;
       flex-direction: column;
+      width: 350px;
+
+      h3 {
+        font-size: 1rem;
+        background-color: transparent;
+        min-width: 80px;
+        font-weight: 700;
+      }
+      h4 {
+        font-weight: 500;
+      }
+      p{
+        font-weight: 300;
+      }
 
       .summary-title-income,
       .summary-title-expense,
       .summary-title-total {
         display: flex;
-
-        h3 {
-          font-family: "Sour Gummy";
-          font-size: 1rem;
-          font-weight: 800;
-          margin: 5px;
-          width: 120px;
-          align-self: center;
-        }
+        justify-content: space-around;
       }
 
       .summary-title-income {
@@ -550,22 +598,96 @@ input[type="range"]::-webkit-slider-runnable-track {
   }
 
   .summary-summaries-table {
-
-    h3 {
-      background-color: var(--background3);
-      margin: 10px 0px 10px 0px;
-      padding: 5px;
-    }
+    overflow: hidden;
 
     button {
       justify-self: center;
     }
 
     div {
-
       p {
         margin: 5px;
       }
+    }
+
+    .summaries-container {
+      height: 150px;
+      transition: height .4s ease;
+
+      .savings-selection-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+
+        h4 {
+          margin: 0;
+          font-size: 1.2rem;
+        }
+
+        select {
+          font-size: 1.05rem;
+          padding: 0 5px;
+          width: 150px;
+          background-color: var(--background1);
+        }
+      }
+
+      .savings-targets-container {
+        display: flex;
+        justify-content: center;
+        margin: 5px;
+
+        button {
+          background-color: var(--button3);
+        }
+        button:hover {
+          background-color: color-mix(in hsl, var(--button3), black 30%);
+        }
+
+        form {
+          input {
+            height: 20px;
+            padding: 2px;
+            margin: 0 5px;
+            width: 130px;
+            font-size: 1rem;
+            background-color: var(--background1);
+          }
+          button {
+            background-color: var(--button1)
+          }
+          button:hover {
+            background-color: color-mix(in hsl, var(--button1), black 30%);
+          }
+        }
+      }
+
+      .summary-groups {
+        display: grid;
+        grid-template-columns: auto auto;
+
+        .summary-group {
+          display: grid;
+          grid-template-columns: 200px 120px;
+          width: 100%;
+          justify-self: center;
+          margin-top: 2px;
+
+          p {
+            font-size: 1.1rem;
+            padding: 5px;
+            margin: 0;
+            background-color: var(--color3-light2);
+          }
+          p:nth-child(2n) {
+            background-color: var(--background1);
+          }
+        }
+      }
+    }
+    .summaries-container.hidden {
+      height: 0px;
+      transition: height .4s ease;
     }
   }
 
@@ -600,7 +722,7 @@ input[type="range"]::-webkit-slider-runnable-track {
   height: 92%;
 
   h3 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .titles {
@@ -896,7 +1018,8 @@ main {
 
 .income-component,
 .expense-component, 
-.transaction-component {
+.transaction-component,
+.savings-component {
   margin: 1rem 0rem 1rem 0rem;
 
   form {
@@ -946,6 +1069,17 @@ main {
   }
 }
 
+.savings-component {
+  .topbar {
+    .title {
+      background-color: var(--color1);
+    }
+  }
+  .table-header {
+    background-color: var(--color1);
+  }
+}
+
 .transaction-component {
   .topbar {
     .title {
@@ -963,7 +1097,8 @@ section {
 
 .transaction-row,
 .expense-row,
-.income-row {
+.income-row,
+.savings-row {
   display: flex;
   height: 27px;
   overflow: hidden;
@@ -993,18 +1128,22 @@ section {
 
 .transaction-row.hidden,
 .expense-row.hidden,
-.income-row.hidden {
+.income-row.hidden,
+.savings-row.hidden {
   height: 0px !important;
   transition: height .4s ease;
-}
-.transaction-row:hover {
-  outline: 2px solid var(--color2-dark);
 }
 .expense-row:hover {
   outline: 2px solid var(--color5-dark);
 }
 .income-row:hover {
   outline: 2px solid var(--color4-dark);
+}
+.savings-row:hover {
+  outline: 2px solid var(--color1-dark)
+}
+.transaction-row:hover {
+  outline: 2px solid var(--color2-dark);
 }
 
 section {
@@ -1022,6 +1161,13 @@ section {
     background-color: var(--color5-light2);
   }
 
+  .savings-row {
+    background-color: var(--color1-light1);
+  }
+  .savings-row:nth-child(2n) {
+    background-color: var(--color1-light2);
+  }
+
   .transaction-row {
     background-color: var(--color2-light1);
   }
@@ -1029,8 +1175,6 @@ section {
     background-color: var(--color2-light2);
   }
 }
-
-
 
 .expense_component,
 .income_component {
@@ -1102,8 +1246,8 @@ section {
 
     button {
       position: absolute;
-      background-color: var(--color4-dark);
-      color: white;
+      background-color: var(--button4);
+      color: var(--font);
       border-radius: var(--button-radius);
       padding: 0px 5px 0px 5px;
       margin-left: 1055px;
@@ -1121,6 +1265,100 @@ section {
       option:hover {
         background-color: var(--color5-dark);
       }
+    }
+  }
+}
+
+.savings-component {
+  justify-self: center;
+
+  .title {
+    background-color: var(--color1-dark);
+  }
+
+  .table-header {
+    width: fit-content;
+
+    .name {
+      width: 110px;
+    }
+    .frequency {
+      width: 110px;
+    }
+    .date {
+      width: 130px;
+      text-align: center;
+    }
+    .expected,
+    .actual,
+    .difference {
+      width: 100px;
+    }
+    .notes {
+      width: 270px;
+    }
+  }
+
+  .savings-row {
+    width: fit-content;
+  }
+
+  form {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .warning {
+      position: absolute;
+      background-color: var(--color1);
+      color: white;
+      border-radius: var(--border-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: -15px;
+      align-self: center;
+    }
+
+    input,
+    select,
+    span {
+      font-size: 1rem;
+      border: none;
+      border-radius: var(--button-radius);
+      color: var(--font);
+      background-color: transparent;
+      padding: 2px 5px 2px 5px;
+      transition: background-color .2s ease;
+    }
+
+    select {
+      option {
+        background-color: var(--color1-light2);
+        transition: background-color .2s ease;
+      }
+
+      option:hover {
+        background-color: var(--color1-dark);
+        transition: background-color .2s ease;
+      }
+    }
+
+    select:focus,
+    input:focus {
+      background-color: var(--color1-dark);
+      border-radius: var(--button-radius);
+      outline:none;
+      transition: background-color .2s ease;
+    }
+
+    button {
+      position: absolute;
+      background-color: var(--button4);
+      color: var(--font);
+      border-radius: var(--button-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: 40px;
+      align-self: center;
+      width: 20px;
     }
   }
 }
@@ -1222,7 +1460,7 @@ section {
     button {
       position: absolute;
       background-color: var(--button4);
-      color: var(--color-white);
+      color: var(--font);
       border-radius: var(--button-radius);
       padding: 0px 5px 0px 5px;
       margin-left: 803px;
@@ -1237,6 +1475,84 @@ section {
     select:focus,
     input:focus {
       background-color: var(--color5-dark);
+    }
+  }
+}
+
+.savings_component {
+  form {
+    display: flex;
+
+    .warning {
+      position: absolute;
+      background-color: #ff4444;
+      color: white;
+      border-radius: var(--border-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: -15px;
+      align-self: center;
+    }
+
+    input,
+    select,
+    span {
+      font-size: 1rem;
+      border: none;
+      border-radius: var(--button-radius);
+      color: var(--font);
+      background-color: transparent;
+      padding: 2px 5px 2px 5px;
+      transition: background-color .2s ease;
+    }
+
+    select:focus,
+    input:focus {
+      background-color: var(--color1-dark);
+      border-radius: var(--button-radius);
+      outline:none;
+      transition: background-color .2s ease;
+    }
+
+    .name {
+      width: 110px;
+    }
+    .frequency {
+      width: 120px;
+    }
+    .date {
+      width: 130px;
+      text-align: center;
+    }
+    .expected,
+    .actual,
+    .difference {
+      text-align: right;
+      width: 100px;
+    }
+    .notes {
+      width: 250px;
+    }
+
+    select {
+      option {
+        background-color: var(--color4-light2);
+        transition: background-color .2s ease;
+      }
+
+      option:hover {
+        background-color: var(--color4-dark);
+        transition: background-color .2s ease;
+      }
+    }
+
+    button {
+      position: absolute;
+      background-color: var(--button4);
+      color: var(--font);
+      border-radius: var(--button-radius);
+      padding: 0px 5px 0px 5px;
+      margin-left: 993px;
+      align-self: center;
     }
   }
 }

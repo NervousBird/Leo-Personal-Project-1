@@ -4,6 +4,7 @@ import { changeDatesByMonth, getMonthAsWord, padDate } from "../util/date-utils"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
 import { useTransactions } from "../hooks/useTransactions"
+import { useSavings, useSaving } from "../hooks/useSavings.ts"
 import { useUserData } from "../hooks/useUserData.ts"
 import Finances from "./Finances"
 import SummaryComponent from "../components/SummaryComponent"
@@ -21,6 +22,8 @@ function Home() {
   const { data: incomes, isPending: incomesPending, isError: incomesError } = useIncomes()
   const { data: expenses, isPending: expensesPending, isError: expensesError } = useExpenses()
   const { data: transactions, isPending: transactionsPending, isError: transactionsError } = useTransactions()
+  const { data: savings, isPending: savingsPending, isError: savingsError } = useSavings()
+  const { data: saving, isPending: savingPending, isError: savingError } = useSaving()
   const { data: userData, isPending: userDataPending, isError: userDataError } = useUserData()
 
   const [dateRange, setDateRange] = useState({ startDate: setDate[0], endDate: setDate[1] })
@@ -70,6 +73,9 @@ function Home() {
         Home
       </Link>
 
+      {userDataPending && <p>Loading User Data ...</p>}
+      {userDataError && <p>Error Loading User Data ...</p>}
+
       {userData &&
         <CustomisationComponent data={userData} />
       }
@@ -83,16 +89,20 @@ function Home() {
         {incomesPending && <p>Loading Incomes ...</p>}
         {expensesPending && <p>Loading Expenses ...</p>}
         {transactionsPending && <p>Loading Transactions ...</p>}
+        {savingsPending && savingPending && <p>Loading Savings...</p>}
 
         {incomesError && <p>Error Loading Incomes ...</p>}
         {expensesError && <p>Error Loading Expenses...</p>}
         {transactionsError && <p>Error Loading Transactions ...</p>}
+        {savingsError && savingError && <p>Error Loading Savings...</p>}
 
-        {incomes && expenses && transactions &&
+        {incomes && expenses && transactions && savings && saving &&
           <Finances
             incomes={incomes}
             expenses={expenses}
             transactions={transactions}
+            savings={savings}
+            saving={saving}
             dates={dateRange}
             dateTitle={dateTitle}
             cycleType={cycleType}
@@ -102,10 +112,15 @@ function Home() {
           />
         }
 
-        {/* Add nav bar to cycle summary and tables? */}
-
-        {incomes && expenses && transactions &&
-          <SummaryComponent incomes={incomes} expenses={expenses} transactions={transactions} dates={dateRange} />
+        {incomes && expenses && transactions && savings && saving &&
+          <SummaryComponent
+            incomes={incomes}
+            expenses={expenses}
+            transactions={transactions}
+            savings={savings}
+            saving={saving}
+            dates={dateRange}
+          />
         }
       </div>
     </section>
