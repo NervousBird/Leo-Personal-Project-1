@@ -764,7 +764,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 .finances {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   padding: 10px 30px;
   background: var(--background2);
@@ -796,7 +796,7 @@ input[type="range"]::-webkit-slider-runnable-track {
   border-radius: var(--border-radius);
   padding: 0rem 3rem 1rem 3rem;
   margin: 10px;
-  width: 350px;
+  // width: auto;
   overflow: hidden;
 
   button {
@@ -840,6 +840,10 @@ input[type="range"]::-webkit-slider-runnable-track {
 .recurringForm-container {
   font-size: 1rem;
 
+  h3 {
+    font-size: 2rem;
+  }
+
   .warning-container {
     position: absolute;
     justify-self: center;
@@ -872,7 +876,6 @@ input[type="range"]::-webkit-slider-runnable-track {
     flex-wrap: wrap;
     background-color: var(--background3);
     border-radius: var(--border-radius);
-    padding: 40px 0px 0px 0px;
 
     section {
       display: flex;
@@ -929,7 +932,7 @@ input[type="range"]::-webkit-slider-runnable-track {
       flex-basis: 1;
       width: 100%;
       align-items: center;
-      margin: 15px 0px 10px 0px;
+      margin: 5px 0px;
 
       button {
         font-size: 1rem;

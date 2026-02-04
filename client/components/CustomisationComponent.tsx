@@ -27,7 +27,14 @@ function CustomisationComponent({ data }: Props) {
   }
 
   const handleSave = async () => {
-    // Handle User Customisation database update
+    console.log({      id: 1,
+      colors: JSON.stringify(formData),
+      borders: JSON.stringify(radiusForm),
+      fonts: '',
+      datesRange: '',
+      leavingPoint: '',
+      userId: 1,})
+
     await userData.update.mutateAsync({
       id: 1,
       colors: JSON.stringify(formData),
