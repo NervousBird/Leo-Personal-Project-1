@@ -19,54 +19,18 @@ interface Props {
     startDate: string
     endDate: string
   }
-  dateTitle: string[]
-  cycleType: string
-  onHandleChange: (e: ChangeEvent<HTMLInputElement>) => void
-  onHandleChangeMonth: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onHandleCycleType: () => void
 }
 
-function Finances({ incomes, expenses, transactions, savings, saving, dates, dateTitle, cycleType, onHandleChange, onHandleChangeMonth, onHandleCycleType }: Props) {
+function Finances({ incomes, expenses, transactions, savings, saving, dates }: Props) {
 
   return (
     <section className='finances'>
-
 
       <section>
         <ReccuringForm />
       </section>
 
-      <nav className='finance-nav'>
-        <span className='monthtitle-container'>
-          {dateTitle && dateTitle.map((month, idx) => <h3 key={idx}>{month}</h3>)}
-        </span>
-        <button 
-          value={cycleType} 
-          onClick={onHandleCycleType}>
-          {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
-        </button>
-        <span>
-          <button name='back' onClick={onHandleChangeMonth}>{'<'}</button>
-          <input
-            type='date'
-            id='startDate'
-            name='startDate'
-            value={dates.startDate}
-            onChange={onHandleChange}
-          />
-          <input
-            type='date'
-            id='endDate'
-            name='endDate'
-            min={dates.startDate}
-            value={dates.endDate}
-            onChange={onHandleChange}
-          />
-          <button name='forward' onClick={onHandleChangeMonth}>{'>'}</button>
-        </span>
-      </nav>
-
-      {dates &&
+       {dates &&
         <section>
           {incomes && transactions &&
             <IncomeComponent incomes={incomes} transactions={transactions} dates={dates}/>

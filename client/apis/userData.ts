@@ -1,9 +1,9 @@
 import request from 'superagent'
-import { UserData, UserDataObject } from '../../models/userData.ts'
+import { UserData } from '../../models/userData.ts'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
-export async function getUserData(): Promise<UserData>{
+export async function getUserData(): Promise<UserData> {
   const response = await request.get(`${rootURL}/userData`)
   return response.body
 }

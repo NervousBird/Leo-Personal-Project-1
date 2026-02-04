@@ -81,7 +81,36 @@ function Home() {
       }
 
       <header className="year-title">
-        <h1>{yearTitle}</h1>
+        <nav className='finance-nav'>
+          <span className='monthtitle-container'>
+            {dateTitle && dateTitle.map((month, idx) => <h3 key={idx}>{month}</h3>)}
+            <h3>{yearTitle}</h3>
+          </span>
+          <button 
+            value={cycleType} 
+            onClick={handleCycleType}>
+            {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
+          </button>
+          <span>
+            <button name='back' onClick={handleChangeMonth}>{'<'}</button>
+            <input
+              type='date'
+              id='startDate'
+              name='startDate'
+              value={dateRange.startDate}
+              onChange={handleChange}
+            />
+            <input
+              type='date'
+              id='endDate'
+              name='endDate'
+              min={dateRange.startDate}
+              value={dateRange.endDate}
+              onChange={handleChange}
+            />
+            <button name='forward' onClick={handleChangeMonth}>{'>'}</button>
+          </span>
+        </nav>
       </header>
 
       <div className="information-container">
@@ -104,11 +133,6 @@ function Home() {
             savings={savings}
             saving={saving}
             dates={dateRange}
-            dateTitle={dateTitle}
-            cycleType={cycleType}
-            onHandleChange={handleChange}
-            onHandleChangeMonth={handleChangeMonth}
-            onHandleCycleType={handleCycleType}
           />
         }
 
