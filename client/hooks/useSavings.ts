@@ -54,7 +54,6 @@ export function useSaving() {
     add: useAddSaving(),
     delete: useDeleteSaving(),
     update: useUpdateSaving(),
-    addBulk: useAddBulkSavings(),
   }
 }
 
@@ -84,5 +83,5 @@ export function useDeleteSaving() {
 }
 
 export function useUpdateSaving() {
-  return useSavingMutation(API.updateSaving)
+  return useSavingsMutation(API.updateSaving)
 }

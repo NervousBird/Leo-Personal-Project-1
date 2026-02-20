@@ -143,11 +143,7 @@ function getDatesByDay(dateRange: DateRange, days: number): string[] {
 
   // Loop here
   while (currentDate < endDate) {
-    // get the max amount of days
     const finalDay = new Date(Number(currentYear), Number(currentMonth), 0).getDate()
-    console.log(new Date(Number(currentYear), Number(currentMonth), 0))
-    console.log(finalDay)
-    // Add 7 days to next week
     const nextMonth = currentMonth + 1
     let nextDay = currentDay + days
 

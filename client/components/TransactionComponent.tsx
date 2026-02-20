@@ -1,5 +1,5 @@
 import { Transaction } from "../../models/transactions"
-import { useState, useEffect } from "react"
+import { useState, useEffect, ChangeEvent } from "react"
 import { useTransactions } from "../hooks/useTransactions"
 import TransactionRow from "./TransactionRow"
 
@@ -36,11 +36,6 @@ function TransactionComponent({ transactions, dates }: Props) {
     await useTransaction.delete.mutateAsync(id)
   }
 
-  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
-    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
-    return result
-  }
-
   const handleHidden = () => {
     setHidden(!hidden)
   }
@@ -51,10 +46,7 @@ function TransactionComponent({ transactions, dates }: Props) {
   }
 
   const filterTransaction = () => {
-    let filter = transactions.filter(transaction => isDateBetween(transaction.date, dates.startDate, dates.endDate))
-    if(searchString.search !== "") {
-      filter = filter.filter(transaction => transaction.name.toLowerCase().includes(searchString.search.toLowerCase()))
-    }
+    const filter = transactions.filter(transaction => transaction.name.toLowerCase().includes(searchString.search.toLowerCase()))
     setFilteredTransactions(filter)
   }
 

@@ -3,6 +3,7 @@ import { Transaction } from "../../models/transactions"
 import { useTransactions } from "../hooks/useTransactions"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
+import { useSavings } from "../hooks/useSavings.ts"
 import { isDateBetween } from "../util/date-utils"
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 function TransactionRow({ transactionData, dates }: Props) {
   const { data: incomes, isPending: incomesPending, isError: incomesError } = useIncomes()
   const { data: expenses, isPending: expensesPending, isError: expensesError } = useExpenses()
+  const { data: savings, isPending: savingsPending, isError: savingsError } = useSavings()
   const useTransaction = useTransactions()
 
   const [warning, setWarning] = useState(false)
@@ -50,10 +52,11 @@ function TransactionRow({ transactionData, dates }: Props) {
   }
 
   useEffect(() => {
-    if(incomes && expenses) {
+    if(incomes && expenses && savings) {
       const types = [...new Set(['empty',
         ...incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate)).map(data => data.type), 
         ...expenses.filter(expense => isDateBetween(expense.date, dates.startDate, dates.endDate)).map(data => data.type),
+        ...savings.filter(saving => isDateBetween(saving.startingDate, dates.startDate, dates.endDate)).map(data => data.name)
       ])].filter(type => type !== '')
       setTypesChoice(types)
     }
@@ -61,13 +64,15 @@ function TransactionRow({ transactionData, dates }: Props) {
 
   return (
     <div className="transaction_component">
-      
+ 
       {incomesPending && <p>Loading...</p>}
       {expensesPending && <p>Loading...</p>}
+      {savingsPending && <p>Loading...</p>}
       {incomesError && <p>Error loading incomes...</p>}
       {expensesError && <p>Error loading expense...</p>}
+      {savingsError && <p>Error loading savings...</p>}
 
-      {incomes && expenses && 
+      {incomes && expenses && savings &&
         <form onSubmit={handleSubmit}>
           {warning && <div className="warning">!</div>}
           <input
@@ -77,10 +82,10 @@ function TransactionRow({ transactionData, dates }: Props) {
             onChange={handleChange}
             placeholder="name"
           />
-          <select 
+          <select
             className="type"
-            name="type" 
-            value={transaction.type} 
+            name="type"
+            value={transaction.type}
             onChange={handleType}>
             {typesChoice.map((type,idx) =>
               <option key={idx} value={type}>{type}</option>
@@ -92,16 +97,16 @@ function TransactionRow({ transactionData, dates }: Props) {
             value={transaction.date}
             onChange={handleChange}
             type="date"
-            placeholder="date" 
+            placeholder="date"
           />
-          <input 
+          <input
             className="amount"
             name="amount"
             value={`$${transaction.amount}`}
             onChange={handleChange}
             placeholder="amount"
           />
-          <input 
+          <input
             className="notes"
             name="notes"
             value={transaction.notes}

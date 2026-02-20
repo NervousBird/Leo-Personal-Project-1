@@ -1,8 +1,8 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { Income } from "../../models/incomes"
-import { useIncomes } from "../hooks/useIncomes"
-import { Transaction } from "../../models/transactions"
-import { getNextDate, isDateBetween } from "../util/date-utils"
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { Income } from '../../models/incomes'
+import { useIncomes } from '../hooks/useIncomes'
+import { Transaction } from '../../models/transactions'
+import { getNextDate, isDateBetween } from '../util/date-utils'
 
 interface Props {
   incomes: Income
@@ -24,10 +24,9 @@ function IncomeRow({ incomes, transactions }: Props) {
 
   const countActualAmount = async () => {
     if (transactions) {
-      // filter transactions to be between the displayed dates
       const startDate = incomeData.date
       const endDate = getNextDate(startDate, incomeData.frequency)
-      const amounts = transactions.filter(transaction =>
+      const amounts = transactions.filter((transaction) =>
         transaction.type === incomeData.type &&
         isDateBetween(transaction.date, startDate, endDate))
         .map(transaction => transaction.amount)
@@ -46,15 +45,15 @@ function IncomeRow({ incomes, transactions }: Props) {
     const actualNum = Number(actual.replace('$', ''))
     setDifference(`${(actualNum - expectedNum).toFixed(2)}`)
   }
- 
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    switch(name) {
+    switch (name) {
       case 'expected':
-        setIncomeData((prev) => ({...prev, [name]: value.replace('$', '')}))
+        setIncomeData((prev) => ({ ...prev, [name]: value.replace('$', '') }))
         break
       default:
-        setIncomeData((prev) => ({...prev, [name]: value}))
+        setIncomeData((prev) => ({ ...prev, [name]: value }))
         break
     }
     setWarning(true)
@@ -65,7 +64,7 @@ function IncomeRow({ incomes, transactions }: Props) {
     incomeData.expected = `${Number(incomeData.expected).toFixed(2)}`
     await useIncome.update.mutateAsync({
       id: incomeData.id,
-      name: incomeData.name, 
+      name: incomeData.name,
       type: incomeData.type,
       frequency: incomeData.frequency,
       date: incomeData.date,
@@ -93,12 +92,13 @@ function IncomeRow({ incomes, transactions }: Props) {
           onChange={handleChange}
           placeholder="type"
         />
-        <select 
+        <select
           className="frequency"
-          id='frequency'
+          id="frequency"
           name="frequency"
           value={incomeData.frequency}
-          onChange={handleChange}>
+          onChange={handleChange}
+        >
           <option value="daily">daily</option>
           <option value="weekly">weekly</option>
           <option value="fornightly">fortnightly</option>
@@ -107,7 +107,7 @@ function IncomeRow({ incomes, transactions }: Props) {
           <option value="bi-yearly">bi-yearly</option>
           <option value="yearly">yearly</option>
         </select>
-        <input 
+        <input
           className="date"
           name="date"
           value={incomeData.date}
@@ -131,7 +131,7 @@ function IncomeRow({ incomes, transactions }: Props) {
           onChange={handleChange}
           placeholder="notes"
         />
-        {warning && <button type='submit'>✔</button>}
+        {warning && <button type="submit">✔</button>}
       </form>
     </div>
   )

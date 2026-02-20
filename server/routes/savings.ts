@@ -72,7 +72,6 @@ router.get('/saving', async (req, res) => {
 router.get('/saving/:name', async (req, res) => {
   try {
     const data = req.params.name
-    console.log("data:", data )
     const saving = await db.getSavingByName(data)
     res.json(saving)
   } catch (error) {
