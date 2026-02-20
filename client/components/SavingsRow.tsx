@@ -26,8 +26,8 @@ function IncomeRow({ savings, transactions }: Props) {
     if (transactions) {
       const startDate = savingsData.startingDate
       const endDate = getNextDate(startDate, savingsData.frequency)
-      const amounts = transactions.filter(transaction => 
-        transaction.name === savingsData.name && 
+      const amounts = transactions.filter(transaction =>
+        transaction.type === savingsData.name &&
         isDateBetween(transaction.date, startDate, endDate))
         .map(transaction => transaction.amount)
 
@@ -35,7 +35,7 @@ function IncomeRow({ savings, transactions }: Props) {
         const count = amounts.reduce((acc, curr) => `${Number(acc) + Number(curr)}`)
         setActual(Number(count).toFixed(2))
       } else {
-        setActual(savings.amount)
+        setActual(savingsData.amount)
       }
     }
   }

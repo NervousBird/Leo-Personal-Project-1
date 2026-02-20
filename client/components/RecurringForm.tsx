@@ -1,8 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from "react"
-import { useExpenses } from "../hooks/useExpenses"
-import { useIncomes } from "../hooks/useIncomes"
-import { getDatesToAdd } from "../util/date-utils"
-import { IncomeObject } from "../../models/incomes"
+import { useExpenses } from "../hooks/useExpenses.ts"
+import { useIncomes } from "../hooks/useIncomes.ts"
+import { useSavings, useSaving } from "../hooks/useSavings.ts"
+import { getDatesToAdd } from "../util/date-utils.ts"
+import { IncomeObject } from "../../models/incomes.ts"
+import { SavingsBulkObject } from "../../models/savings.ts"
 
 const defaultForm = {
   category: 'Income',
@@ -21,19 +23,22 @@ const frequencyArray = [
 function ReccuringForm() {
   const { data: expenses, isPending: expensesPending, isError: expensesError } = useExpenses()
   const { data: incomes, isPending: incomesPending, isError: incomesError } = useIncomes()
+  const { data: savings, isPending: savingsPending, isError: savingsError } = useSavings()
+  const { data: saving, isPending: savingPending, isError: savingError } = useSaving()
   const useIncome = useIncomes()
   const useExpense = useExpenses()
+  const useSavingsHooks = useSavings()
   const [formData, setFormData] = useState(defaultForm)
   const [formWarning, setFormWarning] = useState({ state: false, message: '' })
-  const [hidden, setHidden] = useState(false)
+  const [hidden, setHidden] = useState(true)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-  
+
     if(formData.category === '') {
       return setFormWarning({ state: true, message: 'Category must have a valid input!' })
     }
-    if(formData.type === '') {
+    if(formData.type === '' && formData.category !== "Saving") {
       return setFormWarning({ state: true, message: 'Type must have a valid input!' })
     }
     if(formData.frequency === '') {
@@ -62,21 +67,39 @@ function ReccuringForm() {
 
         filteredDates = datesArray.filter(date => !filteredExpenses?.includes(date))
       }
+
+      if(formData.category === "Saving") {
+        const filteredSavings = savings?.filter(saving => {
+          saving.name === formData.name ? true : false
+        }).map(saving => saving.startingDate)
+
+        filteredDates = datesArray.filter(date => !filteredSavings?.includes(date))
+      }
     }
 
     // Create non existing database entries, datesArray contains the DATES they should be posted
     if(filteredDates.length !== 0) {
       const dataArray = filteredDates.map(date => {
-        return {
-          name: formData.name,
-          type: formData.type,
-          frequency: formData.frequency,
-          date: date,
-          expected: Number(formData.expected.replace("$", "")).toFixed(2),
-          notes: '',
+        if(formData.category === "Saving") {
+          return {
+            name: formData.name,
+            frequency: formData.frequency,
+            starting_date: date,
+            amount: Number(formData.expected.replace("$", "")).toFixed(2),
+            notes: '',
+          }
+        } else {
+          return {
+            name: formData.name,
+            type: formData.type,
+            frequency: formData.frequency,
+            date: date,
+            expected: Number(formData.expected.replace("$", "")).toFixed(2),
+            notes: '',
+          }
         }
       }) as IncomeObject[]
-      addToDatabase(dataArray)      
+      addToDatabase(dataArray)
     }
 
     // Wipe form/show success!
@@ -84,27 +107,34 @@ function ReccuringForm() {
     setFormWarning({ state: false, message: '' })
   }
 
-  const addToDatabase = async (data: IncomeObject[]) => {
+  const addToDatabase = async (data: IncomeObject[] | SavingsBulkObject[]) => {
+    const typeIncome = data as IncomeObject[]
+    const typeSavings = data as SavingsBulkObject[]
     switch(formData.category) {
       case 'Income':
          try {
-            await useIncome.addBulk.mutateAsync(data)
+            await useIncome.addBulk.mutateAsync(typeIncome)
         } catch (error) {
           console.error('Error adding income:', error)
         }
         break
       case 'Expense':
-            try {
-            await useExpense.addBulk.mutateAsync(data)
+          try {
+            await useExpense.addBulk.mutateAsync(typeIncome)
         } catch (error) {
           console.error('Error adding expense:', error)
+        }
+      case 'Saving':
+        try {
+          await useSavingsHooks.addBulk.mutateAsync(typeSavings)
+        } catch (error) {
+          console.error('Error adding saving:', error)
         }
         break
       default:
         console.log('error')
         break
     }
-    console.log('added')
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -123,14 +153,14 @@ function ReccuringForm() {
     e.preventDefault()
     setHidden(!hidden)
   }
-  
+
   return (
     <div className="recurringForm-container">
       {incomesPending && expensesPending && <p>Loading...</p>}
       {incomesError && expensesError && <p>Error loading...</p>}
 
       {formWarning.state && <div className="warning-container"><p>{formWarning.message}</p></div>}
-      
+
       {incomes && expenses &&
         <form onSubmit={handleSubmit}>
           <button className="form-button" onClick={handleHidden} type="button">
@@ -149,6 +179,7 @@ function ReccuringForm() {
                 onChange={handleChange}>
                 <option value="Income">Income</option>
                 <option value="Expense">Expense</option>
+                <option value="Saving">Saving</option>
               </select>
             </span>
             <span>
@@ -169,6 +200,7 @@ function ReccuringForm() {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
+                disabled={formData.category === "Saving"}
               />
             </span>
             <span>

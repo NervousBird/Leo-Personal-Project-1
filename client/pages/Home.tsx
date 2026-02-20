@@ -1,6 +1,6 @@
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect,useMemo, useState } from "react"
 import { Link } from "react-router"
-import { changeDatesByMonth, getMonthAsWord, padDate } from "../util/date-utils"
+import { changeDatesByMonth, getMonthAsWord, padDate, isDateBetween } from "../util/date-utils"
 import { useIncomes } from "../hooks/useIncomes"
 import { useExpenses } from "../hooks/useExpenses"
 import { useTransactions } from "../hooks/useTransactions"
@@ -9,6 +9,10 @@ import { useUserData } from "../hooks/useUserData.ts"
 import Finances from "./Finances"
 import SummaryComponent from "../components/SummaryComponent"
 import CustomisationComponent from "../components/CustomisationComponent.tsx"
+import { Income } from "../../models/incomes.ts"
+import { Expense } from "../../models/expenses.ts"
+import { Savings } from "../../models/savings.ts"
+import { Transaction } from "../../models/transactions.ts"
 
 const currentYear = new Date().getFullYear()
 const currentMonth = new Date().getMonth()
@@ -31,10 +35,38 @@ function Home() {
   const [dateTitle, setDateTitle] = useState([] as string[])
   const [yearTitle, setYearTitle] = useState([] as string[])
 
+  const incomesData = useMemo((): Income[] => {
+    if(incomes) {
+      return incomes.filter(income => isDateBetween(income.date, dateRange.startDate, dateRange.endDate))
+    }
+    return [] as Income[]
+  }, [incomes, dateRange])
+
+  const expensesData = useMemo((): Expense[] => {
+    if(expenses) {
+      return expenses.filter(expense => isDateBetween(expense.date, dateRange.startDate, dateRange.endDate))
+    }
+    return [] as Expense[]
+  }, [expenses, dateRange])
+
+  const savingsData = useMemo((): Savings[] => {
+    if(savings) {
+      return savings.filter(saving => isDateBetween(saving.startingDate, dateRange.startDate, dateRange.endDate))
+    }
+    return [] as Savings[]
+  }, [savings, dateRange])
+
+  const transactionsData = useMemo((): Transaction[] => {
+    if(transactions) {
+      return transactions.filter(transaction => isDateBetween(transaction.date, dateRange.startDate, dateRange.endDate))
+    }
+    return [] as Transaction[]
+  }, [transactions, dateRange])
+
   useEffect(() => {
     updateMonthDisplay()
     updateYearDisplay()
-  },[dateRange])
+  },[dateRange, incomes])
 
   const updateMonthDisplay = () => {
     const newDateTitle = getMonthAsWord(dateRange)
@@ -69,49 +101,50 @@ function Home() {
 
   return (
     <section>
-      <Link to="/" viewTransition>
-        Home
-      </Link>
+      <div className="navbar">
+        <Link className="home-button" to="/" viewTransition>
+          Home
+        </Link>
+
+        <header className="year-title">
+          <nav className='finance-nav'>
+            <button
+              value={cycleType}
+              onClick={handleCycleType}>
+              {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
+            </button>
+            <span>
+              <button name='back' onClick={handleChangeMonth}>{'<'}</button>
+              <input
+                type='date'
+                id='startDate'
+                name='startDate'
+                value={dateRange.startDate}
+                onChange={handleChange}
+              />
+              <input
+                type='date'
+                id='endDate'
+                name='endDate'
+                min={dateRange.startDate}
+                value={dateRange.endDate}
+                onChange={handleChange}
+              />
+              <button name='forward' onClick={handleChangeMonth}>{'>'}</button>
+            </span>
+          </nav>
+        </header>
+
+        <span className='monthtitle-container'>
+          {dateTitle && dateTitle.map((month, idx) => <h3 key={idx}>{month}</h3>)}
+          <h3>{yearTitle}</h3>
+        </span>
+      </div>
 
       {userDataPending && <p>Loading User Data ...</p>}
       {userDataError && <p>Error Loading User Data ...</p>}
 
-      {userData &&
-        <CustomisationComponent data={userData} />
-      }
-
-      <header className="year-title">
-        <nav className='finance-nav'>
-          <span className='monthtitle-container'>
-            {dateTitle && dateTitle.map((month, idx) => <h3 key={idx}>{month}</h3>)}
-            <h3>{yearTitle}</h3>
-          </span>
-          <button 
-            value={cycleType} 
-            onClick={handleCycleType}>
-            {cycleType.charAt(0).toUpperCase() + cycleType.slice(1)}
-          </button>
-          <span>
-            <button name='back' onClick={handleChangeMonth}>{'<'}</button>
-            <input
-              type='date'
-              id='startDate'
-              name='startDate'
-              value={dateRange.startDate}
-              onChange={handleChange}
-            />
-            <input
-              type='date'
-              id='endDate'
-              name='endDate'
-              min={dateRange.startDate}
-              value={dateRange.endDate}
-              onChange={handleChange}
-            />
-            <button name='forward' onClick={handleChangeMonth}>{'>'}</button>
-          </span>
-        </nav>
-      </header>
+      {userData && <CustomisationComponent data={userData} /> }
 
       <div className="information-container">
 
@@ -125,13 +158,12 @@ function Home() {
         {transactionsError && <p>Error Loading Transactions ...</p>}
         {savingsError && savingError && <p>Error Loading Savings...</p>}
 
-        {incomes && expenses && transactions && savings && saving &&
+        {incomesData && expenses && transactions && savings && saving &&
           <Finances
-            incomes={incomes}
-            expenses={expenses}
-            transactions={transactions}
-            savings={savings}
-            saving={saving}
+            incomes={incomesData}
+            expenses={expensesData}
+            transactions={transactionsData}
+            savings={savingsData}
             dates={dateRange}
           />
         }

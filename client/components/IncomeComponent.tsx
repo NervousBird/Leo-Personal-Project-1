@@ -1,5 +1,5 @@
 import { useIncomes } from "../hooks/useIncomes.ts"
-import { useState, useEffect, ChangeEvent } from "react"
+import { useState, useEffect, useRef, ChangeEvent, MouseEvent } from "react"
 import { Income } from '../../models/incomes.ts'
 import IncomeRow from "./IncomeRow.tsx"
 import { Transaction } from "../../models/transactions.ts"
@@ -18,6 +18,8 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
   const [hidden, setHidden] = useState(false)
   const [filteredIncomes, setFilteredIncomes] = useState(incomes)
   const [searchString, setSearchString] = useState({ search: "" })
+  const [sort, setSort] = useState("")
+  const filter = useRef("")
 
   const handleNewIncome = async () => {
     try {
@@ -38,11 +40,6 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
     await useIncome.delete.mutateAsync(id)
   }
 
-  const isDateBetween = (dateToCheck: string, startDate: string, endDate: string) => {
-    const result = new Date(dateToCheck) >= new Date(startDate) && new Date(dateToCheck) <= new Date(endDate)
-    return result
-  }
-
   const handleHidden = () => {
     setHidden(!hidden)
   }
@@ -52,11 +49,55 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
     setSearchString((prev) => ({...prev, [name]: value}))
   }
 
-  const filterIncome = () => {
-    let filter = incomes.filter(income => isDateBetween(income.date, dates.startDate, dates.endDate))
-    if(searchString.search !== "") {
-      filter = filter.filter(income => income.name.toLowerCase().includes(searchString.search.toLowerCase()))
+  const handleSort = (e: MouseEvent<HTMLButtonElement>) => {
+    const { name } = e.target as HTMLButtonElement
+    if(sort === name) {
+      setSort("")
+      filter.current = ""
+    } else {
+      setSort(name)
+      filter.current = name
     }
+  }
+
+  const updateSort = (filter: string) => {
+    switch(filter) {
+      case "name":
+        setFilteredIncomes([...incomes.sort((a, b) => {return a.name.localeCompare(b.name)})])
+        break
+      case "type":
+        setFilteredIncomes([...incomes.sort((a, b) => {return a.type.localeCompare(b.type)})])
+        break
+      case "frequency":
+        setFilteredIncomes([...incomes.sort((a, b) => {return a.frequency.localeCompare(b.frequency)})])
+        break
+      case "date":
+        setFilteredIncomes([...incomes.sort((a, b) => {return (Number(new Date(a.date)) - Number(new Date(b.date)))})])
+        break
+      case "expected":
+        setFilteredIncomes([...incomes.sort((a, b) => {return Number(b.expected) - Number(a.expected)})])
+        break
+      case "actual":
+        setFilteredIncomes([...incomes.sort((a, b) => {return Number(b.expected) - Number(a.expected)})])
+        break
+      case "difference":
+        setFilteredIncomes([...incomes.sort((a, b) => {return Number(b.expected) - Number(a.expected)})])
+        break
+      case "notes":
+        setFilteredIncomes([...incomes.sort((a, b) => {return a.name.localeCompare(b.name)})])
+        break
+      case "":
+        setFilteredIncomes([...incomes])
+        break
+    }
+  }
+
+  useEffect (() => {
+    updateSort(filter.current)
+  }, [incomes, dates, sort])
+
+  const filterIncome = () => {
+    const filter = incomes.filter(income => income.name.toLowerCase().includes(searchString.search.toLowerCase()))
     setFilteredIncomes(filter)
   }
 
@@ -79,15 +120,16 @@ function IncomeComponent({ incomes, transactions, dates }: Props) {
       </div>
 
       <span className='table-header'>
-        <h4 className='name'>Name</h4>
-        <h4 className='type'>Type</h4>
-        <h4 className='frequency'>Frequency</h4>
-        <h4 className='date'>Date</h4>
-        <h4 className='expected'>Expected</h4>
-        <h4 className='actual'>Actual</h4>
-        <h4 className='difference'>Difference</h4>
-        <h4 className='notes'>Notes</h4>
+        <button name="name" className="name" onClick={handleSort}>Name</button>
+        <button name="type" className="type" onClick={handleSort}>type</button>
+        <button name="frequency" className="frequency" onClick={handleSort}>Frequency</button>
+        <button name="date" className="date" onClick={handleSort}>Date</button>
+        <button name="expected" className="expected" onClick={handleSort}>Expected</button>
+        <button name="actual" className="actual" onClick={handleSort}>Actual</button>
+        <button name="difference" className="difference" onClick={handleSort}>Difference</button>
+        <button name="notes" className="notes" onClick={handleSort}>Notes</button>
       </span>
+
       {filteredIncomes && filteredIncomes.map(income =>
           <div key={income.id} className={hidden === true ? "income-row hidden" : "income-row"}>
             <IncomeRow incomes={income} transactions={transactions} />

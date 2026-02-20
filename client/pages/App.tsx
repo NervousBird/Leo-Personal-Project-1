@@ -36,6 +36,7 @@ function App() {
       setTrigger(true)
     }
   }
+
   return (
     <main>
       <Outlet />

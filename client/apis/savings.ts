@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Savings, SavingsObject, Saving, SavingObject } from '../../models/savings.ts'
+import { Savings, SavingsObject, SavingsBulkObject, Saving, SavingObject } from '../../models/savings.ts'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
@@ -20,7 +20,8 @@ export async function deleteSavings(id: Savings) {
   await request.delete(`${rootURL}/savings/savings`).send(id)
 }
 
-export async function addBulkSavings(data: SavingsObject[]) {
+// TODO: fix this type to adjust the array of objects type instead of making a whole new interface
+export async function addBulkSavings(data: SavingsBulkObject[]) {
   await request.post(`${rootURL}/savings/savings/bulk`).send(data)
 }
 

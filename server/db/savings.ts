@@ -1,5 +1,5 @@
 import connection from './connection.ts'
-import { Savings, SavingsObject, Saving, SavingObject } from '../../models/savings.ts'
+import { Savings, SavingsObject, SavingsBulkObject, Saving, SavingObject } from '../../models/savings.ts'
 
 const savingsColumns = [
   'id',
@@ -38,7 +38,7 @@ export async function deleteSavings(id: number, db = connection) {
   return db('savings').where('id', id).delete()
 }
 
-export async function addBulkSavings(data: SavingsObject[], db = connection) {
+export async function addBulkSavings(data: SavingsBulkObject[], db = connection) {
   return db('savings').insert(data)
 }
 

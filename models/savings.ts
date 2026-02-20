@@ -10,6 +10,14 @@ export interface SavingsObject {
   notes: string
 }
 
+export interface SavingsBulkObject {
+  name: string
+  amount: string
+  frequency: string
+  starting_date: string
+  notes: string
+}
+
 export interface Saving extends SavingObject {
   id: number
 }
